@@ -1,6 +1,6 @@
 /* startscreen.c */
 
-# include "startscreen.h";
+# include "startscreen.h"
 
 void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset) {
 

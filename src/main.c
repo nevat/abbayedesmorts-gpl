@@ -6,10 +6,12 @@
 
 /* GPL v3 license */
 
+#include "main.h"
+
 main () {
 
 	uint exit = 0;
-	uint state = 0; /* 0-intro,1-introduction */
+	uint state = 0; /* 0-intro,1-history,2-game */
 	uint grapset = 0; /* 0-8bits, 1-16bits */
 
 	/* Creating window */
@@ -23,7 +25,9 @@ main () {
 		switch (state) {
 			case 0: startscreen(screen,renderer,&state,&grapset);
 							break;
-			case 1: exit = 1;
+			case 1: history(screen,renderer,&state,&grapset);
+							break;
+			case 2: exit = 1;
 							break;
 		}
 	}
@@ -34,11 +38,5 @@ main () {
 
 	/* Exiting normally */
 	return 0;
-
-}
-
-void history(SDL_Renderer *renderer,uint *state,uint *grapset) {
-
-	uint exit = 0;
 
 }
