@@ -27,7 +27,7 @@ main () {
 							break;
 			case 1: history(screen,renderer,&state,&grapset);
 							break;
-			case 2: exit = 1;
+			case 2: game(screen,renderer,&state,&grapset);
 							break;
 		}
 	}
