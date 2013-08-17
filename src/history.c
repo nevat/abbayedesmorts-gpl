@@ -6,6 +6,10 @@ void history(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset
 
 	SDL_Event keyp;
 
+	/* Init audio */
+	Mix_OpenAudio (44100, AUDIO_S16, 2, 4096);
+	Mix_Music *music = Mix_LoadMUS("../sounds/ManhuntN.ogg");
+
 	/* Loading PNG */
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
 	SDL_Texture *text = IMG_LoadTexture(renderer,"../graphics/history.png");
@@ -20,11 +24,18 @@ void history(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset
 	float posenem[4] = {-17,-17,-17,-17};
 	uint animation = 0;
 	uint i = 0;
+	uint musicload = 0;
 
 	while (exit != 1) {
 
 		/* Cleaning the renderer */
 		SDL_RenderClear(renderer);
+
+		/* Play music at start */
+		if (musicload == 0) {
+			musicload = 1;
+			Mix_PlayMusic(music, 0);
+		}
 
 		/* Show text */
 		SDL_RenderCopy(renderer,text,NULL,NULL);
@@ -91,5 +102,6 @@ void history(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
 	SDL_DestroyTexture(text);
+	Mix_FreeMusic(music);
 
 }
