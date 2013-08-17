@@ -4,7 +4,8 @@
 
 void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset) {
 
-	int exit = 0;
+	uint exit = 0;
+	uint musicplay = 0;
 
 	SDL_Rect srcintro = {0,0,256,192};
 	SDL_Rect desintro = {0,0,256,192};
@@ -14,6 +15,10 @@ void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *gra
 	/* Loading PNG */
 	SDL_Texture *intro = IMG_LoadTexture(renderer,"../graphics/intro.png");
 	SDL_Texture *intromd = IMG_LoadTexture(renderer,"../graphics/intromd.png");
+
+	/* Init audio */
+	Mix_OpenAudio (44100, AUDIO_S16, 2, 4096);
+	Mix_Music *music = Mix_LoadMUS("../sounds/MainTitleN.ogg");
 
 	while (exit != 1) {
 
@@ -29,6 +34,12 @@ void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *gra
 		/* Flip ! */
 		SDL_RenderPresent(renderer);
 
+		/* Play music if required */
+		if (musicplay == 0) {
+			musicplay = 1;
+			Mix_PlayMusic(music, 0);
+		}
+
 		/* Check keyboard */
 		if ( SDL_PollEvent(&keyp) ) {
 			if (keyp.type == SDL_KEYDOWN) { /* Key pressed */
@@ -41,8 +52,10 @@ void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *gra
 				if (keyp.key.keysym.sym == SDLK_i) { /* Show instructions */
 					if (srcintro.y == 0)
 						srcintro.y = 192;
-					else
+					else {
 						srcintro.y = 0;
+						musicplay = 0;
+					}
 				}
 				if (keyp.key.keysym.sym == SDLK_f) /* Switch to fullscreen */
 					SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN);
