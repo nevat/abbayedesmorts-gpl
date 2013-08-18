@@ -7,6 +7,8 @@
 # include "SDL2/SDL_mixer.h"
 # include "SDL2/SDL_ttf.h"
 
+# include "structs.h"
+
 void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 	/* Renderer */
@@ -40,6 +42,45 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 	/* Load data */
 	loaddata(stagedata,enemydata);
+
+	/* Init struct */
+	struct enem enemies = {
+		.type = {0,0,0,0,0,0,0},
+		.x = {0,0,0,0,0,0,0},
+		.y = {0,0,0,0,0,0,0},
+		.direction = {0,0,0,0,0,0,0},
+		.tilex = {0,0,0,0,0,0,0},
+		.tiley = {0,0,0,0,0,0,0},
+		.animation = {0,0,0,0,0,0,0},
+		.limleft = {0,0,0,0,0,0,0},
+		.limright = {0,0,0,0,0,0,0},
+		.speed = {0,0,0,0,0,0,0},
+		.fire = {0,0,0,0,0,0,0},
+		.adjustx1 = {0,0,0,0,0,0,0},
+		.adjustx2 = {0,0,0,0,0,0,0},
+		.adjusty1 = {0,0,0,0,0,0,0},
+		.adjusty2 = {0,0,0,0,0,0,0}
+	};
+
+	struct hero jean = {
+		.x = 72,
+		.y = 136,
+		.direction = 1,
+		.jump = 0,
+		.height = 0,
+		.animation = 0,
+		.gravity = 1.9,
+		.points = {0,0,0,0,0,0,0,0},
+		.ground = 0,
+		.collision = {0,0,0,0},
+		.ducking = 0,
+		.checkpoint = {5,72,136,5},
+		.state = {9,0},
+		.flags = {0,0,0,0,0,0,0},
+		.death = 0,
+		.push = {0,0,0,0},
+		.temp = 0
+	};
 
 	/* Game loop */
 	while (exit != 1) {
