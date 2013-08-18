@@ -1,6 +1,10 @@
 /* history.c */
 
-# include "history.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include "SDL2/SDL.h"
+# include "SDL2/SDL_image.h"
+# include "SDL2/SDL_mixer.h"
 
 void history(SDL_Window *screen,uint *state,uint *grapset) {
 

@@ -1,6 +1,11 @@
 /* game.c */
 
-# include "game.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include "SDL2/SDL.h"
+# include "SDL2/SDL_image.h"
+# include "SDL2/SDL_mixer.h"
+# include "SDL2/SDL_ttf.h"
 
 void game(SDL_Window *screen,uint *state,uint *grapset) {
 
@@ -8,6 +13,14 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
+
+	/* Sounds */
+	Mix_Music *bso[7];
+	Mix_Chunk *fx[7];
+
+	/* Init Font */
+	TTF_Font *fuente = TTF_OpenFont("../fonts/VeniceClassic.ttf", 17);
+	TTF_SetFontHinting(font, TTF_HINTING_NORMAL);
 
 	uint stagedata[25][22][32];
 	int enemydata[25][7][15];
@@ -17,9 +30,16 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 	uint changeflag = 1; /* Screen change */
 	uint counter[3] = {0,0,0}; /* Counters */
 	uint changetiles=*grapset;
+	uint i = 0;
 
 	/* Loading PNG */
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
+
+	/* Loading musics */
+	loadingmusic(bso,fx);
+
+	/* Load data */
+	loaddata(stagedata,enemydata);
 
 	/* Game loop */
 	while (exit != 1) {
@@ -36,6 +56,10 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		/* Draw screen */
 		drawscreen(renderer,stagedata,tiles,room,counter,changeflag,fx,changetiles);
 
+		/* Draw statusbar */
+		if (room[0] != 4)
+			statusbar(renderer,tiles,room,jean.lifes,jean.crosses,font,changetiles);
+
 		/* Flip ! */
 		SDL_RenderPresent(renderer);
 
@@ -44,58 +68,11 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
 	SDL_DestroyRenderer(renderer);
-
-}
-
-void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
-
-	FILE *datafile = NULL;
-	int i = 0;
-	int j = 0;
-	int k = 0;
-	char line[129],temp[3],line2[61];
-
-	/* Loading file */
-	datafile = fopen("../data/map.txt, "r");
-	fgets (line, 129, datafile);
-	fgets (line, 129, datafile);
-
-	/* Cargamos los datos del fichero en el array */
-	for (i=0; i<=24; i++) {
-		for (j=0; j<=21; j++) {
-			for (k=0; k<=31; k++) {
-				temp[0] = line[k*4];
-				temp[1] = line[(k*4) + 1];
-				temp[2] = line[(k*4) + 2];
-				sscanf (temp, "%d", &stagedata[i][j][k]);
-			}
-			fgets (line, 129, datafile);
-		}
-		fgets (line, 129, datafile);
+	for (i=0;i<7;i++) {
+		Mix_FreeMusic(bso[i]);
+		Mix_FreeChunk(fx[i]);
 	}
-
-	/* Cerramos fichero */
-	fclose (datafile);
-
-	datafile = fopen("../data/enemies.txt", "r");
-	fgets (line2, 61, datafile);
-	fgets (line2, 61, datafile);
-
-	/* Cargamos los datos del fichero en el array */
-	for (i=0; i<=24; i++) {
-		for (j=0; j<7; j++) {
-			for (k=0; k<15; k++) {
-				temp[0] = line2[k*4];
-				temp[1] = line2[(k*4) + 1];
-				temp[2] = line2[(k*4) + 2];
-				sscanf (temp, "%d", &enemydata[i][j][k]);
-			}
-			fgets (line2, 61, datafile);
-		}
-		fgets (line2, 61, datafile);
-	}
-
-	fclose (datafile);
+	TTF_CloseFont(font);
 
 }
 
@@ -258,6 +235,102 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 				}
 			}
 		}
+	}
+
+}
+
+void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,int crosses,TTF_Font *font,uint changetiles) {
+
+	SDL_Rect srcbar = {448,104,13,12};
+	SDL_Rect desbar = {0,177,0,0};
+	SDL_Color fgcolor = {255,255,255}; /* Color de la fuente, blanco */
+	SDL_Texture *score = NULL;
+	SDL_Rect desscore = {0,0,0,0};
+	int i = 0;
+
+	char data[1];
+	char screenname[18];
+	int width = 0;
+	int height = 0;
+
+	/* Show heart and crosses sprites */
+	if (changetiles == 1)
+		srcbar.y = 224;
+	SDL_RenderCopy(renderer,tiles,&srcbar,&desbar);
+	srcbar.x = 461;
+	srcbar.w = 12;
+	desbar.x = 32;
+	SDL_RenderCopy(renderer,tiles,&srcbar,&desbar);
+
+	desmarcador.y = 174;
+
+	for (i=0; i<=2; i++) {
+		switch (i) {
+			case 0: sprintf(data, "%d", lifes);
+									 score = TTF_RenderText_Solid(font, data, fgcolor);
+									 desscore.x = 18;
+									 break;
+			case 1: sprintf(data, "%d", crosses);
+									 score = TTF_RenderText_Solid(font, data, fgcolor);
+									 desscore.x = 50;
+									 break;
+			case 2:
+				if (room[0] == 1)
+					sprintf (screenname, "A prayer of Hope");
+				if (room[0] == 2)
+					sprintf (screenname, "Tower of the Bell");
+				if (room[0] == 3)
+					sprintf (screenname, "Wine supplies");
+				if (room[0] == 5)
+					sprintf (screenname, "Escape !!!");
+				if (room[0] == 6)
+					sprintf (screenname, "Death is close");
+				if (room[0] == 7)
+					sprintf (screenname, "Abandoned church");
+				if (room[0] == 8)
+					sprintf (screenname, "The Altar");
+				if (room[0] == 9)
+					sprintf (screenname, "Hangman tree");
+				if (room[0] == 10)
+					sprintf (screenname, "Pestilent Beast");
+				if (room[0] == 11)
+					sprintf (screenname, "Cave of illusions");
+				if (room[0] == 12)
+					sprintf (screenname, "Plagued ruins");
+				if (room[0] == 13)
+					sprintf (screenname, "Catacombs");
+				if (room[0] == 14)
+					sprintf (screenname, "Hidden garden");
+				if (room[0] == 15)
+					sprintf (screenname, "Gloomy tunels");
+				if (room[0] == 16)
+					sprintf (screenname, "Lake of despair");
+				if (room[0] == 17)
+					sprintf (screenname, "The wheel of faith");
+				if (room[0] == 18)
+					sprintf (screenname, "Banquet of Death");
+				if (room[0] == 19)
+					sprintf (screenname, "Underground river");
+				if (room[0] == 20)
+					sprintf (screenname, "Unexpected gate");
+				if (room[0] == 21)
+					sprintf (screenname, "Evil church");
+				if (room[0] == 22)
+					sprintf (screenname, "Tortured souls");
+				if (room[0] == 23)
+					sprintf (screenname, "Ashes to ashes");
+				if (room[0] == 24)
+					sprintf (screenname, "Satan !!!");
+
+				score = TTF_RenderText_Solid(font, screenname, fgcolor);
+				TTF_SizeText(font, screenname, &width, &height);
+				desscore.x = 256 - width;
+				break;
+		}
+
+		SDL_RenderCopy(renderer,score,NULL,&desscore);
+		SDL_DestroyTexture(score);
+
 	}
 
 }
