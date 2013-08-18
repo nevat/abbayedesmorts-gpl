@@ -2,7 +2,12 @@
 
 # include "startscreen.h"
 
-void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset) {
+void startscreen(SDL_Window *screen,uint *state,uint *grapset) {
+
+	/* Renderer (with VSync, nice !) */
+	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	SDL_RenderSetLogicalSize(renderer, 256, 192);
 
 	uint exit = 0;
 	uint musicplay = 0;
@@ -16,8 +21,7 @@ void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *gra
 	SDL_Texture *intro = IMG_LoadTexture(renderer,"../graphics/intro.png");
 	SDL_Texture *intromd = IMG_LoadTexture(renderer,"../graphics/intromd.png");
 
-	/* Init audio */
-	Mix_OpenAudio (44100, AUDIO_S16, 2, 4096);
+	/* Load audio */
 	Mix_Music *music = Mix_LoadMUS("../sounds/MainTitleN.ogg");
 
 	while (exit != 1) {
@@ -71,5 +75,6 @@ void startscreen(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *gra
 	/* Cleaning */
 	SDL_DestroyTexture(intro);
 	SDL_DestroyTexture(intromd);
+	SDL_DestroyRenderer(renderer);
 
 }

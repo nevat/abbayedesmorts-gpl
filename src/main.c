@@ -16,24 +16,24 @@ main () {
 
 	/* Creating window */
 	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,512,384,SDL_WINDOW_OPENGL);
-	/* Renderer (with VSync, nice !) */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
+
+	/* Init audio */
+	Mix_OpenAudio (44100, AUDIO_S16, 2, 4096);
 
 	while (exit != 1) {
 		switch (state) {
-			case 0: startscreen(screen,renderer,&state,&grapset);
+			case 0: startscreen(screen,&state,&grapset);
 							break;
-			case 1: history(screen,renderer,&state,&grapset);
+			case 1: history(screen,&state,&grapset);
 							break;
-			case 2: game(screen,renderer,&state,&grapset);
+			case 2: game(screen,&state,&grapset);
+							break;
+			case 6: exit = 1;
 							break;
 		}
 	}
 
 	/* Cleaning */
-	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(screen);
 
 	/* Exiting normally */

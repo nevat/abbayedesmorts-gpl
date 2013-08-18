@@ -2,12 +2,16 @@
 
 # include "history.h"
 
-void history(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset) {
+void history(SDL_Window *screen,uint *state,uint *grapset) {
+
+	/* Renderer */
+	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	SDL_RenderSetLogicalSize(renderer, 256, 192);
 
 	SDL_Event keyp;
 
-	/* Init audio */
-	Mix_OpenAudio (44100, AUDIO_S16, 2, 4096);
+	/* Load audio */
 	Mix_Music *music = Mix_LoadMUS("../sounds/ManhuntN.ogg");
 
 	/* Loading PNG */
@@ -102,6 +106,7 @@ void history(SDL_Window *screen,SDL_Renderer *renderer,uint *state,uint *grapset
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
 	SDL_DestroyTexture(text);
+	SDL_DestroyRenderer(renderer);
 	Mix_FreeMusic(music);
 
 }
