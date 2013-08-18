@@ -101,6 +101,10 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		if (room[0] != 4)
 			statusbar(renderer,tiles,room,jean.lifes,jean.crosses,font,changetiles);
 
+		/* Draw Jean */
+		if (jean.flags[6] < 8)
+			drawjean (renderer,tiles,&jean,counter,fx,changetiles);
+
 		/* Flip ! */
 		SDL_RenderPresent(renderer);
 
@@ -264,14 +268,12 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 				}
 				if ((data == 152) || (data == 137) || (data == 136)) {
 					if (changeflag == 0) {
-						if (changetiles == 1)
-							srctiles.y = srctiles.y + 120;
+						srctiles.y = srctiles.y + (changetiles * 120);
 						SDL_RenderCopy(renderer,tiles,&srctiles,&destiles);
 					}
 				}
 				else {
-					if (changetiles == 1)
-						srctiles.y = srctiles.y + 120;
+					srctiles.y = srctiles.y + (changetiles * 120);
 					SDL_RenderCopy(renderer,tiles,&srctiles,&destiles);
 				}
 			}
