@@ -59,7 +59,7 @@ void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 
 void loadingmusic(Mix_Music *bso[],Mix_Chunk *fx[]) {
 
-	/* Musicas */
+	/* Musics */
 	bso[0] = Mix_LoadMUS("../sounds/PrayerofHopeN.ogg");
 	bso[1] = Mix_LoadMUS("../sounds/AreaIChurchN.ogg");
 	bso[2] = Mix_LoadMUS("../sounds/GameOverV2N.ogg");
@@ -75,7 +75,7 @@ void loadingmusic(Mix_Music *bso[],Mix_Chunk *fx[]) {
 	fx[2] = Mix_LoadWAV ("../sounds/Item.ogg");
 	fx[3] = Mix_LoadWAV ("../sounds/jump.ogg");
 	fx[4] = Mix_LoadWAV ("../sounds/slash.ogg");
-	fx[5] = Mix_LoadWAV ("../sounds/mechanism.ogg");
+	fx[5] = Mix_LoadWAV ("../sounds/mechanismn.ogg");
 	fx[6] = Mix_LoadWAV ("../sounds/onedeathn.ogg");
 
 }

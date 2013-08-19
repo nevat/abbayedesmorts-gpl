@@ -30,7 +30,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 	/* Init Font */
 	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf", 17);
-	TTF_SetFontHinting(font, TTF_HINTING_NORMAL);
+	/* TTF_SetFontHinting(font, TTF_HINTING_NORMAL); */
 
 	uint stagedata[25][22][32];
 	int enemydata[25][7][15];
