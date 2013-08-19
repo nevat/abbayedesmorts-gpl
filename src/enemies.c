@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL2\SDL.h>
-#include <SDL2\SDL_image.h>
-#include <SDL2\SDL_mixer.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include "structs.h"
 
 void searchenemies (uint room[], struct enem *enemies, int *changeflag, int enemydata[][7][15]) {
@@ -494,7 +494,7 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 			enemies->direction[0] = 1;
 	}
 	if (enemies->direction[0] == 1) { /* Right mov. */
-		if (enemies->x[0] < enemies->limder[0])
+		if (enemies->x[0] < enemies->limright[0])
 			enemies->x[0] ++;
 		else
 			enemies->direction[0] = 0;
@@ -718,7 +718,7 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 			enemies->direction[0] = 1;
 	}
 	if (enemies->direction[0] == 1) { /* Bajando */
-		if (enemies->y[0] < enemies->limder[0])
+		if (enemies->y[0] < enemies->limright[0])
 			enemies->y[0] += 0.5;
 		else
 			enemies->direction[0] = 0;

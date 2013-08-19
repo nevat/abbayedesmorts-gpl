@@ -29,7 +29,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 	Mix_Chunk *fx[7];
 
 	/* Init Font */
-	TTF_Font *fuente = TTF_OpenFont("../fonts/VeniceClassic.ttf", 17);
+	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf", 17);
 	TTF_SetFontHinting(font, TTF_HINTING_NORMAL);
 
 	uint stagedata[25][22][32];
@@ -44,6 +44,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 	float proyec[24] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; /* Enemiess shoots */
 	uint keyp = 0;
 	uint parchment = 0;
+	uint n = 0;
 
 	/* Loading PNG */
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
@@ -111,7 +112,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 		/* Draw statusbar */
 		if (room[0] != 4)
-			statusbar(renderer,tiles,room,jean.lifes,jean.crosses,font,changetiles);
+			statusbar(renderer,tiles,room,jean.state[0],jean.state[1],font,changetiles);
 
 		/* Draw Jean */
 		if (jean.flags[6] < 8)
@@ -218,8 +219,8 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 			Mix_PlayChannel(-1, fx[2], 0);
 			Mix_PauseMusic ();
 			/* Waiting a key */
-			while (teclap == 0)
-				keybpause (&teclap);
+			while (keyp == 0)
+				keybpause (&keyp);
 			jean.push[2] = 0;
 			jean.push[3] = 0;
 			keyp = 0;
@@ -248,7 +249,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 			Mix_HaltMusic();
 			/* Mix_FreeMusic(sonido); */
 			*state = 3;
-			*exit = 1;
+			exit = 1;
 		}
 
 	}

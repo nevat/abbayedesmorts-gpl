@@ -19,7 +19,7 @@ void ending (SDL_Window *screen,uint *state) {
 	SDL_Texture *text = NULL;
 
 	SDL_Color fgcolor = {255,255,255};
-	TTF_Font *font = TTF_OpenFont(RUTA_FON_VENICE_CLASSIC, 18);
+	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf",18);
 	TTF_SetFontHinting(font, TTF_HINTING_NORMAL);
 
 	SDL_Rect destext = {0,0,0,0};
@@ -46,7 +46,7 @@ void ending (SDL_Window *screen,uint *state) {
 		else
 			x = 5;
 
-		srcpuerta.x = 600 + (64 * x);
+		srcdoor.x = 600 + (64 * x);
 		SDL_RenderCopy(renderer,tiles,&srcdoor,&desdoor);
 		if (i > 365) {
 			sprintf (message, "Your body has burned");
@@ -54,26 +54,25 @@ void ending (SDL_Window *screen,uint *state) {
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 120 - (width / 2);
 			destext.y = 20 - (height / 2);
-			SDL_BlitSurface(text, NULL, fondo, &destext);
+			SDL_RenderCopy(renderer,text,NULL,&destext);
 			sprintf (message, "in the flames,");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 125 - (width / 2);
 			destext.y = 50 - (height / 2);
-			SDL_BlitSurface(text, NULL, fondo, &destext);
+			SDL_RenderCopy(renderer,text,NULL,&destext);
 			sprintf (message, "but your soul has found");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 122 - (width / 2);
 			destext.y = 125 + (height / 2);
-			SDL_BlitSurface(text, NULL, fondo, &destext);
+			SDL_RenderCopy(renderer,text,NULL,&destext);
 			sprintf (message, "a place in Heaven");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 121 - (width / 2);
 			destext.y = 155 + (height / 2);
 			SDL_RenderCopy(renderer,text,NULL,&destext);
-			SDL_BlitSurface(text, NULL, fondo, &destext);
 		}
 
 		/* Flip */

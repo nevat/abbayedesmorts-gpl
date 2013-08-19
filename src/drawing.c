@@ -254,7 +254,7 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 				if (proyec[n] > enemies->limleft[i])
 				  proyec[n] -= 2.5;
 				else {
-				  enemies->shoot[i] = 0;
+				  enemies->fire[i] = 0;
 				  enemies->speed[i] = 0;
 				  proyec[n] = 0;
 				}
@@ -263,7 +263,7 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 				if (proyec[n] < enemies->limright[i])
 		  		proyec[n] += 2.5;
 				else {
-		  		enemies->shoot[i] = 0;
+		  		enemies->fire[i] = 0;
 				  enemies->speed[i] = 0;
 				  proyec[n] = 0;
 				}
@@ -277,7 +277,7 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 									SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 								}
 								break;
-				case 1: if (proyec[n] > (enemies->limizq[i] + 8)) {
+				case 1: if (proyec[n] > (enemies->limleft[i] + 8)) {
 								  destile.x = proyec[n];
 								  destile.y = enemies->y[i] + 8;
 									SDL_RenderCopy(renderer,tiles,&srctile,&destile);
@@ -292,7 +292,7 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 
 void showparchment (SDL_Renderer *renderer,uint *parchment,SDL_Texture *yparchment) {
 
-	TTF_Font *font = TTF_OpenFont(RUTA_FON_VENICE_CLASSIC, 18);
+	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf",18);
 	SDL_Texture *text = NULL;
 	SDL_Color fgcolor = {0,0,0};
 	SDL_Rect destext = {0,0,0,0};
@@ -335,14 +335,14 @@ void showparchment (SDL_Renderer *renderer,uint *parchment,SDL_Texture *yparchme
 	destext.y = 85;
 	SDL_RenderCopy(renderer,text,NULL,&destext);
 	SDL_DestroyTexture(text);
-	TTF_CloseFont(fuente);
+	TTF_CloseFont(font);
 
 }
 
 void redparchment (SDL_Renderer *renderer,struct hero *jean) {
 
 	SDL_Texture *rparchment = IMG_LoadTexture(renderer,"../graphics/redparch.png");
-	SDL_RenderCopy(renderer,redparch,NULL,NULL);
+	SDL_RenderCopy(renderer,rparchment,NULL,NULL);
 	SDL_DestroyTexture(rparchment);
 
 	jean->flags[6] = 4;
@@ -352,7 +352,7 @@ void redparchment (SDL_Renderer *renderer,struct hero *jean) {
 void blueparchment (SDL_Renderer *renderer,struct hero *jean) {
 
 	SDL_Texture *bparchment = IMG_LoadTexture(renderer,"../graphics/blueparch.png");
-	SDL_RenderCopy(renderer,blueparch,NULL,NULL);
+	SDL_RenderCopy(renderer,bparchment,NULL,NULL);
 	SDL_DestroyTexture(bparchment);
 
 }
