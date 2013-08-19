@@ -120,7 +120,8 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 	SDL_Rect srcbar = {448,104,13,12};
 	SDL_Rect desbar = {0,177,0,0};
 	SDL_Color fgcolor = {255,255,255}; /* Color de la fuente, blanco */
-	SDL_Texture *score = NULL;
+	SDL_Surface *score = NULL;
+	SDL_Texture *scoretext = NULL;
 	SDL_Rect desscore = {0,0,0,0};
 	int i = 0;
 
@@ -143,13 +144,15 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 	for (i=0; i<=2; i++) {
 		switch (i) {
 			case 0: sprintf(data, "%d", lifes);
-									 score = TTF_RenderText_Solid(font, data, fgcolor);
-									 desscore.x = 18;
-									 break;
+							score = TTF_RenderText_Solid(font, data, fgcolor);
+							scoretext = SDL_CreateTextureFromSurface(renderer,score);
+							desscore.x = 18;
+							break;
 			case 1: sprintf(data, "%d", crosses);
-									 score = TTF_RenderText_Solid(font, data, fgcolor);
-									 desscore.x = 50;
-									 break;
+							score = TTF_RenderText_Solid(font, data, fgcolor);
+							scoretext = SDL_CreateTextureFromSurface(renderer,score);
+							desscore.x = 50;
+							break;
 			case 2:
 				if (room[0] == 1)
 					sprintf (screenname, "A prayer of Hope");
@@ -199,13 +202,15 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 					sprintf (screenname, "Satan !!!");
 
 				score = TTF_RenderText_Solid(font, screenname, fgcolor);
+				scoretext = SDL_CreateTextureFromSurface(renderer,score);
 				TTF_SizeText(font, screenname, &width, &height);
 				desscore.x = 256 - width;
 				break;
 		}
 
-		SDL_RenderCopy(renderer,score,NULL,&desscore);
-		SDL_DestroyTexture(score);
+		SDL_RenderCopy(renderer,scoretext,NULL,&desscore);
+		SDL_DestroyTexture(scoretext);
+		SDL_FreeSurface(score);
 
 	}
 
@@ -293,7 +298,8 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 void showparchment (SDL_Renderer *renderer,uint *parchment,SDL_Texture *yparchment) {
 
 	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf",18);
-	SDL_Texture *text = NULL;
+	SDL_Surface *text = NULL;
+	SDL_Texture *textsurf = NULL;
 	SDL_Color fgcolor = {0,0,0};
 	SDL_Rect destext = {0,0,0,0};
 	int height = 0;
@@ -305,37 +311,40 @@ void showparchment (SDL_Renderer *renderer,uint *parchment,SDL_Texture *yparchme
 
 	switch (*parchment) {
 		case 3: sprintf (line1, "Twelve crosses");
-		sprintf (line2, "against the devil");
-		break;
+						sprintf (line2, "against the devil");
+						break;
 		case 8:	sprintf (line1, "Twelve brothers");
-		sprintf (line2, "hid and died here");
-		break;
+						sprintf (line2, "hid and died here");
+						break;
 		case 12: sprintf (line1, "Four brothers");
-		sprintf (line2, "changed their faith");
-		break;
+						 sprintf (line2, "changed their faith");
+						 break;
 		case 14: sprintf (line1, "An invisible path");
-		sprintf (line2, "over a wood bridge");
-		break;
+						 sprintf (line2, "over a wood bridge");
+						 break;
 		case 16: sprintf (line1, "Jump to death");
-		sprintf (line2, "and prove your faith");
-		break;
+						 sprintf (line2, "and prove your faith");
+						 break;
 		case 21: sprintf (line1, "Glide through");
-		sprintf (line2, "the beast cage");
-		break;
+						 sprintf (line2, "the beast cage");
+						 break;
 	}
 
 	text = TTF_RenderText_Blended(font, line1, fgcolor);
+	textsurf = SDL_CreateTextureFromSurface(renderer,text);
 	TTF_SizeText(font, line1, &width, &height);
 	destext.x = 127 - (width / 2);
 	destext.y = 81 - height;
-	SDL_RenderCopy(renderer,text,NULL,&destext);
+	SDL_RenderCopy(renderer,textsurf,NULL,&destext);
 	text= TTF_RenderText_Blended(font, line2, fgcolor);
+	textsurf = SDL_CreateTextureFromSurface(renderer,text);
 	TTF_SizeText(font, line2, &width, &height);
 	destext.x = 127 - (width / 2);
 	destext.y = 85;
-	SDL_RenderCopy(renderer,text,NULL,&destext);
-	SDL_DestroyTexture(text);
+	SDL_RenderCopy(renderer,textsurf,NULL,&destext);
+	SDL_DestroyTexture(textsurf);
 	TTF_CloseFont(font);
+	SDL_FreeSurface(text);
 
 }
 

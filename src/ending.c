@@ -16,7 +16,8 @@ void ending (SDL_Window *screen,uint *state) {
 
 	SDL_Texture *black = IMG_LoadTexture(renderer,"../graphics/black.png");
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
-	SDL_Texture *text = NULL;
+	SDL_Surface *text = NULL;
+	SDL_Texture *textsurf = NULL;
 
 	SDL_Color fgcolor = {255,255,255};
 	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf",18);
@@ -51,28 +52,32 @@ void ending (SDL_Window *screen,uint *state) {
 		if (i > 365) {
 			sprintf (message, "Your body has burned");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
+			textsurf = SDL_CreateTextureFromSurface(renderer,text);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 120 - (width / 2);
 			destext.y = 20 - (height / 2);
-			SDL_RenderCopy(renderer,text,NULL,&destext);
+			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
 			sprintf (message, "in the flames,");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
+			textsurf = SDL_CreateTextureFromSurface(renderer,text);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 125 - (width / 2);
 			destext.y = 50 - (height / 2);
-			SDL_RenderCopy(renderer,text,NULL,&destext);
+			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
 			sprintf (message, "but your soul has found");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
+			textsurf = SDL_CreateTextureFromSurface(renderer,text);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 122 - (width / 2);
 			destext.y = 125 + (height / 2);
-			SDL_RenderCopy(renderer,text,NULL,&destext);
+			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
 			sprintf (message, "a place in Heaven");
 			text = TTF_RenderText_Blended(font, message, fgcolor);
+			textsurf = SDL_CreateTextureFromSurface(renderer,text);
 			TTF_SizeText(font, message, &width, &height);
 			destext.x = 121 - (width / 2);
 			destext.y = 155 + (height / 2);
-			SDL_RenderCopy(renderer,text,NULL,&destext);
+			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
 		}
 
 		/* Flip */
@@ -85,8 +90,9 @@ void ending (SDL_Window *screen,uint *state) {
 	SDL_DestroyTexture (black);
 	Mix_FreeMusic (bso);
 	TTF_CloseFont (font);
-	SDL_DestroyTexture (text);
+	SDL_DestroyTexture (textsurf);
 	SDL_DestroyRenderer (renderer);
+	SDL_FreeSurface(text);
 
 	*state = 0;
 

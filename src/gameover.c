@@ -15,7 +15,8 @@ void gameover (SDL_Window *screen,uint *state) {
   SDL_Color fgcolor = {255,255,255};
 	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf", 18);
 	SDL_Texture *black = IMG_LoadTexture(renderer,"../graphics/black.png");
-	SDL_Texture *gameover = NULL;
+	SDL_Texture *gameoversurf = NULL;
+	SDL_Surface *gameover = NULL;
 	SDL_Rect destext = {0,0,0,0};
 	Mix_Music *bso = Mix_LoadMUS("../sounds/GameOverV2N.ogg");
 	int height = 0;
@@ -27,10 +28,11 @@ void gameover (SDL_Window *screen,uint *state) {
 	sprintf (text, "G a m e  O v e r");
 
 	gameover = TTF_RenderText_Blended(font, text, fgcolor);
+	gameoversurf = SDL_CreateTextureFromSurface(renderer,gameover);
 	TTF_SizeText(font, text, &width, &height);
 	destext.x = 125 - 16 - (width / 2);
 	destext.y = 80 - 12 - (height / 2);
-	SDL_RenderCopy(renderer,gameover,NULL,&destext);
+	SDL_RenderCopy(renderer,gameoversurf,NULL,&destext);
 
 	/* Flip */
 	SDL_RenderPresent(renderer);
@@ -43,8 +45,9 @@ void gameover (SDL_Window *screen,uint *state) {
 	Mix_FreeMusic (bso);
 	TTF_CloseFont(font);
 	SDL_DestroyTexture(black);
-	SDL_DestroyTexture(gameover);
+	SDL_DestroyTexture(gameoversurf);
 	SDL_DestroyRenderer(renderer);
+	SDL_FreeSurface(gameover);
 
 	*state = 0;
 
