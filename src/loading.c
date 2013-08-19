@@ -62,11 +62,12 @@ void loadingmusic(Mix_Music *bso[],Mix_Chunk *fx[]) {
 	/* Musicas */
 	bso[0] = Mix_LoadMUS("../sounds/PrayerofHopeN.ogg");
 	bso[1] = Mix_LoadMUS("../sounds/AreaIChurchN.ogg");
-	bso[2] = Mix_LoadMUS("../sounds/HangmansTree.ogg");
-	bso[3] = Mix_LoadMUS("../sounds/AreaIICavesV2N.ogg");
-	bso[4] = Mix_LoadMUS("../sounds/EvilFightN.ogg");
-	bso[5] = Mix_LoadMUS("../sounds/AreaIIIHellN.ogg");
-	bso[6] = Mix_LoadMUS("../sounds/ManhuntwoodN.ogg");
+	bso[2] = Mix_LoadMUS("../sounds/GameOverV2N.ogg");
+	bso[3] = Mix_LoadMUS("../sounds/HangmansTree.ogg");
+	bso[4] = Mix_LoadMUS("../sounds/AreaIICavesV2N.ogg");
+	bso[5] = Mix_LoadMUS("../sounds/EvilFightN.ogg");
+	bso[6] = Mix_LoadMUS("../sounds/AreaIIIHellN.ogg");
+	bso[7] = Mix_LoadMUS("../sounds/ManhuntwoodN.ogg");
 
 	/* Fxs */
 	fx[0] = Mix_LoadWAV ("../sounds/shoot.ogg");

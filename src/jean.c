@@ -273,3 +273,358 @@ void collisions (struct hero *jean,uint stagedata[][22][32],int room[]) {
 	}
 
 }
+
+void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parchment,uint *changeflag,struct enem *enemies,float proyec[],Mix_Chunk *fx[]) {
+
+	int x = 0;
+	int y = 0;
+	int h = 0;
+	int v = 0;
+	int r = 0;
+	int flag = 0;
+
+	x = (jean->x + 2) / 8;
+	y = jean->y / 8;
+
+	if (y > 0) {
+
+		/* Touch spikes, water or fire */
+		if (((stagedata[room[0]][y+3][x] == 5) || (stagedata[room[0]][y+3][x+1] == 5)) || (((stagedata[room[0]][y+3][x] > 500) && (stagedata[room[0]][y+3][x] < 532))|| ((stagedata[room[0]][y+3][x+1] > 500) && (stagedata[room[0]][y+3][x+1] < 532))) || (((stagedata[room[0]][y+3][x] == 59) || (stagedata[room[0]][y+3][x] == 59)) || ((stagedata[room[0]][y+3][x+1] == 60) && (stagedata[room[0]][y+3][x+1] == 60)))) {
+			if ((room[0] == 11) && (y+3 == 20) && (x < 4))
+				jean->death = 0;
+			else {
+				if (jean->death == 0)
+					jean->death = 1;
+			}
+		}
+
+		/* Touch checkpoint */
+		if (((stagedata[room[0]][y][x] > 320) &&  (stagedata[room[0]][y][x] < 325)) || ((stagedata[room[0]][y][x+1] > 320) &&  (stagedata[room[0]][y][x+1] < 325))) {
+			for (v=0;v<22;v++) {
+				for (h=0;h<32;h++) {
+					if ((stagedata[room[0]][v][h] > 320) && (stagedata[room[0]][v][h] < 325))
+						stagedata[room[0]][v][h] += 6;
+				}
+			}
+			jean->checkpoint[3] = jean->checkpoint[0];
+			jean->checkpoint[0] = room[0];
+			jean->checkpoint[1] = jean->x;
+			jean->checkpoint[2] = jean->y;
+			/* Old checkpoint returns to original state */
+			for (v=0;v<22;v++) {
+				for (h=0;h<32;h++) {
+					if ((stagedata[jean->checkpoint[3]][v][h] > 326) && (stagedata[jean->checkpoint[3]][v][h] < 331))
+						stagedata[jean->checkpoint[3]][v][h] -= 6;
+				}
+			}
+			Mix_PlayChannel(-1, fx[2], 0);
+		}
+
+		/* Touch bell */
+		if (room[0] == 2) {
+			if (((stagedata[room[0]][y+1][x] > 300) &&  (stagedata[room[0]][y+1][x] < 305)) || ((stagedata[room[0]][y+1][x+1] > 300) &&  (stagedata[room[0]][y+1][x+1] < 305))) {
+				for (v=1;v<3;v++) {
+					for (h=5;h<7;h++) {
+						if ((stagedata[room[0]][v][h] > 300) && (stagedata[room[0]][v][h] < 305))
+							stagedata[room[0]][v][h] += 4;
+					}
+				}
+				jean->flags[1] = 1;
+				Mix_PauseMusic ();
+				Mix_PlayChannel(-1, fx[5], 0);
+				sleep(2);
+				Mix_ResumeMusic ();
+			}
+		}
+
+		/* Touch lever */
+		if (((stagedata[room[0]][y+1][x] > 308) && (stagedata[room[0]][y+1][x] < 313)) || ((stagedata[room[0]][y+1][x+1] > 308) && (stagedata[room[0]][y+1][x+1] < 313))) {
+			for (v=0;v<22;v++) {
+				for (h=0;h<32;h++) {
+					if ((stagedata[room[0]][v][h] > 308) && (stagedata[room[0]][v][h] < 313))
+						stagedata[room[0]][v][h] += 4;
+				}
+			}
+			if (room[0] == 9)
+				jean->flags[3] = 1;
+			if (room[0] == 10)
+				jean->flags[2] = 1;
+			if (room[0] == 20)
+				jean->flags[4] = 1;
+			Mix_PauseMusic ();
+			Mix_PlayChannel(-1, fx[5], 0);
+			sleep(2);
+			Mix_ResumeMusic ();
+		}
+
+
+		/* Touch hearts */
+		if (room[0] == 23) {
+			if (((stagedata[room[0]][y+1][x] > 400) &&  (stagedata[room[0]][y+1][x] < 405)) || ((stagedata[room[0]][y+1][x+1] > 400) &&  (stagedata[room[0]][y+1][x+1] < 405))) {
+				if (jean->x > 160) {
+					stagedata[23][7][23] = 0;
+					stagedata[23][7][24] = 0;
+					stagedata[23][8][23] = 0;
+					stagedata[23][8][24] = 0;
+				}
+				else {
+					stagedata[23][18][8] = 0;
+					stagedata[23][18][9] = 0;
+					stagedata[23][19][8] = 0;
+					stagedata[23][19][9] = 0;
+				}
+				if (jean->state[0] < 9)
+					jean->state[0] += 1;
+				Mix_PlayChannel(-1, fx[2], 0);;
+			}
+		}
+		else {
+			if (((stagedata[room[0]][y+1][x] > 400) &&  (stagedata[room[0]][y+1][x] < 405)) || ((stagedata[room[0]][y+1][x+1] > 400) &&  (stagedata[room[0]][y+1][x+1] < 405))) {
+				for (v=0;v<22;v++) {
+					for (h=0;h<32;h++) {
+						if ((stagedata[room[0]][v][h] > 400) && (stagedata[room[0]][v][h] < 405))
+							stagedata[room[0]][v][h] = 0;
+					}
+				}
+				if (jean->state[0] < 9)
+					jean->state[0] += 1;
+				Mix_PlayChannel(-1, fx[2], 0);
+			}
+		}
+
+		/* Touch crosses */
+		if (((stagedata[room[0]][y+1][x] > 408) &&  (stagedata[room[0]][y+1][x] < 413)) || ((stagedata[room[0]][y+1][x+1] > 408) &&  (stagedata[room[0]][y+1][x+1] < 413)) || ((stagedata[room[0]][y+2][x] > 408) &&  (stagedata[room[0]][y+2][x] < 413))) {
+			for (v=0;v<22;v++) {
+				for (h=0;h<32;h++) {
+					if ((stagedata[room[0]][v][h] > 408) && (stagedata[room[0]][v][h] < 413))
+						stagedata[room[0]][v][h] = 0;
+				}
+			}
+			jean->state[1] += 1;
+			Mix_PlayChannel(-1, fx[2], 0);;
+		}
+
+		/* Touch yellow parchment */
+		if (((stagedata[room[0]][y+1][x] > 316) &&  (stagedata[room[0]][y+1][x] < 321)) || ((stagedata[room[0]][y+1][x+1] > 316) &&  (stagedata[room[0]][y+1][x+1] < 321))) {
+			for (v=0;v<22;v++) {
+				for (h=0;h<32;h++) {
+					if ((stagedata[room[0]][v][h] > 316) && (stagedata[room[0]][v][h] < 321))
+						stagedata[room[0]][v][h] = 0;
+				}
+			}
+			*parchment = room[0];
+		}
+
+		/* Touch red parchment */
+		if (((stagedata[room[0]][y+1][x] > 338) &&  (stagedata[room[0]][y+1][x] < 343)) || ((stagedata[room[0]][y+1][x+1] > 338) &&  (stagedata[room[0]][y+1][x+1] < 343))) {
+			jean->flags[6] = 3;
+			/* Delete parchment */
+			stagedata[24][14][28] = 0;
+			stagedata[24][14][29] = 0;
+			stagedata[24][15][28] = 0;
+			stagedata[24][15][29] = 0;
+		}
+
+		/* Touch door */
+		if ((room[0] == 10) || (room[0] == 19)) {
+			if (stagedata[room[0]][y][x] == 154) {
+				switch (room[0]) {
+					case 10: room[0] = 19;
+									 jean->x = 160;
+									 jean->y = 120;
+									 break;
+				  case 19: room[0] = 10;
+									 jean->x = 176;
+									 jean->y = 136;
+								   break;
+				}
+				Mix_PlayChannel(-1, fx[1], 0);;
+				*changeflag = 1;
+			}
+		}
+
+		/* Touch switch */
+		if (room[0] == 17) {
+			if ((((stagedata[room[0]][y+1][x] > 330) && (stagedata[room[0]][y+1][x] < 339)) || ((stagedata[room[0]][y+1][x+1] > 330) && (stagedata[room[0]][y+1][x+1] < 339))) && (jean->flags[5] == 0)) {
+				for (v=2;v<4;v++) {
+					for (h=15;h<17;h++) {
+						if ((stagedata[room[0]][v][h] > 330) && (stagedata[room[0]][v][h] < 335)) {
+							stagedata[room[0]][v][h] += 4;
+							jean->flags[5] = 1;
+						}
+						if (((stagedata[room[0]][v][h] > 334) && (stagedata[room[0]][v][h] < 339)) && (jean->flags[5] == 0))
+							stagedata[room[0]][v][h] -= 4;
+					}
+				}
+				jean->flags[5] = 1;
+				/* Flapping all crosses  */
+				for (r=1; r<25; r++) {
+					for (v=0; v<22; v++) {
+						for (h=0; h<32; h++) {
+							flag = 0;
+							/* Crosses enabled */
+							if ((stagedata[r][v][h] > 408) && (stagedata[r][v][h] < 413)) {
+								stagedata[r][v][h] += 16;
+								flag = 1;
+							}
+							/* Crosses disabled */
+							if ((stagedata[r][v][h] > 424) && (stagedata[r][v][h] < 429) && (flag == 0))
+								stagedata[r][v][h] -= 16;
+						}
+					}
+				}
+			Mix_PauseMusic ();
+			Mix_PlayChannel(-1, fx[5], 0);;
+			sleep(2);
+			Mix_ResumeMusic ();
+			}
+		}
+
+		/* Touch cup */
+		if (room[0] == 24) {
+			if ((stagedata[room[0]][y][x+1] == 650) || (stagedata[room[0]][y+1][x+1] == 650) || (stagedata[room[0]][y+2][x+1] == 650)) {
+				Mix_HaltMusic ();
+				Mix_PlayChannel(-1, fx[5], 0);
+				sleep(2);
+				stagedata[24][3][15] = 0; /* Delete cup */
+				/* Delete crosses */
+				for (v=0; v<22; v++) {
+					for (h=0; h<32; h++) {
+						if (stagedata[room[0]][v][h] == 84)
+							stagedata[room[0]][v][h] = 0;
+					}
+				}
+				/* Delete Satan */
+				enemigos->type[0] = 88;
+				enemigos->speed[0] = 0; /* Using speed as counter */
+				enemigos->adjustx1[0] = 0;
+				enemigos->adjustx2[0] = 0;
+				enemigos->adjusty1[0] = 0;
+				enemigos->adjusty2[0] = 0;
+				/* Deleting shoots */
+				for (v=0;v<24;v++)
+					proyec[v] = 0;
+				/* Init crusaders */
+				for (v=1;v<7;v++)
+					enemigos->type[v] = 17;
+				enemigos->adjustx2[0] = 15;
+				enemigos->adjusty2[0] = 23;
+			}
+		}
+
+	}
+
+}
+
+void contact (struct hero *jean,struct enem enemies,float proyec[],uint room[]) {
+
+	int i = 0;
+	int half = 0; /* Half size of enemy sprite */
+	int points[4] = {0,0,0,0}; /* 4 points of collision of enemy sprite */
+	int x = 0;
+	int y = 0;
+	int n = 0;
+
+	/* Collisions with enemies */
+	for (i=0;i<7;i++) {
+		if (((enemies.type[i] > 0) && (enemies.type[i] != 12)) || ((enemies.type[i] == 12) && (enemies.y[i] > enemies.limizq[i] + 8))) {
+			/* Setting points of collision... */
+			points[0] = enemies.x[i] + enemies.adjustx1[i];
+			points[1] = enemies.x[i] + enemies.adjustx2[i];
+			points[2] = enemies.y[i] + enemies.adjusty1[i];
+			points[3] = enemies.y[i] + enemies.adjusty2[i];
+			/* Checking... */
+			for (x=points[0];x<=points[1];x++) {
+				if ((x>jean->x+1) && (x<jean->x+13)) {
+					for (y=points[2];y<=points[3];y++) {
+						if ((y>jean->y+(jean->ducking*8)) && (y<jean->y+22)) {
+							if (jean->flags[6] < 5) {
+								jean->death = 1;
+								y=points[3] + 1;
+								x=points[1] + 1;
+							}
+							else {
+								/* Mix_HaltMusic (); */
+								jean->flags[6] = 6;
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	/* Collision with shoots */
+	for (i=0;i<3;i++) {
+		if (proyec[i*2] > 0) {
+			/* Setting points of collision */
+			if (enemies.type[i] == 11) { /* Gargoyle */
+				points[0] = proyec[i*2];
+				points[1] = proyec[i*2]+10;
+				points[2] = enemies.y[i] + 10;
+				points[3] = enemies.y[i] + 12;
+			}
+
+			if (enemies.type[i] == 15) { /* Archers */
+				points[0] = proyec[i*2] + 3;
+				points[1] = proyec[i*2] + 7;
+				points[2] = enemies.y[i] + 10;
+				points[3] = enemies.y[i] + 17;
+			}
+			for (x=points[0];x<=points[1];x++) {
+				if ((x>jean->x+3) && (x<jean->x+13)) {
+					for (y=points[2];y<=points[3];y++) {
+						if ((y>(jean->y+5+(jean->ducking*8))) && (y<jean->y+22)) {
+							jean->death = 1;
+							y=points[3] + 1;
+							x=points[1] + 1;
+						}
+					}
+				}
+			}
+
+		}
+
+	}
+
+	/* Check collision with plants shoots, dragon, death and Satan */
+	if ((room[0] == 10) || (room[0] == 14) || (room[0] == 18) || (room[0] == 24)) {
+		for (i=0;i<23;i+=2) {
+			if (proyec[i] > 0) {
+				if (room[0] == 18) {
+					points[0] = proyec[i+1];
+					points[1] = proyec[i+1]+15;
+					points[2] = proyec[i];
+					points[3] = proyec[i] + 15;
+				}
+				if ((room[0] == 14) || (room[0] == 24)) {
+					points[0] = proyec[i];
+					points[1] = proyec[i] + 3;
+					points[2] = proyec[i+1];
+					points[3] = proyec[i+1] + 3;
+				}
+				if (room[0] == 10) {
+					points[0] = proyec[i];
+					points[1] = proyec[i] + 8;
+					points[2] = 88;
+					points[3] = 96;
+				}
+
+				for (x=points[0];x<=points[1];x++) {
+					if ((x>jean->x+1) && (x<jean->x+13)) {
+						for (y=points[2];y<=points[3];y++) {
+							if ((y>jean->y+(jean->ducking*8)) && (y<jean->y+22)) {
+								jean->death = 1;
+								y=points[3] + 1;
+								x=points[1] + 1;
+								i= 17;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
