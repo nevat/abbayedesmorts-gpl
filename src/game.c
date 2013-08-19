@@ -9,6 +9,14 @@
 
 # include "structs.h"
 
+void keybpause (uint *keyp);
+void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag);
+void changescreen (struct hero *jean,uint room[], int *changeflag);
+void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]);
+void control (struct hero *jean,uint *keyp);
+void counters (uint counter[]);
+void animation (uint stagedata[][22][32],int room[],int counter[]);
+
 void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 	/* Renderer */
@@ -122,7 +130,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 			if (room[0] == 14)
 				plants (&enemies,renderer,tiles,counter,proyec,fx,changetiles);
 			if (room[0] == 9)
-				drawrope (enemies,renderer,tiles);
+				drawrope (enemies,renderer,tiles,changetiles);
 			if (room[0] == 18)
 				death (&enemies,renderer,tiles,counter,proyec,stagedata,fx,changetiles);
 			if ((room[0] == 24) && (enemies.type[0] == 18))
@@ -206,6 +214,43 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		/* Flip ! */
 		SDL_RenderPresent(renderer);
 
+		if (parchment > 0) {
+			Mix_PlayChannel(-1, fx[2], 0);
+			Mix_PauseMusic ();
+			/* Waiting a key */
+			while (teclap == 0)
+				keybpause (&teclap);
+			jean.push[2] = 0;
+			jean.push[3] = 0;
+			keyp = 0;
+			Mix_ResumeMusic ();
+			parchment = 0;
+		}
+		if (jean.flags[6] == 4) {
+			Mix_PlayChannel(-1, fx[2], 0);
+			sleep(5);
+			jean.flags[6] = 5;
+			jean.direction = 0;
+			music (room,bso,&changeflag,jean.flags[6]);
+		}
+		if (jean.flags[6] == 6) {
+			sleep(5);
+			jean.death = 0;
+			changeflag = 1;
+			room[0] = 4;
+			jean.flags[6] = 7;
+			jean.x = 125;
+			jean.y = 115;
+			jean.jump = 1;
+		}
+
+		if (jean.state[0] == 0) {
+			Mix_HaltMusic();
+			/* Mix_FreeMusic(sonido); */
+			*state = 3;
+			*exit = 1;
+		}
+
 	}
 
 	/* Cleaning */
@@ -230,7 +275,7 @@ void animation (uint stagedata[][22][32],int room[],int counter[]) {
 	for (j=0; j<=21; j++) {
 		for (i=0; i<=31; i++) {
 
-			data = stagedata[room][j][i];
+			data = stagedata[room[0]][j][i];
 
 			/* Fire animation */
 			if ((data == 59) || (data == 60)) {
@@ -250,7 +295,7 @@ void animation (uint stagedata[][22][32],int room[],int counter[]) {
 					data = 501;
 			}
 
-			stagedata[room][j][i] = data;
+			stagedata[room[0]][j][i] = data;
 
 		}
 	}
@@ -275,287 +320,6 @@ void counters (uint counter[]) {
 
 }
 
-void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *tiles,uint room[],uint counter[],uint changeflag,Mix_Chunk *fx[],uint changetiles) {
-
-	int coordx = 0;
-	int coordy = 0;
-	SDL_Rect srctiles = {0,0,8,8};
-	SDL_Rect destiles = {0,0,0,0};
-	uint data = 0;
-
-	for (coordy=0; coordy<=21; coordy++) {
-		for (coordx=0; coordx<=31; coordx++) {
-			data = stagedata[room][coordy][coordx];
-			if ((data > 0) && (data != 99)) {
-				destiles.x = coordx * 8;
-				destiles.y = coordy * 8;
-				if (data < 200) {
-					srctiles.w = 8;
-					srctiles.h = 8;
-					if (data < 101) {
-						srctiles.y = 0;
-						if (data == 84) /* Cross brightness */
-							srctiles.x = (data - 1) * 8 + (counter[0]/8 * 8);
-						else
-							srctiles.x = (data - 1) * 8;
-					}
-					else {
-						if (data == 154) {
-							srctiles.x=600 + ((counter[0] / 8) * 16);
-							srctiles.y=0;
-							srctiles.w=16;
-							srctiles.h=24;
-						}
-						else {
-							srctiles.y = 8;
-							srctiles.x = (data - 101) * 8;
-						}
-					}
-				}
-				if ((data > 199) && (data < 300)) {
-					srctiles.x = (data - 201) * 48;
-					srctiles.y = 16;
-					srctiles.w = 48;
-					srctiles.h = 48;
-				}
-				if ((data > 299) && (data < 399)) {
-					srctiles.x = 96 + ((data - 301) * 8);
-					srctiles.y = 16;
-					srctiles.w = 8;
-					srctiles.h = 8;
-					/* Door movement */
-					if ((room == 7) && ((counter[1] > 59) && (counter[1] < 71))) {
-						if ((data == 347) || (data == 348) || (data == 349) || (data == 350)) {
-							destiles.x += 2;
-							if ((data == 350) && (counter[1] == 70))
-								Mix_PlayChannel(-1, fx[3], 0); /* Sound of door */
-						}
-					}
-				}
-				/* Hearts */
-				if ((data > 399) && (data < 405)) {
-					srctiles.x = 96 + ((data - 401) * 8) + (32 * (counter[0] / 15));
-					srctiles.y = 24;
-					srctiles.w = 8;
-					srctiles.h = 8;
-				}
-				/* Crosses */
-				if ((data > 408) && (data < 429)) {
-					srctiles.x = 96 + ((data - 401) * 8) + (32 * (counter[1] / 23));
-					srctiles.y = 24;
-					srctiles.w = 8;
-					srctiles.h = 8;
-				}
-
-				if ((data > 499) && (data < 599)) {
-					srctiles.x = 96 + ((data - 501) * 8);
-					srctiles.y = 32;
-					srctiles.w = 8;
-					srctiles.h = 8;
-				}
-				if ((data > 599) && (data < 650)) {
-					srctiles.x = 96 + ((data - 601) * 8);
-					srctiles.y = 56;
-					srctiles.w = 8;
-					srctiles.h = 8;
-				}
-				if (data == 650) { /* Cup */
-					srctiles.x = 584;
-					srctiles.y = 87;
-					srctiles.w = 16;
-					srctiles.h = 16;
-				}
-				if ((data == 152) || (data == 137) || (data == 136)) {
-					if (changeflag == 0) {
-						srctiles.y = srctiles.y + (changetiles * 120);
-						SDL_RenderCopy(renderer,tiles,&srctiles,&destiles);
-					}
-				}
-				else {
-					srctiles.y = srctiles.y + (changetiles * 120);
-					SDL_RenderCopy(renderer,tiles,&srctiles,&destiles);
-				}
-			}
-		}
-	}
-
-}
-
-void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,int crosses,TTF_Font *font,uint changetiles) {
-
-	SDL_Rect srcbar = {448,104,13,12};
-	SDL_Rect desbar = {0,177,0,0};
-	SDL_Color fgcolor = {255,255,255}; /* Color de la fuente, blanco */
-	SDL_Texture *score = NULL;
-	SDL_Rect desscore = {0,0,0,0};
-	int i = 0;
-
-	char data[1];
-	char screenname[18];
-	int width = 0;
-	int height = 0;
-
-	/* Show heart and crosses sprites */
-	if (changetiles == 1)
-		srcbar.y = 224;
-	SDL_RenderCopy(renderer,tiles,&srcbar,&desbar);
-	srcbar.x = 461;
-	srcbar.w = 12;
-	desbar.x = 32;
-	SDL_RenderCopy(renderer,tiles,&srcbar,&desbar);
-
-	desmarcador.y = 174;
-
-	for (i=0; i<=2; i++) {
-		switch (i) {
-			case 0: sprintf(data, "%d", lifes);
-									 score = TTF_RenderText_Solid(font, data, fgcolor);
-									 desscore.x = 18;
-									 break;
-			case 1: sprintf(data, "%d", crosses);
-									 score = TTF_RenderText_Solid(font, data, fgcolor);
-									 desscore.x = 50;
-									 break;
-			case 2:
-				if (room[0] == 1)
-					sprintf (screenname, "A prayer of Hope");
-				if (room[0] == 2)
-					sprintf (screenname, "Tower of the Bell");
-				if (room[0] == 3)
-					sprintf (screenname, "Wine supplies");
-				if (room[0] == 5)
-					sprintf (screenname, "Escape !!!");
-				if (room[0] == 6)
-					sprintf (screenname, "Death is close");
-				if (room[0] == 7)
-					sprintf (screenname, "Abandoned church");
-				if (room[0] == 8)
-					sprintf (screenname, "The Altar");
-				if (room[0] == 9)
-					sprintf (screenname, "Hangman tree");
-				if (room[0] == 10)
-					sprintf (screenname, "Pestilent Beast");
-				if (room[0] == 11)
-					sprintf (screenname, "Cave of illusions");
-				if (room[0] == 12)
-					sprintf (screenname, "Plagued ruins");
-				if (room[0] == 13)
-					sprintf (screenname, "Catacombs");
-				if (room[0] == 14)
-					sprintf (screenname, "Hidden garden");
-				if (room[0] == 15)
-					sprintf (screenname, "Gloomy tunels");
-				if (room[0] == 16)
-					sprintf (screenname, "Lake of despair");
-				if (room[0] == 17)
-					sprintf (screenname, "The wheel of faith");
-				if (room[0] == 18)
-					sprintf (screenname, "Banquet of Death");
-				if (room[0] == 19)
-					sprintf (screenname, "Underground river");
-				if (room[0] == 20)
-					sprintf (screenname, "Unexpected gate");
-				if (room[0] == 21)
-					sprintf (screenname, "Evil church");
-				if (room[0] == 22)
-					sprintf (screenname, "Tortured souls");
-				if (room[0] == 23)
-					sprintf (screenname, "Ashes to ashes");
-				if (room[0] == 24)
-					sprintf (screenname, "Satan !!!");
-
-				score = TTF_RenderText_Solid(font, screenname, fgcolor);
-				TTF_SizeText(font, screenname, &width, &height);
-				desscore.x = 256 - width;
-				break;
-		}
-
-		SDL_RenderCopy(renderer,score,NULL,&desscore);
-		SDL_DestroyTexture(score);
-
-	}
-
-}
-
-void drawrope (struct enem enemies,SDL_Renderer *renderer,SDL_Texture *tiles) {
-
-	int i = 0;
-	int blocks = 0;
-	int j = 0;
-	SDL_Rect srctile = {424,8,16,8};
-	SDL_Rect destile = {0,0,16,8};
-
-	for (i=2; i<6; i++) {
-		blocks = (enemies.y[i] - (enemies.limleft[i] - 8)) / 8;
-		for (j=0; j<=blocks; j++) {
-			srctile.y = 8 + (changetiles * 120);
-	  	destile.x = enemies.x[i];
-	  	destile.y = (enemies.limleft[i] - 8) + (8 * j);
-			SDL_RenderCopy(renderer,tiles,&srctile,&destile);
-		}
-	}
-
-}
-
-void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct enem *enemies,uint changetiles) {
-/* Shoots from skeletons & gargoyles */
-
-	SDL_Rect srctile = {656,24,16,8};
-	SDL_Rect destile = {0,0,0,0};
-	int i = 0;
-	int n = 0;
-
-	srctile.y = 24 + (changetiles * 120);
-
-  for (n=0; n<=4; n+=2) {
-		if (proyec[n] > 0) {
-	  	i = proyec[n+1];
-	  	if (enemies->type[i] == 15) {
-				srctile.h = 16;
-				srctile.x = 640 - (16 * enemigos->direction[i]);
-	  	}
-
-	  	/* Move shoot */
-	  	if (enemies->direction[i] == 1) {
-				if (proyec[n] > enemies->limleft[i])
-				  proyec[n] -= 2.5;
-				else {
-				  enemies->shoot[i] = 0;
-				  enemies->speed[i] = 0;
-				  proyec[n] = 0;
-				}
-	  	}
-	  	else {
-				if (proyec[n] < enemies->limright[i])
-		  		proyec[n] += 2.5;
-				else {
-		  		enemies->shoot[i] = 0;
-				  enemies->speed[i] = 0;
-				  proyec[n] = 0;
-				}
-	  	}
-
-	  	/* Draw shoot */
-	  	switch (enemies->direction[i]) {
-				case 0: if ((proyec[n] < (enemies->limright[i] - 8)) && (proyec[n] != 0)) {
-								  destile.x = proyec[n];
-								  destile.y = enemies->y[i] + 8;
-									SDL_RenderCopy(renderer,tiles,&srctile,&destile);
-								}
-								break;
-				case 1: if (proyec[n] > (enemigos->limizq[i] + 8)) {
-								  destile.x = proyec[n];
-								  destile.y = enemigos->y[i] + 8;
-									SDL_RenderCopy(renderer,tiles,&srctile,&destile);
-								}
-								break;
-	  	}
-		}
-
-	}
-
-}
-
 void control (struct hero *jean,uint *keyp) {
 
 	SDL_Event event;
@@ -564,49 +328,49 @@ void control (struct hero *jean,uint *keyp) {
 		*keyp = 0;
 
 	while (SDL_PollEvent(&event)) {
-		if (evento.type == SDL_QUIT)
+		if (event.type == SDL_QUIT)
 	   	exit(0);
-		if (evento.type == SDL_KEYDOWN) {
-			if (evento.key.keysym.sym == SDLK_UP) {
+		if (event.type == SDL_KEYDOWN) {
+			if (event.key.keysym.sym == SDLK_UP) {
 				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
 					jean->jump = 1;
 			}
-			if (evento.key.keysym.sym == SDLK_DOWN) {
+			if (event.key.keysym.sym == SDLK_DOWN) {
 				if ((jean->push[1] == 0) && (jean->jump == 0)) {
 					jean->push[1] = 1;
 					jean->ducking = 1;
 				}
 			}
-			if (evento.key.keysym.sym == SDLK_LEFT) {
+			if (event.key.keysym.sym == SDLK_LEFT) {
 				if (jean->push[2] == 0) {
 					jean->push[2] = 1;
 					jean->push[3] = 0;
 				}
 			}
-			if (evento.key.keysym.sym == SDLK_RIGHT) {
+			if (event.key.keysym.sym == SDLK_RIGHT) {
 				if (jean->push[3] == 0) {
 					jean->push[3] = 1;
 					jean->push[2] = 0;
 				}
 			}
-			if (evento.key.keysym.sym == SDLK_f)
+			if (event.key.keysym.sym == SDLK_f)
 				*keyp = 6;
-			if (evento.key.keysym.sym == SDLK_c)
+			if (event.key.keysym.sym == SDLK_c)
 				*keyp = 9;
-	   	if (evento.key.keysym.sym == SDLK_ESCAPE)
+	   	if (event.key.keysym.sym == SDLK_ESCAPE)
       		exit(0);
 		}
 
-		if (evento.type == SDL_KEYUP) {
-			if (evento.key.keysym.sym == SDLK_UP)
+		if (event.type == SDL_KEYUP) {
+			if (event.key.keysym.sym == SDLK_UP)
 				jean->push[0] = 0;
-			if (evento.key.keysym.sym == SDLK_DOWN) {
+			if (event.key.keysym.sym == SDLK_DOWN) {
 				jean->push[1] = 0;
 				jean->ducking = 0;
 			}
-			if (evento.key.keysym.sym == SDLK_LEFT)
+			if (event.key.keysym.sym == SDLK_LEFT)
 				jean->push[2] = 0;
-			if (evento.key.keysym.sym == SDLK_RIGHT)
+			if (event.key.keysym.sym == SDLK_RIGHT)
 				jean->push[3] = 0;
 		}
 
@@ -675,7 +439,7 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 	if (room[0] == 10) {
 		/* Dragon fire kills Jean */
 		if (((jean->x > 127) && (jean->x < 144)) && (jean->y < 89)) {
-			if ((enemigos->speed[0] > 109) && (enemigos->speed[0] < 146))
+			if ((enemies->speed[0] > 109) && (enemies->speed[0] < 146))
 				jean->death = 1;
 		}
 	}
@@ -766,15 +530,15 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 			Mix_PlayChannel(-1, fx[1], 0);
 		}
 		/* Killed Satan, Smoke appears */
-		if (enemigos->type[0] == 88) {
-			if (enemigos->speed[0] < 90)
-				enemigos->speed[0] ++;
+		if (enemies->type[0] == 88) {
+			if (enemies->speed[0] < 90)
+				enemies->speed[0] ++;
 			else {
-				enemigos->speed[0] = 0;
-				enemigos->type[i] = 0;
-				enemigos->x[0] = 0;
-				enemigos->y[0] = 0;
-				enemigos->type[0] = 17;
+				enemies->speed[0] = 0;
+				enemies->type[i] = 0;
+				enemies->x[0] = 0;
+				enemies->y[0] = 0;
+				enemies->type[0] = 17;
 				/* Putting red parchment */
 				stagedata[24][14][28] = 339;
 				stagedata[24][14][29] = 340;
@@ -907,69 +671,16 @@ void changescreen (struct hero *jean,uint room[], int *changeflag) {
 
 }
 
-void showparchment (SDL_Renderer *renderer,uint *parchment,SDL_Texture *yparchment) {
+void keybpause (uint *keyp) {
 
-  TTF_Font *font = TTF_OpenFont(RUTA_FON_VENICE_CLASSIC, 18);
-	SDL_Texture *text = NULL;
-  SDL_Color fgcolor = {0,0,0};
-	SDL_Rect destext = {0,0,0,0};
-	int height = 0;
-	int width = 0;
-  char line1[18];
-	char line2[20];
+	SDL_Event event;
 
-	SDL_RenderCopy(renderer,yparchment,NULL,NULL);
-
-	switch (*parchment) {
-		case 3: sprintf (line1, "Twelve crosses");
-						sprintf (line2, "against the devil");
-						break;
-		case 8:	sprintf (line1, "Twelve brothers");
-						sprintf (line2, "hid and died here");
-						break;
-		case 12: sprintf (line1, "Four brothers");
-						 sprintf (line2, "changed their faith");
-						 break;
-		case 14: sprintf (line1, "An invisible path");
-						 sprintf (line2, "over a wood bridge");
-						 break;
-		case 16: sprintf (line1, "Jump to death");
-						 sprintf (line2, "and prove your faith");
-						 break;
-		case 21: sprintf (line1, "Glide through");
-						 sprintf (line2, "the beast cage");
-						 break;
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_KEYDOWN) {
+			if ((event.key.keysym.sym == SDLK_SPACE) ||
+				(event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
+					*keyp = 1;
+		}
 	}
-
-	text = TTF_RenderText_Blended(font, line1, fgcolor);
-	TTF_SizeText(font, line1, &width, &height);
-	destext.x = 127 - (width / 2);
-	destext.y = 81 - height;
-	SDL_RenderCopy(renderer,text,NULL,&destext);
-	text= TTF_RenderText_Blended(font, line2, fgcolor);
-	TTF_SizeText(font, line2, &width, &height);
-	destext.x = 127 - (width / 2);
-	destext.y = 85;
-	SDL_RenderCopy(renderer,text,NULL,&destext);
-	SDL_DestroyTexture(text);
-  TTF_CloseFont(fuente);
-
-}
-
-void redparchment (SDL_Renderer *renderer,struct hero *jean) {
-
-	SDL_Texture *rparchment = IMG_LoadTexture(renderer,"../graphics/redparch.png");
-	SDL_RenderCopy(renderer,redparch,NULL,NULL);
-	SDL_DestroyTexture(rparchment);
-
-	jean->flags[6] = 4;
-
-}
-
-void blueparchment (SDL_Renderer *renderer, struct hero *jean) {
-
-	SDL_Texture *bparchment = IMG_LoadTexture(renderer,"../graphics/blueparch.png");
-	SDL_RenderCopy(renderer,blueparch,NULL,NULL);
-	SDL_DestroyTexture(bparchment);
 
 }

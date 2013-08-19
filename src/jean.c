@@ -2,10 +2,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL2\SDL.h>
-#include <SDL2\SDL_image.h>
-#include <SDL2\SDL_mixer.h>
-#include "struct.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
+#include "SDL2/SDL_mixer.h"
+#include "structs.h"
 
 void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 
@@ -63,7 +63,7 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 
 }
 
-void drawjean (SDL_Renderer *renderer,SDL_Textures *tiles,struct hero *jean,int counter[],Mix_Chunk *fx[],uint changetiles) {
+void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int counter[],Mix_Chunk *fx[],uint changetiles) {
 
 	SDL_Rect srctile = {320,88,16,24};
 	SDL_Rect destile = {0,0,16,24};
@@ -71,7 +71,7 @@ void drawjean (SDL_Renderer *renderer,SDL_Textures *tiles,struct hero *jean,int 
 	SDL_Rect desducktile = {0,0,18,13};
 	int r = 0;
 
-	if (jean->deatch == 0) {
+	if (jean->death == 0) {
 		if (jean->jump > 0) {
 			r = 1;
 			jean->animation = 0;
@@ -93,7 +93,7 @@ void drawjean (SDL_Renderer *renderer,SDL_Textures *tiles,struct hero *jean,int 
 			desducktile.x = jean->x;
 			if (changetiles == 1)
 				srcducktile.y = 208;
-			SDL_RenderCopy(renderer,tiles,&srcducktile,desducktile);
+			SDL_RenderCopy(renderer,tiles,&srcducktile,&desducktile);
 		}
 	}
 
@@ -495,20 +495,20 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 					}
 				}
 				/* Delete Satan */
-				enemigos->type[0] = 88;
-				enemigos->speed[0] = 0; /* Using speed as counter */
-				enemigos->adjustx1[0] = 0;
-				enemigos->adjustx2[0] = 0;
-				enemigos->adjusty1[0] = 0;
-				enemigos->adjusty2[0] = 0;
+				enemies->type[0] = 88;
+				enemies->speed[0] = 0; /* Using speed as counter */
+				enemies->adjustx1[0] = 0;
+				enemies->adjustx2[0] = 0;
+				enemies->adjusty1[0] = 0;
+				enemies->adjusty2[0] = 0;
 				/* Deleting shoots */
 				for (v=0;v<24;v++)
 					proyec[v] = 0;
 				/* Init crusaders */
 				for (v=1;v<7;v++)
-					enemigos->type[v] = 17;
-				enemigos->adjustx2[0] = 15;
-				enemigos->adjusty2[0] = 23;
+					enemies->type[v] = 17;
+				enemies->adjustx2[0] = 15;
+				enemies->adjusty2[0] = 23;
 			}
 		}
 
@@ -527,7 +527,7 @@ void contact (struct hero *jean,struct enem enemies,float proyec[],uint room[]) 
 
 	/* Collisions with enemies */
 	for (i=0;i<7;i++) {
-		if (((enemies.type[i] > 0) && (enemies.type[i] != 12)) || ((enemies.type[i] == 12) && (enemies.y[i] > enemies.limizq[i] + 8))) {
+		if (((enemies.type[i] > 0) && (enemies.type[i] != 12)) || ((enemies.type[i] == 12) && (enemies.y[i] > enemies.limleft[i] + 8))) {
 			/* Setting points of collision... */
 			points[0] = enemies.x[i] + enemies.adjustx1[i];
 			points[1] = enemies.x[i] + enemies.adjustx2[i];

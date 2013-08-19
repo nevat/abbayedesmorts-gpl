@@ -14,7 +14,7 @@ void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 	char line[129],temp[3],line2[61];
 
 	/* Loading file */
-	datafile = fopen("../data/map.txt, "r");
+	datafile = fopen("../data/map.txt", "r");
 	fgets (line, 129, datafile);
 	fgets (line, 129, datafile);
 

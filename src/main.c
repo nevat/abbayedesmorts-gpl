@@ -32,6 +32,10 @@ main () {
 							break;
 			case 2: game(screen,&state,&grapset);
 							break;
+			case 3: gameover(screen,&state);
+							break;
+			case 4: ending(screen,&state);
+							break;
 			case 6: exit = 1;
 							break;
 		}
