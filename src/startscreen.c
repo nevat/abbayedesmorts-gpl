@@ -6,7 +6,7 @@
 # include "SDL2/SDL_image.h"
 # include "SDL2/SDL_mixer.h"
 
-void startscreen(SDL_Window *screen,uint *state,uint *grapset) {
+void startscreen(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
 	/* Renderer (with VSync, nice !) */
 	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
@@ -65,11 +65,23 @@ void startscreen(SDL_Window *screen,uint *state,uint *grapset) {
 						musicplay = 0;
 					}
 				}
-				if (keyp.key.keysym.sym == SDLK_f) /* Switch to fullscreen */
-					SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN);
+				if (keyp.key.keysym.sym == SDLK_f) { /* Switch fullscreen/windowed */
+					if (*fullscreen == 0) {
+						SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN);
+						*fullscreen = 1;
+					}
+					else {
+						SDL_SetWindowFullscreen(screen,0);
+						*fullscreen = 0;
+					}
+				}
 				if (keyp.key.keysym.sym == SDLK_SPACE) { /* Start game */
 					*state = 1;
 					exit = 1;
+				}
+				if (keyp.key.keysym.sym == SDLK_ESCAPE) { /* Exit game */
+      		exit = 1;
+					*state = 6;
 				}
 			}
 		}

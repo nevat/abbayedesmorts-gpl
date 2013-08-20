@@ -17,7 +17,7 @@ void control (struct hero *jean,uint *keyp);
 void counters (uint counter[]);
 void animation (uint stagedata[][22][32],int room[],int counter[]);
 
-void game(SDL_Window *screen,uint *state,uint *grapset) {
+void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
 	/* Renderer */
 	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
@@ -45,6 +45,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 	uint keyp = 0;
 	uint parchment = 0;
 	uint n = 0;
+	uint winfull = *fullscreen;
 
 	/* Loading PNG */
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
@@ -104,7 +105,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		/* Cleaning the renderer */
 		SDL_RenderClear(renderer);
 
-		/* Change graphic set */
+		/* Change graphic set requested */
 		if (keyp == 9) {
 			keyp = 0;
 			if (changetiles == 0)
@@ -112,6 +113,25 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 			else
 				changetiles = 0;
 			*grapset = changetiles;
+		}
+
+		/* Switch fullscreen/windowed requested */
+		if (keyp == 6) {
+			if (*fullscreen == 0) {
+				SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN);
+				*fullscreen = 1;
+			}
+			else {
+				SDL_SetWindowFullscreen(screen,0);
+				*fullscreen = 0;
+			}
+			keyp = 0;
+		}
+
+		/* Exit requested */
+		if (keyp == 10) {
+			exit = 1;
+			*state = 6;
 		}
 
 		/* Animation of fire and water */
@@ -159,7 +179,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		if (jean.death == 0) {
 			if (jean.flags[6] < 5) {
 					if (jean.temp == 0)
-						control(&jean, &keyp);
+						control(&jean,&keyp);
 					if (jean.temp == 1)
 						jean.temp = 0;
 					collisions (&jean,stagedata,room);
@@ -274,6 +294,10 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		Mix_FreeChunk(fx[i]);
 	TTF_CloseFont(font);
 
+	*fullscreen = winfull;
+
+
+
 }
 
 void animation (uint stagedata[][22][32],int room[],int counter[]) {
@@ -369,7 +393,7 @@ void control (struct hero *jean,uint *keyp) {
 			if (event.key.keysym.sym == SDLK_c)
 				*keyp = 9;
 	   	if (event.key.keysym.sym == SDLK_ESCAPE)
-      		exit(0);
+      	*keyp = 10;
 		}
 
 		if (event.type == SDL_KEYUP) {

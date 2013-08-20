@@ -17,20 +17,22 @@ main () {
 	uint exit = 0;
 	uint state = 0; /* 0-intro,1-history,2-game */
 	uint grapset = 0; /* 0-8bits, 1-16bits */
+	uint fullscreen = 0; /* 0-Windowed,1-Fullscreen */
 
 	/* Creating window */
 	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,512,384,SDL_WINDOW_OPENGL);
 
 	/* Init audio */
-	Mix_OpenAudio (44100, AUDIO_S16, 2, 4096);
+	Mix_OpenAudio (44100,MIX_DEFAULT_FORMAT,2,4096);
+	Mix_AllocateChannels(5);
 
 	while (exit != 1) {
 		switch (state) {
-			case 0: startscreen(screen,&state,&grapset);
+			case 0: startscreen(screen,&state,&grapset,&fullscreen);
 							break;
-			case 1: history(screen,&state,&grapset);
+			case 1: history(screen,&state,&grapset,&fullscreen);
 							break;
-			case 2: game(screen,&state,&grapset);
+			case 2: game(screen,&state,&grapset,&fullscreen);
 							break;
 			case 3: gameover(screen,&state);
 							break;
