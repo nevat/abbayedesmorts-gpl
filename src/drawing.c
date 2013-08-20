@@ -14,7 +14,7 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 	int coordx = 0;
 	int coordy = 0;
 	SDL_Rect srctiles = {0,0,8,8};
-	SDL_Rect destiles = {0,0,0,0};
+	SDL_Rect destiles = {0,0,8,8};
 	uint data = 0;
 
 	for (coordy=0; coordy<=21; coordy++) {
@@ -99,6 +99,8 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 					srctiles.w = 16;
 					srctiles.h = 16;
 				}
+				destiles.w = srctiles.w;
+				destiles.h = srctiles.h;
 				if ((data == 152) || (data == 137) || (data == 136)) {
 					if (changeflag == 0) {
 						srctiles.y = srctiles.y + (changetiles * 120);
@@ -115,20 +117,15 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 
 }
 
-void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,int crosses,TTF_Font *font,uint changetiles) {
+void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,int crosses,SDL_Texture *fonts,uint changetiles) {
 
 	SDL_Rect srcbar = {448,104,13,12};
-	SDL_Rect desbar = {0,177,0,0};
-	SDL_Color fgcolor = {255,255,255}; /* Color de la fuente, blanco */
-	SDL_Surface *score = NULL;
-	SDL_Texture *scoretext = NULL;
-	SDL_Rect desscore = {0,0,0,0};
+	SDL_Rect desbar = {0,177,13,12};
+	SDL_Rect srcnumbers = {0,414,10,10};
+	SDL_Rect desnumbers = {18,178,10,10};
+	SDL_Rect srctext = {0,0,136,18};
+	SDL_Rect destext = {119,176,136,18};
 	int i = 0;
-
-	char data[1];
-	char screenname[18];
-	int width = 0;
-	int height = 0;
 
 	/* Show heart and crosses sprites */
 	if (changetiles == 1)
@@ -139,78 +136,25 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 	desbar.x = 32;
 	SDL_RenderCopy(renderer,tiles,&srcbar,&desbar);
 
-	desscore.y = 174;
-
 	for (i=0; i<=2; i++) {
 		switch (i) {
-			case 0: sprintf(data, "%d", lifes);
-							score = TTF_RenderText_Solid(font, data, fgcolor);
-							scoretext = SDL_CreateTextureFromSurface(renderer,score);
-							desscore.x = 18;
+			case 0: srcnumbers.x = lifes * 10;
+							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
 							break;
-			case 1: sprintf(data, "%d", crosses);
-							score = TTF_RenderText_Solid(font, data, fgcolor);
-							scoretext = SDL_CreateTextureFromSurface(renderer,score);
-							desscore.x = 50;
+			case 1: desnumbers.x = 50;
+							srcnumbers.x = crosses * 10;
+							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
 							break;
-			case 2:
-				if (room[0] == 1)
-					sprintf (screenname, "A prayer of Hope");
-				if (room[0] == 2)
-					sprintf (screenname, "Tower of the Bell");
-				if (room[0] == 3)
-					sprintf (screenname, "Wine supplies");
-				if (room[0] == 5)
-					sprintf (screenname, "Escape !!!");
-				if (room[0] == 6)
-					sprintf (screenname, "Death is close");
-				if (room[0] == 7)
-					sprintf (screenname, "Abandoned church");
-				if (room[0] == 8)
-					sprintf (screenname, "The Altar");
-				if (room[0] == 9)
-					sprintf (screenname, "Hangman tree");
-				if (room[0] == 10)
-					sprintf (screenname, "Pestilent Beast");
-				if (room[0] == 11)
-					sprintf (screenname, "Cave of illusions");
-				if (room[0] == 12)
-					sprintf (screenname, "Plagued ruins");
-				if (room[0] == 13)
-					sprintf (screenname, "Catacombs");
-				if (room[0] == 14)
-					sprintf (screenname, "Hidden garden");
-				if (room[0] == 15)
-					sprintf (screenname, "Gloomy tunels");
-				if (room[0] == 16)
-					sprintf (screenname, "Lake of despair");
-				if (room[0] == 17)
-					sprintf (screenname, "The wheel of faith");
-				if (room[0] == 18)
-					sprintf (screenname, "Banquet of Death");
-				if (room[0] == 19)
-					sprintf (screenname, "Underground river");
-				if (room[0] == 20)
-					sprintf (screenname, "Unexpected gate");
-				if (room[0] == 21)
-					sprintf (screenname, "Evil church");
-				if (room[0] == 22)
-					sprintf (screenname, "Tortured souls");
-				if (room[0] == 23)
-					sprintf (screenname, "Ashes to ashes");
-				if (room[0] == 24)
-					sprintf (screenname, "Satan !!!");
-
-				score = TTF_RenderText_Solid(font, screenname, fgcolor);
-				scoretext = SDL_CreateTextureFromSurface(renderer,score);
-				TTF_SizeText(font, screenname, &width, &height);
-				desscore.x = 256 - width;
-				break;
+			case 2: if ((room[0] > 0) && (room[0] < 4)) {
+								srctext.y = (room[0] - 1) * 18;
+								SDL_RenderCopy(renderer,fonts,&srctext,&destext);
+							}
+							if (room[0] > 4) {
+								srctext.y = (room[0] - 2) * 18;
+								SDL_RenderCopy(renderer,fonts,&srctext,&destext);
+							}
+							break;
 		}
-
-		SDL_RenderCopy(renderer,scoretext,NULL,&desscore);
-		SDL_DestroyTexture(scoretext);
-		SDL_FreeSurface(score);
 
 	}
 
@@ -295,56 +239,30 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 
 }
 
-void showparchment (SDL_Renderer *renderer,uint *parchment,SDL_Texture *yparchment) {
+void showparchment (SDL_Renderer *renderer,uint *parchment) {
 
-	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf",18);
-	SDL_Surface *text = NULL;
-	SDL_Texture *textsurf = NULL;
-	SDL_Color fgcolor = {0,0,0};
-	SDL_Rect destext = {0,0,0,0};
-	int height = 0;
-	int width = 0;
-	char line1[18];
-	char line2[20];
-
-	SDL_RenderCopy(renderer,yparchment,NULL,NULL);
+	SDL_Texture *yparchment = NULL;
 
 	switch (*parchment) {
-		case 3: sprintf (line1, "Twelve crosses");
-						sprintf (line2, "against the devil");
+		case 3: yparchment = IMG_LoadTexture(renderer,"../graphics/parchment1.png");
 						break;
-		case 8:	sprintf (line1, "Twelve brothers");
-						sprintf (line2, "hid and died here");
+		case 8:	yparchment = IMG_LoadTexture(renderer,"../graphics/parchment2.png");
 						break;
-		case 12: sprintf (line1, "Four brothers");
-						 sprintf (line2, "changed their faith");
+		case 12: yparchment = IMG_LoadTexture(renderer,"../graphics/parchment3.png");
 						 break;
-		case 14: sprintf (line1, "An invisible path");
-						 sprintf (line2, "over a wood bridge");
+		case 14: yparchment = IMG_LoadTexture(renderer,"../graphics/parchment4.png");
 						 break;
-		case 16: sprintf (line1, "Jump to death");
-						 sprintf (line2, "and prove your faith");
+		case 16: yparchment = IMG_LoadTexture(renderer,"../graphics/parchment5.png");
 						 break;
-		case 21: sprintf (line1, "Glide through");
-						 sprintf (line2, "the beast cage");
+		case 21: yparchment = IMG_LoadTexture(renderer,"../graphics/parchment6.png");
 						 break;
+
 	}
 
-	text = TTF_RenderText_Blended(font, line1, fgcolor);
-	textsurf = SDL_CreateTextureFromSurface(renderer,text);
-	TTF_SizeText(font, line1, &width, &height);
-	destext.x = 127 - (width / 2);
-	destext.y = 81 - height;
-	SDL_RenderCopy(renderer,textsurf,NULL,&destext);
-	text= TTF_RenderText_Blended(font, line2, fgcolor);
-	textsurf = SDL_CreateTextureFromSurface(renderer,text);
-	TTF_SizeText(font, line2, &width, &height);
-	destext.x = 127 - (width / 2);
-	destext.y = 85;
-	SDL_RenderCopy(renderer,textsurf,NULL,&destext);
-	SDL_DestroyTexture(textsurf);
-	TTF_CloseFont(font);
-	SDL_FreeSurface(text);
+	SDL_RenderCopy(renderer,yparchment,NULL,NULL);
+	SDL_DestroyTexture(yparchment);
+
+	*parchment = 0;
 
 }
 

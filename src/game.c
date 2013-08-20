@@ -48,7 +48,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 	/* Loading PNG */
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
-	SDL_Texture *yparchment = IMG_LoadTexture(renderer,"../graphics/parchment.png");
+	SDL_Texture *fonts = IMG_LoadTexture(renderer,"../graphics/fonts.png");
 
 	/* Loading musics */
 	loadingmusic(bso,fx);
@@ -104,6 +104,16 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		/* Cleaning the renderer */
 		SDL_RenderClear(renderer);
 
+		/* Change graphic set */
+		if (keyp == 9) {
+			keyp = 0;
+			if (changetiles == 0)
+				changetiles = 1;
+			else
+				changetiles = 0;
+			*grapset = changetiles;
+		}
+
 		/* Animation of fire and water */
 		animation(stagedata,room,counter);
 
@@ -112,7 +122,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 		/* Draw statusbar */
 		if (room[0] != 4)
-			statusbar(renderer,tiles,room,jean.state[0],jean.state[1],font,changetiles);
+			statusbar(renderer,tiles,room,jean.state[0],jean.state[1],fonts,changetiles);
 
 		/* Draw Jean */
 		if (jean.flags[6] < 8)
@@ -206,7 +216,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 		}
 		/* Parchments */
 		if (parchment > 0)
-			showparchment (renderer,parchment,yparchment);
+			showparchment (renderer,&parchment);
 		if (jean.flags[6] == 3)
 			redparchment (renderer,&jean);
 		if (jean.flags[6] == 6)
@@ -256,7 +266,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset) {
 
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
-	SDL_DestroyTexture(yparchment);
+	SDL_DestroyTexture(fonts);
 	SDL_DestroyRenderer(renderer);
 	for (i=0;i<8;i++)
 		Mix_FreeMusic(bso[i]);
@@ -678,8 +688,7 @@ void keybpause (uint *keyp) {
 
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_KEYDOWN) {
-			if ((event.key.keysym.sym == SDLK_SPACE) ||
-				(event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
+			if ((event.key.keysym.sym == SDLK_SPACE) || (event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
 					*keyp = 1;
 		}
 	}

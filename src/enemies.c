@@ -35,7 +35,7 @@ void searchenemies (uint room[], struct enem *enemies, int *changeflag, int enem
 void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,Mix_Chunk *fx[],uint changetiles) {
 
 	SDL_Rect srctile = {0,0,16,16};
-	SDL_Rect destile = {0,0,0,0};
+	SDL_Rect destile = {0,0,16,16};
 
 	int i = 0;
 
