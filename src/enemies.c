@@ -41,13 +41,18 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 
 	for (i=0; i<7; i++) {
 		if ((enemies->type[i] > 0) && (enemies->type[i] < 16)) {
-	  	if ((enemies->type[i] == 3) || (enemies->type[i] == 5) || (enemies->type[i] == 15))
+	  	if ((enemies->type[i] == 3) || (enemies->type[i] == 5) || (enemies->type[i] == 15)) {
 				srctile.h = 24;
-	  	else
+				destile.h = 24;
+			}
+	  	else {
 				srctile.h = 16;
+				destile.h = 16;
+			}
 	  	if (enemies->type[i] == 6) {
 				srctile.x = enemies->tilex[i] + (enemies->animation[i] * 24);
 				srctile.w = 24;
+				destile.w = 24;
 	  	}
 	  	else {
 				if (enemies->type[i] == 15)
@@ -55,6 +60,7 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 				else
 					srctile.x = enemies->tilex[i] + (enemies->animation[i] * 16);
 				srctile.w = 16;
+				destile.w = 16;
 	  	}
 	  	srctile.y = enemies->tiley[i] + (changetiles * 120);
 	  	destile.x = enemies->x[i];
@@ -67,6 +73,7 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 		  		srctile.x = 368;
 					srctile.y = 32 + (changetiles * 120);
 				  srctile.h = 8;
+					destile.h = 8;
 				  destile.y = enemies->limright[i];
 					SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 					if ((enemies->speed[i] > 30) && (enemies->speed[i] < 40))
@@ -76,6 +83,7 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 			  	srctile.x = 384;
 					srctile.y = 32 + (changetiles * 120);
 				  srctile.h = 8;
+					destile.h = 8;
 				  destile.y = enemies->limright[i];
 					SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 				}
@@ -90,6 +98,8 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 			srctile.y = 0 + (changetiles * 120);
 			srctile.w = 32;
 			srctile.h = 48;
+			destile.w = 32;
+			destile.h = 48;
 			destile.x = enemies->x[i];
 			destile.y = enemies->y[i];
 			SDL_RenderCopy(renderer,tiles,&srctile,&destile);
@@ -695,6 +705,8 @@ void dragon (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 			srctile.h = 8;
 			destile.x = proyec[n];
 			destile.y = 88;
+			destile.w = 8;
+			destile.h = 8;
 			SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 	  }
 	}
