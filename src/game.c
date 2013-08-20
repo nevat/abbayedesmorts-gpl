@@ -186,7 +186,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 					movejean (&jean,fx);
 			}
 			if (room[0] != 4) {
-				touchobj (&jean,stagedata,room,parchment,&changeflag,&enemies,proyec,fx);
+				touchobj (&jean,stagedata,room,&parchment,&changeflag,&enemies,proyec,fx);
 				contact (&jean,enemies,proyec,room);
 			}
 			events (&jean,stagedata,room,counter,&enemies,fx);
@@ -246,6 +246,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 		SDL_RenderPresent(renderer);
 
 		if (parchment > 0) {
+			printf("Here \n");
 			Mix_PlayChannel(-1, fx[2], 0);
 			Mix_PauseMusic ();
 			/* Waiting a key */

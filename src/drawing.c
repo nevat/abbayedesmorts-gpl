@@ -262,8 +262,6 @@ void showparchment (SDL_Renderer *renderer,uint *parchment) {
 	SDL_RenderCopy(renderer,yparchment,NULL,NULL);
 	SDL_DestroyTexture(yparchment);
 
-	*parchment = 0;
-
 }
 
 void redparchment (SDL_Renderer *renderer,struct hero *jean) {
