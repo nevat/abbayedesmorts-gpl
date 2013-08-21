@@ -217,6 +217,8 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 				  proyec[n] = 0;
 				}
 	  	}
+	  	destile.w = srctile.w;
+			destile.h = srctile.h;
 
 	  	/* Draw shoot */
 	  	switch (enemies->direction[i]) {

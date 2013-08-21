@@ -20,9 +20,10 @@ void animation (uint stagedata[][22][32],int room[],int counter[]);
 void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
 	/* Renderer */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);  // make the scaled rendering look smoother.
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
+	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 
 	/* Sounds */
 	Mix_Music *bso[8];
@@ -48,7 +49,11 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	uint winfull = *fullscreen;
 
 	/* Loading PNG */
-	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
+	SDL_Texture *tiles = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STATIC,1000,240);
+	SDL_Surface *tilesb = IMG_Load("../graphics/tiles.png");
+	SDL_SetColorKey(tilesb, SDL_TRUE, SDL_MapRGB(tilesb->format, 0, 0, 0) );
+	tiles = SDL_CreateTextureFromSurface(renderer, tilesb);
+	SDL_FreeSurface(tilesb);
 	SDL_Texture *fonts = IMG_LoadTexture(renderer,"../graphics/fonts.png");
 
 	/* Loading musics */
@@ -118,7 +123,7 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 		/* Switch fullscreen/windowed requested */
 		if (keyp == 6) {
 			if (*fullscreen == 0) {
-				SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN);
+				SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
 				*fullscreen = 1;
 			}
 			else {
