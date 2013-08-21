@@ -220,7 +220,7 @@ void collisions (struct hero *jean,uint stagedata[][22][32],int room[]) {
 	blground[2] = stagedata[room[0]][points[7]+1][points[2]];
 	blground[3] = stagedata[room[0]][points[7]+1][points[3]];
 
-	if ((jean->jump != 1) && (jean->ducking == 0)) {
+	if (jean->jump != 1) {
 		/* Invisible ground */
 		if (((room[0] == 11) && (points[7]+1 > 19) && (points[0] == 2)) || ((room[0] == 16) && ((jean->y / 8) < 4) && (points[0] == 2))) {
 			jean->y += jean->gravity;
@@ -229,7 +229,7 @@ void collisions (struct hero *jean,uint stagedata[][22][32],int room[]) {
 		else {
 			if (((blground[0] > 0) && (blground[0] < 100)) || ((blground[1] > 0) && (blground[1] < 100)) || ((blground[2] > 0) && (blground[2] < 100)) || ((blground[3] > 0) && (blground[3] < 100))) {
 				jean->ground = (points[7] + 1) * 8;
-				if (points[7] + 1 > 21) /* Chapuza para que Jean caiga por debajo de pantalla */
+				if (points[7] + 1 > 21) /* Dirty trick to make Jean go bottom of the screen */
 					jean->ground = 300;
 				if ((jean->ground - 1) - (jean->y+23) > 1.2)
 					jean->y += jean->gravity;
