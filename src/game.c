@@ -10,7 +10,7 @@
 
 void keybpause (uint *keyp);
 void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag);
-void changescreen (struct hero *jean,uint room[], int *changeflag);
+void changescreen (struct hero *jean,uint room[],uint *changeflag);
 void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]);
 void control (struct hero *jean,uint *keyp);
 void counters (uint counter[]);
@@ -226,7 +226,8 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 		}
 		changescreen (&jean,room,&changeflag);
 		if (changeflag > 0) {
-			searchenemies (room,&enemies,&changeflag,enemydata);
+			if ((jean.flags[6] < 4) || (jean.flags[6] > 5))
+				searchenemies (room,&enemies,&changeflag,enemydata);
 			music (room,bso,&changeflag,jean.flags[6]);
 			for (n=0; n<24; n++) { /* Reset enemyshoots */
 			  proyec[n] = 0;
@@ -672,11 +673,11 @@ void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag) {
 	if ((room[0] == 24) && (flag == 5))
 		Mix_PlayMusic(bso[7], -1);
 
- 	*changeflag = 0;
+ 	*changeflag -= 1;
 
 }
 
-void changescreen (struct hero *jean,uint room[], int *changeflag) {
+void changescreen (struct hero *jean,uint room[], uint *changeflag) {
 
   if ((jean->x < 1) && (room[0] != 5)) {
 		room[1] = room[0];

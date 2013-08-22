@@ -7,7 +7,7 @@
 #include <SDL2/SDL_mixer.h>
 #include "structs.h"
 
-void searchenemies (uint room[], struct enem *enemies, int *changeflag, int enemydata[][7][15]) {
+void searchenemies (uint room[], struct enem *enemies,uint *changeflag, int enemydata[][7][15]) {
 
 	int y = 0;
 
@@ -28,7 +28,8 @@ void searchenemies (uint room[], struct enem *enemies, int *changeflag, int enem
 		enemies->adjusty1[y] = enemydata[room[0]][y][13];
 		enemies->adjusty2[y] = enemydata[room[0]][y][14];
   }
-	*changeflag = 0;
+
+  *changeflag -= 1;
 
 }
 
