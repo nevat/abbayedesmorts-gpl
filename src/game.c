@@ -21,17 +21,13 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
 	/* Renderer */
 	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");  // make the scaled rendering look smoother.
+	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 
 	/* Sounds */
 	Mix_Music *bso[8];
 	Mix_Chunk *fx[7];
-
-	/* Init Font */
-	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf", 17);
-	/* TTF_SetFontHinting(font, TTF_HINTING_NORMAL); */
 
 	uint stagedata[25][22][32];
 	int enemydata[25][7][15];
@@ -298,7 +294,6 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 		Mix_FreeMusic(bso[i]);
 	for (i=0;i<7;i++)
 		Mix_FreeChunk(fx[i]);
-	TTF_CloseFont(font);
 
 	*fullscreen = winfull;
 

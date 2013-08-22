@@ -141,9 +141,19 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 			case 0: srcnumbers.x = lifes * 10;
 							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
 							break;
-			case 1: desnumbers.x = 50;
-							srcnumbers.x = crosses * 10;
-							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+			case 1: if (crosses < 10) {
+								desnumbers.x = 50;
+								srcnumbers.x = crosses * 10;
+								SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+							}
+							else {
+								desnumbers.x = 50;
+								srcnumbers.x = 10;
+								SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+								desnumbers.x = 55;
+								srcnumbers.x = (crosses - 10) * 10;
+								SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+							}
 							break;
 			case 2: if ((room[0] > 0) && (room[0] < 4)) {
 								srctext.y = (room[0] - 1) * 18;
