@@ -20,7 +20,7 @@ main () {
 	uint fullscreen = 0; /* 0-Windowed,1-Fullscreen */
 
 	/* Creating window */
-	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,256,192,SDL_WINDOW_OPENGL);
+	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,512,384,SDL_WINDOW_OPENGL);
 
 	/* Init audio */
 	Mix_OpenAudio (44100,MIX_DEFAULT_FORMAT,2,4096);
