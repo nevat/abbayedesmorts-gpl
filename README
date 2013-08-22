@@ -1,0 +1,38 @@
+INTRODUCTION
+
+Abbaye des Morts is a freeware game made by LocoMalito (with the help of Gryzor87 in music side) in 2010. 
+Was developed with Gamemaker and only runs natively in Microsoft Windows systems.
+
+This is a port to GNU/Linux systems & any system that supports C and SDL libraries. Is written in C code with the help of SDL2 libraries.
+
+The version 2.0 of the game is a port from SDL1.2 to SDL2 libraries. This include a nice set of features: OpenGL rendering, auto-scaling,
+Android & IOS support, VSync, etc.
+
+The code is licensed under GNU GPL version 3, so anyone can download, see, change and redistributed the code.
+
+INSTALLATION FROM SOURCE
+
+In order to compile this program, you need to install SDL2 libraries. Check your distribution instructions.
+
+Unpack the source code file:
+
+$ tar vxfz abbaye_linux_v2_beta.tar.gz
+
+Enter the directory created an run:
+
+$ make abbaye
+
+As root, install the game with:
+
+$ make install
+
+(Ubuntu users run: $ sudo make install)
+
+A icon will appear in your application menu, in game section. Alternatively you can run the game with the order "abbaye".
+
+
+UNINSTALLATION FROM SOURCE
+
+Enter the directory and run (as root):
+
+$ make uninstall (Ubuntu users run: $ sudo make uninstall).
