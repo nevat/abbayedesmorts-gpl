@@ -5,7 +5,6 @@
 # include "SDL2/SDL.h"
 # include "SDL2/SDL_image.h"
 # include "SDL2/SDL_mixer.h"
-# include "SDL2/SDL_ttf.h"
 
 # include "structs.h"
 
@@ -247,7 +246,6 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 		SDL_RenderPresent(renderer);
 
 		if (parchment > 0) {
-			printf("Here \n");
 			Mix_PlayChannel(-1, fx[2], 0);
 			Mix_PauseMusic ();
 			/* Waiting a key */
@@ -674,7 +672,7 @@ void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag) {
 	if ((room[0] == 24) && (flag == 5))
 		Mix_PlayMusic(bso[7], -1);
 
- 	*changeflag -= 1;
+ 	*changeflag = 0;
 
 }
 

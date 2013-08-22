@@ -5,25 +5,17 @@
 # include "SDL2/SDL.h"
 # include "SDL2/SDL_image.h"
 # include "SDL2/SDL_mixer.h"
-# include "SDL2/SDL_ttf.h"
 
 void ending (SDL_Window *screen,uint *state) {
 
 	/* Creating renderer */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
+	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
+	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 
-	SDL_Texture *black = IMG_LoadTexture(renderer,"../graphics/black.png");
 	SDL_Texture *tiles = IMG_LoadTexture(renderer,"../graphics/tiles.png");
-	SDL_Surface *text = NULL;
-	SDL_Texture *textsurf = NULL;
-
-	SDL_Color fgcolor = {255,255,255};
-	TTF_Font *font = TTF_OpenFont("../fonts/VeniceClassic.ttf",18);
-	TTF_SetFontHinting(font, TTF_HINTING_NORMAL);
-
-	SDL_Rect destext = {0,0,0,0};
+	SDL_Texture *text = IMG_LoadTexture(renderer,"../graphics/ending.png");
 
 	SDL_Rect srcdoor = {600,72,64,48};
 	SDL_Rect desdoor = {96,72,64,48};
@@ -40,45 +32,19 @@ void ending (SDL_Window *screen,uint *state) {
 
 	for (i=0;i<951;i++) {
 
-		SDL_RenderCopy(renderer,black,NULL,NULL);
+		/* Cleaning the renderer */
+		SDL_RenderClear(renderer);
 
 		if (i<360)
 			x = i/60;
 		else
 			x = 5;
+		
+		if (i > 365)
+			SDL_RenderCopy(renderer,text,NULL,NULL);
 
 		srcdoor.x = 600 + (64 * x);
 		SDL_RenderCopy(renderer,tiles,&srcdoor,&desdoor);
-		if (i > 365) {
-			sprintf (message, "Your body has burned");
-			text = TTF_RenderText_Blended(font, message, fgcolor);
-			textsurf = SDL_CreateTextureFromSurface(renderer,text);
-			TTF_SizeText(font, message, &width, &height);
-			destext.x = 120 - (width / 2);
-			destext.y = 20 - (height / 2);
-			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
-			sprintf (message, "in the flames,");
-			text = TTF_RenderText_Blended(font, message, fgcolor);
-			textsurf = SDL_CreateTextureFromSurface(renderer,text);
-			TTF_SizeText(font, message, &width, &height);
-			destext.x = 125 - (width / 2);
-			destext.y = 50 - (height / 2);
-			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
-			sprintf (message, "but your soul has found");
-			text = TTF_RenderText_Blended(font, message, fgcolor);
-			textsurf = SDL_CreateTextureFromSurface(renderer,text);
-			TTF_SizeText(font, message, &width, &height);
-			destext.x = 122 - (width / 2);
-			destext.y = 125 + (height / 2);
-			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
-			sprintf (message, "a place in Heaven");
-			text = TTF_RenderText_Blended(font, message, fgcolor);
-			textsurf = SDL_CreateTextureFromSurface(renderer,text);
-			TTF_SizeText(font, message, &width, &height);
-			destext.x = 121 - (width / 2);
-			destext.y = 155 + (height / 2);
-			SDL_RenderCopy(renderer,textsurf,NULL,&destext);
-		}
 
 		/* Flip */
 		SDL_RenderPresent(renderer);
@@ -87,12 +53,9 @@ void ending (SDL_Window *screen,uint *state) {
 
 	/* Cleaning */
 	SDL_DestroyTexture (tiles);
-	SDL_DestroyTexture (black);
+	SDL_DestroyTexture(text);
 	Mix_FreeMusic (bso);
-	TTF_CloseFont (font);
-	SDL_DestroyTexture (textsurf);
 	SDL_DestroyRenderer (renderer);
-	SDL_FreeSurface(text);
 
 	*state = 0;
 
