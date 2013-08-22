@@ -120,10 +120,10 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 
 	SDL_Rect srcbar = {448,104,13,12};
 	SDL_Rect desbar = {0,177,13,12};
-	SDL_Rect srcnumbers = {0,414,10,10};
+	SDL_Rect srcnumbers = {0,460,10,10};
 	SDL_Rect desnumbers = {18,178,10,10};
-	SDL_Rect srctext = {0,0,136,18};
-	SDL_Rect destext = {119,176,136,18};
+	SDL_Rect srctext = {0,0,140,20};
+	SDL_Rect destext = {115,176,136,18};
 	int i = 0;
 
 	/* Show heart and crosses sprites */
@@ -155,11 +155,11 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 							}
 							break;
 			case 2: if ((room[0] > 0) && (room[0] < 4)) {
-								srctext.y = (room[0] - 1) * 18;
+								srctext.y = (room[0] - 1) * 20;
 								SDL_RenderCopy(renderer,fonts,&srctext,&destext);
 							}
 							if (room[0] > 4) {
-								srctext.y = (room[0] - 2) * 18;
+								srctext.y = (room[0] - 2) * 20;
 								SDL_RenderCopy(renderer,fonts,&srctext,&destext);
 							}
 							break;
