@@ -112,22 +112,19 @@ void iniciar_sdl () {
 int framerate (int i, int frate1) {
 /* Control del framerate, 60 Hz */
 
-  int diferencia = 0;
-  int tiempoinicial = 0;
-  int tiempofinal = 0;
+	int now = SDL_GetTicks();
 
   if (i == 1) {
-		tiempoinicial = SDL_GetTicks();
-		return tiempoinicial;
-  }
+		return now;
+		
+	}
 
   if (i == 2) {
-		while (diferencia < 16) {
-		  tiempofinal = SDL_GetTicks();
-		  diferencia = tiempofinal - frate1;
-		}
-  }
-
+		int diff = now - frate1;
+		if (diff<16)
+			SDL_Delay(16-diff);
+		return 0;
+	}
 }
 
 void juego (SDL_Surface *pantalla, int *estadoj, int *cambiot) {
