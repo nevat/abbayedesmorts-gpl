@@ -90,7 +90,7 @@ void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 				}
 				if (keyp.key.keysym.sym == SDLK_f) { /* Switch fullscreen/windowed */
 					if (*fullscreen == 0) {
-						SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN);
+						SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
 						*fullscreen = 1;
 					}
 					else {
