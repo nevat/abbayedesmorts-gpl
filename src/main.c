@@ -527,8 +527,9 @@ void cargardatos (int fase[][22][32], int datosenem[][7][15]) {
   int i = 0;
 	int j = 0;
 	int k = 0;
-  char linea[129], temp[3];
+  char linea[129], temp[4];
   char linea2[61];
+	temp[3] = 0;
 
   /* Cargar el fichero */
   fichero = fopen(RUTA_DAT_MAPA, "r");
