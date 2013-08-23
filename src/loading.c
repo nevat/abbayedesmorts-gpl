@@ -11,7 +11,8 @@ void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 	int i = 0;
 	int j = 0;
 	int k = 0;
-	char line[129],temp[3],line2[61];
+	char line[129],temp[4],line2[61];
+	temp[3] = 0;
 
 	/* Loading file */
 	datafile = fopen("/usr/share/abbayev2/data/map.txt", "r");
