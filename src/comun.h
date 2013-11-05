@@ -3,7 +3,7 @@
 #ifndef _COMUN_H_
 #define _COMUN_H_
 
-#ifdef _OPENPANDORA
+#if defined(_OPENPANDORA) || defined (_GCW_ZERO)
 /* La versión para OpenPandora usa rutas relativas */
 #define _RUTAS_RELATIVAS
 /* La versión para OpenPandora renderiza internamente a 320x240 */
@@ -134,8 +134,25 @@
 #endif
 
 #ifdef _OPENPANDORA
-#undef RUTA_GRA_INTRO
-#define RUTA_GRA_INTRO             "graphics/intro-pandora.png"
+  #undef RUTA_GRA_INTRO
+  #define RUTA_GRA_INTRO           "graphics/intro-pandora.png"
+  #define KEY_JUMP                 SDLK_PAGEDOWN
+  #define KEY_START                SDLK_PAGEDOWN
+  #define KEY_GRAPHICS             SDLK_c
+  #define KEY_INFO                 SDLK_i
+
+#elif defined(_GCW_ZERO)
+  #undef RUTA_GRA_INTRO
+  #define RUTA_GRA_INTRO           "graphics/intro-gcw.png"
+  #define KEY_JUMP                 SDLK_LCTRL
+  #define KEY_START                SDLK_RETURN
+  #define KEY_GRAPHICS             SDLK_LALT
+  #define KEY_INFO                 SDLK_SPACE
+#else
+  #define KEY_JUMP                 SDLK_UP
+  #define KEY_START                SDLK_SPACE
+  #define KEY_GRAPHICS             SDLK_c
+  #define KEY_INFO                 SDLK_i
 #endif
 
 #endif /* _COMUN_H_ */

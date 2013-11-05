@@ -1,5 +1,5 @@
 /* Abbaye des Morts */
-/* Version 1.0 */
+/* Version 1.13 */
 /* Port iniciado el 18/10/2012 */
 /* Version 1.0 finalizada el 28/12/2012 */
 /* Version 1.1 finalizada el 14/01/2013 */
@@ -36,6 +36,7 @@
 #include <SDL_getenv.h>
 #include "main.h"
 
+#undef main
 main () {
 
   /* Variables */
@@ -46,7 +47,7 @@ main () {
 
   /* Iniciar SDL */
   iniciar_sdl ();
-	SDL_WM_SetCaption("Abbaye des Morts - v1.11", "Abbaye des Morts");
+	SDL_WM_SetCaption("Abbaye des Morts - v1.13", "Abbaye des Morts");
 #ifdef _RENDER_320_240
   pantalla = SDL_SetVideoMode(320,240,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
 #else
@@ -1222,11 +1223,7 @@ void tecladoj (struct protagonista *jean, int *tecla) {
 		if (evento.type == SDL_QUIT)
 	   	exit(0);
 		if (evento.type == SDL_KEYDOWN) {
-#ifdef _OPENPANDORA
-			if (evento.key.keysym.sym == SDLK_PAGEDOWN) {
-#else
-			if (evento.key.keysym.sym == SDLK_UP) {
-#endif
+			if (evento.key.keysym.sym == KEY_JUMP) {
 				if ((jean->pulsa[0] == 0) && (jean->salto == 0) && (jean->agachado == 0))
 					jean->salto = 1;
 			}
@@ -1250,18 +1247,14 @@ void tecladoj (struct protagonista *jean, int *tecla) {
 			}
 			if (evento.key.keysym.sym == SDLK_f)
 				*tecla = 6;
-			if (evento.key.keysym.sym == SDLK_c)
+			if (evento.key.keysym.sym == KEY_GRAPHICS)
 				*tecla = 9;
 	   	if (evento.key.keysym.sym == SDLK_ESCAPE)
       		exit(0);
 		}
 
 		if (evento.type == SDL_KEYUP) {
-#ifdef _OPENPANDORA
-			if (evento.key.keysym.sym == SDLK_PAGEDOWN)
-#else
-			if (evento.key.keysym.sym == SDLK_UP)
-#endif
+			if (evento.key.keysym.sym == KEY_JUMP)
 					jean->pulsa[0] = 0;
 			if (evento.key.keysym.sym == SDLK_DOWN) {
 					jean->pulsa[1] = 0;
@@ -1286,7 +1279,7 @@ void teclado (int *tecla, int fase) {
 		if (evento.type == SDL_QUIT)
 	   	exit(0);
    	if (evento.type == SDL_KEYDOWN) {
-	   	if (evento.key.keysym.sym == SDLK_i) {
+	   	if (evento.key.keysym.sym == KEY_INFO) {
       		if (fase == 1)
 						*tecla = 7;
 			}
@@ -1294,13 +1287,9 @@ void teclado (int *tecla, int fase) {
       		exit(0);
 			if (evento.key.keysym.sym == SDLK_f)
 				*tecla = 6;
-			if (evento.key.keysym.sym == SDLK_c)
+			if (evento.key.keysym.sym == KEY_GRAPHICS)
 				*tecla = 9;
-#ifdef _OPENPANDORA
-			if (evento.key.keysym.sym == SDLK_PAGEDOWN)
-#else
-			if (evento.key.keysym.sym == SDLK_SPACE)
-#endif
+			if (evento.key.keysym.sym == KEY_START)
 				*tecla = 5;
 		}
 	}
@@ -1313,11 +1302,7 @@ void tecladop (int *teclap) {
 
 	while (SDL_PollEvent(&evento)) {
 		if (evento.type == SDL_KEYDOWN) {
-#ifdef _OPENPANDORA
-			if ((evento.key.keysym.sym == SDLK_PAGEDOWN) ||
-#else
-			if ((evento.key.keysym.sym == SDLK_SPACE) ||
-#endif
+			if ((evento.key.keysym.sym == KEY_START) ||
 					(evento.key.keysym.sym == SDLK_LEFT) || (evento.key.keysym.sym == SDLK_RIGHT))
 				*teclap = 1;
 		}
