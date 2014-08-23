@@ -23,7 +23,7 @@ $ tar vxfz abbaye_linux_beta.tar.gz
 
 Enter the directory created an run:
 
-$ make abbaye
+$ make
 
 As root, install the game with:
 
@@ -53,7 +53,7 @@ Once installed, launch it, change the directory to the one you use for building 
 
 svn checkout http://abbaye-for-linux.googlecode.com/svn/ abbaye-for-linux-read-only
 cd abbaye-for-linux-read-only
-make abbaye-pandora
+make pandora
 
 And that's all. You can test the built binary launching ./abbaye-pandora. It will most likely run inside a window at 320x240 resolution. To make it fullscreen, create a script to launch it, with the following contents:
 _______________________
@@ -67,3 +67,12 @@ _______________________
 
 Make sure the script has exec permissions, launch it, and you should be able to play the game fullscreen. Finally, it's recommended to package the game in a .pnd file, but doing it is beyond the scope of this readme file.
 
+WII VERSION INSTALLATION
+
+Download the zip file (abbaye-wii-version.zip) and extract the contained apps folder to your Wii's SD card. You can then launch it from Homebrew Channel.
+
+BUILDING THE WII VERSION
+
+Setup the DevkitPPC toolchain as usual and install sdl_wii and the needed portlibs. Build the boot.dol:
+make wii
+(Optional) Convert the sound and music files to 32khz sample rate or use the files from the release zip archive. Without that, sounds and music will play a bit slower.
