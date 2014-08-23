@@ -130,7 +130,13 @@ void iniciar_sdl () {
   }
   atexit(TTF_Quit);
 
-  if (Mix_OpenAudio (44100, AUDIO_S16, 1, 4096)) {
+#ifdef _WII
+  #define AUDIO_FREQ 32000
+#else
+  #define AUDIO_FREQ 44100
+#endif
+
+  if (Mix_OpenAudio (AUDIO_FREQ, AUDIO_S16, 1, 4096)) {
 	printf("No se pudo inicializar SDL_Mixer %s\n",Mix_GetError());
 	exit(1);
   }
