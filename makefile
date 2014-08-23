@@ -1,76 +1,122 @@
 #
-# use `make TARGET=gcw0` to build for GCW-Zero
-# and `make` for normal build
+# use `make PLATFORM`, linux build is default
 #
 
-#TARGET	= gcw0
-#TARGET	= pandora
+NAME = abbaye
+SRC = ./src/main.c \
+      ./src/barradeestado.c \
+      ./src/bosses.c \
+      ./src/enemigos.c \
+      ./src/fase.c \
+      ./src/jean.c \
+      ./src/musica.c \
+      ./src/pantallas.c
 
-NAME	= abbaye
+# Some platforms do not have (useable) sdl-config
+ifeq ($(NO_SDL_CONFIG),)
+    SDL_CFLAGS := `sdl-config --cflags`
+    SDL_LIBS   := `sdl-config --libs`
+endif
 
-CFLAGS	= -s -O2 `sdl-config --cflags`
-LIBS 	= -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx `sdl-config --libs` -lm
+CFLAGS = -s $(SDL_CFLAGS)
+LIBS   = $(SDL_LIBS) -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lm
 
-# assume cross-compilation
-ifeq "$(TARGET)" "gcw0"
-    CC		= mipsel-linux-gcc
-    CFLAGS	+= -mips32 -D_GCW_ZERO
+# Cross-Compilation
+ifeq ($(PLATFORM),gcw0)
+    CC     = mipsel-linux-gcc
+    CFLAGS += -mips32 -D_GCW_ZERO
+else ifeq ($(PLATFORM),pandora)
+    NAME   = abbaye-pandora
+    CC     = $(PREFIX)gcc
+    CFLAGS += -D_OPENPANDORA -finline-functions -funswitch-loops \
+              -fpredictive-commoning -fgcse-after-reload -ftree-vectorize
+else ifeq ($(PLATFORM),wii)
+    NAME   = abbaye-wii.elf
+    CC     = powerpc-eabi-gcc
+    CFLAGS += -O2 -D_WII -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float \
+              -I$(DEVKITPRO)/libogc/include -I$(DEVKITPRO)/libogc/include/SDL
+    LIBS   := -L$(DEVKITPRO)/libogc/lib/wii -lSDL_image -lSDL_ttf -lSDL_mixer \
+              -lSDL_gfx -lSDL -lfat -logc -lwiikeyboard -lwiiuse -lbte \
+              -L$(DEVKITPRO)/portlibs/ppc/lib -lpng -lz -ljpeg -lfreetype \
+              -lmad -lvorbisidec -lm
 else
-ifeq "$(TARGET)" "pandora"
-    CC		= $(PREFIX)gcc
-    CFLAGS	+= -D_OPENPANDORA \
-                   -finline-functions -funswitch-loops -fpredictive-commoning \
-		   -fgcse-after-reload -ftree-vectorize
-    NAME	= abbaye-pandora
-else
-    CC		= gcc
+    CC = gcc
 
     # detect mingw and do some fixes
     ifeq ($(OS),Windows_NT)
-        CFLAGS	+= -Dsleep=SDL_Delay -D_RUTAS_RELATIVAS
-        NAME	= abbaye.exe
+        CFLAGS  += -Dsleep=SDL_Delay -D_RUTAS_RELATIVAS
+        NAME    = abbaye.exe
     endif
 endif
+
+# platform magic
+ifeq ($(PLATFORM),)
+all: linux
+else ifeq ($(PLATFORM),gcw0)
+all: opk
+# this is currently disabled, as there is no script to build the .pnd:
+#else ifeq ($(PLATFORM),"pandora")
+#all: pnd
+else ifeq ($(PLATFORM),wii)
+all: dol
+else
+all: $(NAME)
 endif
 
-SRC	= ./src/main.c \
-	  ./src/barradeestado.c \
-	  ./src/bosses.c \
-	  ./src/enemigos.c \
-	  ./src/fase.c \
-	  ./src/jean.c \
-	  ./src/musica.c \
-	  ./src/pantallas.c
-
-all: $(NAME)
+# Common
+.PHONY: clean
+clean:
+	rm -f abbaye abbaye.exe abbaye-pandora abbaye.pnd \
+	      abbaye.opk abbaye-wii.elf boot.dol
+	@echo "Cleaned all built files."
 
 $(NAME): $(SRC) ./src/comun.h
-	$(CC) $(CFLAGS) $(SRC) $(LIBS) -o $(NAME)
+	$(CC) $(CFLAGS) $(SRC) $(LDFLAGS) $(LIBS) -o $(NAME)
 
-clean:
-	rm -f $(NAME)
+# Linux
+linux: $(NAME)
+	@echo "Linux build ready."
 
-# Installation
-install:
-	cp $(NAME) /usr/bin/
-	cp abbaye.desktop /usr/share/applications
-	mkdir -p /usr/share/abbaye/music
-	cp ./music/* /usr/share/abbaye/music
-	mkdir -p /usr/share/abbaye/fonts
-	cp ./fonts/* /usr/share/abbaye/fonts
-	mkdir -p /usr/share/abbaye/sounds
-	cp ./sounds/* /usr/share/abbaye/sounds
-	mkdir -p /usr/share/abbaye/data
-	cp ./mapa/* /usr/share/abbaye/data
-	cp abbaye.png /usr/share/pixmaps
-	mkdir -p /usr/share/abbaye/graphics
-	cp -r ./graphics/* /usr/share/abbaye/graphics
+# Pandora
+pandora:
+	$(MAKE) PLATFORM=pandora
+	@echo "Pandora build ready."
+
+pnd: $(NAME)
+	@echo "build script for abbaye.pnd missing :("
+
+# GCW Zero
+gcw0:
+	$(MAKE) PLATFORM=gcw0
+	@echo "GCW-Zero build ready."
+
+opk: $(NAME)
+	./make_opk.sh
+
+# Wii
+wii:
+	$(MAKE) PLATFORM=wii NO_SDL_CONFIG=1
+	@echo "Wii build ready."
+
+dol: $(NAME)
+	elf2dol abbaye-wii.elf boot.dol
+
+# Installation under Linux
+install: linux
+	@echo "Installing linux build..."
+	mkdir -p $(DESTDIR)/usr/bin
+	cp $(NAME) $(DESTDIR)/usr/bin
+	mkdir -p $(DESTDIR)/usr/share/applications
+	cp abbaye.desktop $(DESTDIR)/usr/share/applications
+	mkdir -p $(DESTDIR)/usr/share/abbaye
+	cp -r ./fonts ./graphics ./music ./sounds $(DESTDIR)/usr/share/abbaye
+	mkdir -p $(DESTDIR)/usr/share/abbaye/data
+	cp ./mapa/* $(DESTDIR)/usr/share/abbaye/data
+	mkdir -p $(DESTDIR)/usr/share/pixmaps
+	cp abbaye.png $(DESTDIR)/usr/share/pixmaps
 
 uninstall:
 	rm /usr/bin/$(NAME)
 	rm /usr/share/applications/abbaye.desktop
 	rm /usr/share/pixmaps/abbaye.png
 	rm -rf /usr/share/abbaye
-
-opk:	$(NAME)
-	./make_opk.sh
