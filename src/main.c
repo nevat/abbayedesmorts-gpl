@@ -36,8 +36,20 @@
 #include <SDL_getenv.h>
 #include "main.h"
 
+#ifdef _WII
+#include <ogcsys.h>
+#include <fat.h>
+
+SDL_main (int argc, char *argv[])
+#else
 #undef main
-main () {
+main ()
+#endif
+        {
+#ifdef _WII
+  /* enable file system access */
+  fatInitDefault();
+#endif
 
   /* Variables */
   SDL_Surface *pantalla = NULL;
