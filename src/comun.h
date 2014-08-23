@@ -3,7 +3,7 @@
 #ifndef _COMUN_H_
 #define _COMUN_H_
 
-#if defined(_OPENPANDORA) || defined (_GCW_ZERO)
+#if defined(_OPENPANDORA) || defined (_GCW_ZERO) || defined (_WII)
 /* La versión para OpenPandora usa rutas relativas */
 #define _RUTAS_RELATIVAS
 /* La versión para OpenPandora renderiza internamente a 320x240 */
