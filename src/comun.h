@@ -150,6 +150,8 @@
   #define KEY_INFO                 SDLK_SPACE
 
 #elif defined(_WII)
+  #undef RUTA_GRA_INTRO
+  #define RUTA_GRA_INTRO           "graphics/intro-wii.png"
   #define JOYSTICK_SUPPORT
   #define JOY_JUMP                 3 /* 2    */
   #define JOY_START                5 /* +    */

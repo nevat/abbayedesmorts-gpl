@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>Abbaye des Morts</name>
+  <coder>carstene1ns</coder>
+  <version>0.1</version>
+  <release_date>20140802300000</release_date>
+  <short_description>2D platformer set in 13th century</short_description>
+  <long_description>An obsolete videogame for a dark passage of history!
+You play as Jean Raymond, a preacher who escapes to an
+abandoned church after being chased by a group of crusaders.
+Following the instructions on parchments left behind by past
+occupants of the building, Jean must seek out and collect
+the twelve cathar crosses before he can escape from his pursuers.
+
+Homepage: http://www.locomalito.com/abbaye_des_morts.php
+Ports: https://code.google.com/p/abbaye-for-linux/</long_description>
+</app>
