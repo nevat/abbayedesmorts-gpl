@@ -148,6 +148,14 @@
   #define KEY_START                SDLK_RETURN
   #define KEY_GRAPHICS             SDLK_LALT
   #define KEY_INFO                 SDLK_SPACE
+
+#elif defined(_WII)
+  #define JOYSTICK_SUPPORT
+  #define JOY_JUMP                 3 /* 2    */
+  #define JOY_START                5 /* +    */
+  #define JOY_GRAPHICS             4 /* -    */
+  #define JOY_INFO                 0 /* A    */
+  #define JOY_END                  6 /* HOME */
 #else
   #define KEY_JUMP                 SDLK_UP
   #define KEY_START                SDLK_SPACE
