@@ -59,7 +59,7 @@ main ()
 
   /* Iniciar SDL */
   iniciar_sdl ();
-	SDL_WM_SetCaption("Abbaye des Morts - v1.13", "Abbaye des Morts");
+	SDL_WM_SetCaption("Abbaye des Morts - v1.2", "Abbaye des Morts");
 #ifdef _RENDER_320_240
   pantalla = SDL_SetVideoMode(320,240,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
 #else
