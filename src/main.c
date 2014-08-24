@@ -152,7 +152,7 @@ int framerate (int i, int frate1) {
 
   if (i == 1) {
 		return now;
-		
+
 	}
 
   if (i == 2) {
@@ -167,6 +167,7 @@ void juego (SDL_Surface *pantalla, int *estadoj, int *cambiot) {
 
 	SDL_Surface *ventana = NULL;
 	SDL_Surface *tiles = NULL;
+	SDL_Surface *fuentes = NULL;
 	SDL_Surface *temp = NULL;
 #ifdef _RENDER_320_240
 	SDL_Rect desventana = {32,24,0,0};
@@ -240,6 +241,9 @@ void juego (SDL_Surface *pantalla, int *estadoj, int *cambiot) {
 
 	temp = IMG_Load(RUTA_GRA_TEMP);
 	ventana = SDL_DisplayFormat(temp);
+	SDL_FreeSurface(temp);
+	temp = IMG_Load(RUTA_GRA_FUENTES);
+	fuentes = SDL_DisplayFormat(temp);
 	SDL_FreeSurface(temp);
 	if (*cambiot == 0)
 		temp = IMG_Load(RUTA_GRA_TILES);
@@ -351,7 +355,7 @@ void juego (SDL_Surface *pantalla, int *estadoj, int *cambiot) {
 		animitems (fase, habitacion, ciclo);
 		dibujarfase (ventana, fase, tiles, habitacion, ciclo, *cambiot, fondomd, fx);
 		if (habitacion != 4)
-			barradeestado (ventana, tiles, habitacion, jean.estado[0], jean.estado[1], fuente);
+			barradeestado (ventana, tiles, habitacion, jean.estado[0], jean.estado[1], fuente, fuentes);
 		if (jean.flags[6] < 8)
 			dibujarjean (ventana, tiles, &jean, ciclo, fx);
 		/* Gestion de enemigos */

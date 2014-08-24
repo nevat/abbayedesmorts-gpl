@@ -9,46 +9,15 @@
 #include <SDL_ttf.h>
 #include "comun.h"
 
-static const char *nome_habitacion[] = {
-	":)",
-	"A prayer of Hope",
-	"Tower of the Bell",
-	"Wine supplies"
-	":$",
-	"Escape !!!",
-	"Death is close",
-	"Abandoned church",
-	"The Altar",
-	"Hangman tree",
-	"Pestilent Beast",
-	"Cave of illusions",
-	"Plagued ruins",
-	"Catacombs",
-	"Hidden garden",
-	"Gloomy tunels",
-	"Lake of despair",
-	"The wheel of faith",
-	"Banquet of Death",
-	"Underground river",
-	"Unexpected gate",
-	"Evil church",
-	"Tortured souls",
-	"Ashes to ashes",
-	"Satan !!!"};
-
-void barradeestado (SDL_Surface *ventana, SDL_Surface *tiles, int habitacion, int vidas, int cruces, TTF_Font *fuente) {
+void barradeestado (SDL_Surface *ventana, SDL_Surface *tiles, int habitacion, int vidas, int cruces, TTF_Font *fuente, SDL_Surface *fuentes) {
 
   SDL_Rect srcbarra = {448,104,13,12};
   SDL_Rect desbarra = {0,177,0,0};
-  SDL_Color fgcolor = {255,255,255}; /* Color de la fuente, blanco */
-  SDL_Surface *marcador = NULL;
-  SDL_Rect desmarcador = {0,0,0,0};
+	SDL_Rect srcnumbers = {0,460,10,10};
+	SDL_Rect desnumbers = {18,178,10,10};
+	SDL_Rect srctext = {0,0,140,20};
+	SDL_Rect destext = {115,176,136,18};
   int i = 0;
-
-  char datos[1];
-  const char *nompantalla;
-  int ancho = 0;
-  int alto = 0;
 
   SDL_BlitSurface(tiles, &srcbarra, ventana, &desbarra);
   srcbarra.x = 461;
@@ -56,24 +25,36 @@ void barradeestado (SDL_Surface *ventana, SDL_Surface *tiles, int habitacion, in
   desbarra.x = 32;
   SDL_BlitSurface(tiles, &srcbarra, ventana, &desbarra);
 
-  desmarcador.y = 174;
+	for (i=0; i<=2; i++) {
+		switch (i) {
+			case 0: srcnumbers.x = vidas * 10;
+							SDL_BlitSurface(fuentes,&srcnumbers,ventana,&desnumbers);
+							break;
+			case 1: if (cruces < 10) {
+								desnumbers.x = 50;
+								srcnumbers.x = cruces * 10;
+								SDL_BlitSurface(fuentes,&srcnumbers,ventana,&desnumbers);
+							}
+							else {
+								desnumbers.x = 50;
+								srcnumbers.x = 10;
+								SDL_BlitSurface(fuentes,&srcnumbers,ventana,&desnumbers);
+								desnumbers.x = 55;
+								srcnumbers.x = (cruces - 10) * 10;
+								SDL_BlitSurface(fuentes,&srcnumbers,ventana,&desnumbers);
+							}
+							break;
+			case 2: if ((habitacion > 0) && (habitacion < 4)) {
+								srctext.y = (habitacion - 1) * 20;
+								SDL_BlitSurface(fuentes,&srctext,ventana,&destext);
+							}
+							if (habitacion > 4) {
+								srctext.y = (habitacion - 2) * 20;
+								SDL_BlitSurface(fuentes,&srctext,ventana,&destext);
+							}
+							break;
+		}
 
-	sprintf(datos, "%d", vidas);
-	marcador = TTF_RenderText_Solid(fuente, datos, fgcolor);
-	desmarcador.x = 18;
-	SDL_BlitSurface(marcador, NULL, ventana, &desmarcador);
-	
-	sprintf(datos, "%d", cruces);
-	marcador = TTF_RenderText_Solid(fuente, datos, fgcolor);
-	desmarcador.x = 50;
-	SDL_BlitSurface(marcador, NULL, ventana, &desmarcador);
+	}
 
-	nompantalla = nome_habitacion[habitacion];
-	marcador = TTF_RenderText_Solid(fuente, nompantalla, fgcolor);
-	TTF_SizeText(fuente, nompantalla, &ancho, &alto);
-	desmarcador.x = 256 - ancho;
-	
-	SDL_BlitSurface(marcador, NULL, ventana, &desmarcador);
-	SDL_FreeSurface (marcador);
-	
 }
