@@ -271,57 +271,27 @@ void mostrarpergamino (SDL_Surface *ventana, int *pergamino) {
 
 	SDL_Surface *pergamin = NULL;
 	SDL_Surface *temp = NULL;
-  TTF_Font *fuente = NULL;
-	SDL_Surface *marcador = NULL;
-  SDL_Color fgcolor = {0,0,0};
-	SDL_Rect desmarcador = {0,0,0,0};
-	int alto = 0;
-	int ancho = 0;
-  char renglon1[18];
-	char renglon2[20];
 
-  fuente = TTF_OpenFont(RUTA_FON_VENICE_CLASSIC, 18);
-	temp = IMG_Load(RUTA_GRA_PERGAMINO);
+	switch (*pergamino) {
+		case 3: temp = IMG_Load(RUTA_GRA_PERGAMINO1);
+						break;
+		case 8:	temp = IMG_Load(RUTA_GRA_PERGAMINO2);
+						break;
+		case 12: temp = IMG_Load(RUTA_GRA_PERGAMINO3);
+						 break;
+		case 14: temp = IMG_Load(RUTA_GRA_PERGAMINO4);
+						 break;
+		case 16: temp = IMG_Load(RUTA_GRA_PERGAMINO5);
+						 break;
+		case 21: temp = IMG_Load(RUTA_GRA_PERGAMINO6);
+						 break;
+	}
+
 	pergamin = SDL_DisplayFormat(temp);
 	SDL_FreeSurface(temp);
 
 	SDL_BlitSurface (pergamin, NULL, ventana, NULL);
 	SDL_FreeSurface(pergamin);
-
-	switch (*pergamino) {
-		case 3: sprintf (renglon1, "Twelve crosses");
-						sprintf (renglon2, "against the devil");
-						break;
-		case 8:	sprintf (renglon1, "Twelve brothers");
-						sprintf (renglon2, "hid and died here");
-						break;
-		case 12: sprintf (renglon1, "Four brothers");
-						 sprintf (renglon2, "changed their faith");
-						 break;
-		case 14: sprintf (renglon1, "An invisible path");
-						 sprintf (renglon2, "over a wood bridge");
-						 break;
-		case 16: sprintf (renglon1, "Jump to death");
-						 sprintf (renglon2, "and prove your faith");
-						 break;
-		case 21: sprintf (renglon1, "Glide through");
-						 sprintf (renglon2, "the beast cage");
-						 break;
-	}
-
-	marcador = TTF_RenderText_Blended(fuente, renglon1, fgcolor);
-	TTF_SizeText(fuente, renglon1, &ancho, &alto);
-	desmarcador.x = 127 - (ancho / 2);
-	desmarcador.y = 81 - alto;
-	SDL_BlitSurface(marcador, NULL, ventana, &desmarcador);
-	SDL_FreeSurface (marcador);
-	marcador = TTF_RenderText_Blended(fuente, renglon2, fgcolor);
-	TTF_SizeText(fuente, renglon2, &ancho, &alto);
-	desmarcador.x = 127 - (ancho / 2);
-	desmarcador.y = 85;
-	SDL_BlitSurface(marcador, NULL, ventana, &desmarcador);
-	SDL_FreeSurface (marcador);
-  TTF_CloseFont(fuente);
 
 }
 
