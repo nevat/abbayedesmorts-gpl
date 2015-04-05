@@ -3,7 +3,7 @@
 #ifndef _COMUN_H_
 #define _COMUN_H_
 
-#if defined(_OPENPANDORA) || defined (_GCW_ZERO) || defined (_WII)
+#if defined(_OPENPANDORA) || defined (_GCW_ZERO) || defined (_WII) || defined (_PSP)
 /* La versión para OpenPandora usa rutas relativas */
 #define _RUTAS_RELATIVAS
 /* La versión para OpenPandora renderiza internamente a 320x240 */
@@ -172,6 +172,21 @@
   #define JOY_GRAPHICS             4 /* -    */
   #define JOY_INFO                 0 /* A    */
   #define JOY_END                  6 /* HOME */
+
+#elif defined(_PSP)
+  #undef RUTA_GRA_INTRO
+  #define RUTA_GRA_INTRO           "graphics/intro-psp.png"
+  #define JOYSTICK_SUPPORT
+  #define JOY_LEFT                 7  /* LEFT     */
+  #define JOY_RIGHT                9  /* RIGHT    */
+  #define JOY_UP                   8  /* UP       */
+  #define JOY_DOWN                 6  /* DOWN     */
+  #define JOY_JUMP                 3  /* SQUARE   */
+  #define JOY_START                11 /* START    */
+  #define JOY_GRAPHICS             0  /* TRIANGLE */
+  #define JOY_INFO                 1  /* CIRCLE   */
+  #define JOY_END                  12 /* HOME     */
+
 #else
   #define KEY_JUMP                 SDLK_UP
   #define KEY_START                SDLK_SPACE

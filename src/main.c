@@ -60,7 +60,9 @@ main ()
   /* Iniciar SDL */
   iniciar_sdl ();
 	SDL_WM_SetCaption("Abbaye des Morts - v1.2", "Abbaye des Morts");
-#ifdef _RENDER_320_240
+#ifdef _PSP
+  pantalla = SDL_SetVideoMode(320,240,8,SDL_SWSURFACE|SDL_FULLSCREEN|SDL_HWPALETTE);
+#elif defined(_RENDER_320_240)
   pantalla = SDL_SetVideoMode(320,240,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
 #else
   pantalla = SDL_SetVideoMode(640,480,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -1316,13 +1318,46 @@ void tecladoj (struct protagonista *jean, int *tecla) {
 				*tecla = 9;
 			if (evento.jbutton.button == JOY_END)
 				exit(0);
+#	ifdef _PSP
+			if (evento.jbutton.button == JOY_DOWN) {
+				if ((jean->pulsa[1] == 0) && (jean->salto == 0)) {
+					jean->pulsa[1] = 1;
+					jean->agachado = 1;
+				}
+			}
+			if (evento.jbutton.button == JOY_LEFT) {
+				if (jean->pulsa[2] == 0) {
+					jean->pulsa[2] = 1;
+					jean->pulsa[3] = 0;
+				}
+			}
+			if (evento.jbutton.button == JOY_RIGHT) {
+				if (jean->pulsa[3] == 0) {
+					jean->pulsa[3] = 1;
+					jean->pulsa[2] = 0;
+				}
+			}
+#	endif
 		}
 
 		if (evento.type == SDL_JOYBUTTONUP) {
 			if (evento.jbutton.button == JOY_JUMP)
 				jean->pulsa[0] = 0;
+#	ifdef _PSP
+			if (evento.jbutton.button == JOY_DOWN) {
+				jean->pulsa[1] = 0;
+				jean->agachado = 0;
+			}
+			if (evento.jbutton.button == JOY_LEFT) {
+				jean->pulsa[2] = 0;
+			}
+			if (evento.jbutton.button == JOY_RIGHT) {
+				jean->pulsa[3] = 0;
+			}
+#	endif
 		}
 
+#	ifdef _WII
 		if (evento.type == SDL_JOYHATMOTION) {
 			if (evento.jhat.value & SDL_HAT_DOWN) {
 				if ((jean->pulsa[1] == 0) && (jean->salto == 0)) {
@@ -1350,6 +1385,7 @@ void tecladoj (struct protagonista *jean, int *tecla) {
 				jean->pulsa[3] = 0;
 			}
 		}
+#	endif
 #endif
 	}
 
@@ -1413,11 +1449,17 @@ void tecladop (int *teclap) {
 		if (evento.type == SDL_JOYBUTTONDOWN) {
 			if (evento.jbutton.button == JOY_START)
 				*teclap = 1;
+#	ifdef _PSP
+			if ((evento.jbutton.button == JOY_LEFT) || (evento.jbutton.button == JOY_RIGHT))
+				*teclap = 1;
+#	endif
 		}
+#	ifdef _WII
 		if (evento.type == SDL_JOYHATMOTION) {
 			if ((evento.jhat.value & SDL_HAT_LEFT) || (evento.jhat.value & SDL_HAT_RIGHT))
 				*teclap = 1;
 		}
+#	endif
 #endif
 	}
 
