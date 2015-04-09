@@ -6,6 +6,7 @@ CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictiv
 CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"$(PREFIX)/share/abbayev2\""
 LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm
 
+PROG=		abbayev2
 SRCS=		src/drawing.c \
 		src/ending.c \
 		src/enemies.c \
@@ -17,17 +18,17 @@ SRCS=		src/drawing.c \
 		src/main.c \
 		src/startscreen.c
 
-all: abbaye
+all: $(PROG)
 
-abbaye: ./src/main.c ./src/loading.c ./src/startscreen.c ./src/history.c ./src/game.c ./src/jean.c ./src/enemies.c ./src/gameover.c ./src/ending.c ./src/drawing.c
-	$(CC) $(CFLAGS) $(SRCS) -o abbayev2 $(LIBS)
+$(PROG): ./src/main.c ./src/loading.c ./src/startscreen.c ./src/history.c ./src/game.c ./src/jean.c ./src/enemies.c ./src/gameover.c ./src/ending.c ./src/drawing.c
+	$(CC) $(CFLAGS) $(SRCS) -o $(PROG) $(LIBS)
 
 clean:
 
 	rm -rf ./abbayev2
 
 # Installation
-install:
+install: $(PROG)
 	cp abbayev2 $(DESTDIR)$(PREFIX)/bin/
 	cp abbaye.desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
