@@ -45,10 +45,9 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	uint winfull = *fullscreen;
 
 	/* Loading PNG */
-	SDL_Texture *tiles = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STATIC,1000,240);
 	SDL_Surface *tilesb = IMG_Load(DATADIR "/graphics/tiles.png");
 	SDL_SetColorKey(tilesb, SDL_TRUE, SDL_MapRGB(tilesb->format, 0, 0, 0) );
-	tiles = SDL_CreateTextureFromSurface(renderer, tilesb);
+	SDL_Texture *tiles = SDL_CreateTextureFromSurface(renderer, tilesb);
 	SDL_FreeSurface(tilesb);
 	SDL_Texture *fonts = IMG_LoadTexture(renderer, DATADIR "/graphics/fonts.png");
 
