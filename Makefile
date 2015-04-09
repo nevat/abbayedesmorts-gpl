@@ -29,7 +29,7 @@ clean:
 
 # Installation
 install: $(PROG)
-	cp abbayev2 $(DESTDIR)$(PREFIX)/bin/
+	cp $(PROG) $(DESTDIR)$(PREFIX)/bin/
 	cp abbaye.desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
 	cp ./sounds/* $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
@@ -40,7 +40,7 @@ install: $(PROG)
 	cp -r ./graphics/* $(DESTDIR)$(PREFIX)/share/abbayev2/graphics
 
 uninstall:
-	rm $(DESTDIR)$(PREFIX)/bin/abbayev2
+	rm $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	rm $(DESTDIR)$(PREFIX)/share/applications/abbaye.desktop
 	rm $(DESTDIR)$(PREFIX)/share/pixmaps/abbaye.png
 	rm -rf $(DESTDIR)$(PREFIX)/share/abbayev2
