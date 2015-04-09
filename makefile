@@ -1,7 +1,26 @@
+PREFIX?=	/usr
+
+CC?=		gcc
+CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize
+
+CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"$(PREFIX)/share/abbayev2\""
+LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm
+
+SRCS=		src/drawing.c \
+		src/ending.c \
+		src/enemies.c \
+		src/game.c \
+		src/gameover.c \
+		src/history.c \
+		src/jean.c \
+		src/loading.c \
+		src/main.c \
+		src/startscreen.c
+
 all: abbaye
 
 abbaye: ./src/main.c ./src/loading.c ./src/startscreen.c ./src/history.c ./src/game.c ./src/jean.c ./src/enemies.c ./src/gameover.c ./src/ending.c ./src/drawing.c
-	gcc -finline-functions -funswitch-loops -fpredictive-commoning -fgcse-after-reload -ftree-vectorize ./src/main.c ./src/loading.c ./src/startscreen.c ./src/history.c ./src/game.c ./src/jean.c ./src/enemies.c ./src/gameover.c ./src/ending.c ./src/drawing.c -o abbayev2 `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lm
+	$(CC) $(CFLAGS) $(SRCS) -o abbayev2 $(LIBS)
 
 clean:
 
@@ -9,18 +28,18 @@ clean:
 
 # Installation
 install:
-	cp abbayev2 /usr/bin/
-	cp abbaye.desktop /usr/share/applications
-	mkdir -p /usr/share/abbayev2/sounds
-	cp ./sounds/* /usr/share/abbayev2/sounds
-	mkdir -p /usr/share/abbayev2/data
-	cp ./data/* /usr/share/abbayev2/data
-	cp abbaye.png /usr/share/pixmaps
-	mkdir -p /usr/share/abbayev2/graphics
-	cp -r ./graphics/* /usr/share/abbayev2/graphics
+	cp abbayev2 $(DESTDIR)$(PREFIX)/bin/
+	cp abbaye.desktop $(DESTDIR)$(PREFIX)/share/applications
+	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
+	cp ./sounds/* $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
+	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/data
+	cp ./data/* $(DESTDIR)$(PREFIX)/share/abbayev2/data
+	cp abbaye.png $(DESTDIR)$(PREFIX)/share/pixmaps
+	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/graphics
+	cp -r ./graphics/* $(DESTDIR)$(PREFIX)/share/abbayev2/graphics
 
 uninstall:
-	rm /usr/bin/abbayev2
-	rm /usr/share/applications/abbaye.desktop
-	rm /usr/share/pixmaps/abbaye.png
-	rm -rf /usr/share/abbayev2
+	rm $(DESTDIR)$(PREFIX)/bin/abbayev2
+	rm $(DESTDIR)$(PREFIX)/share/applications/abbaye.desktop
+	rm $(DESTDIR)$(PREFIX)/share/pixmaps/abbaye.png
+	rm -rf $(DESTDIR)$(PREFIX)/share/abbayev2

@@ -255,17 +255,17 @@ void showparchment (SDL_Renderer *renderer,uint *parchment) {
 	SDL_Texture *yparchment = NULL;
 
 	switch (*parchment) {
-		case 3: yparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/parchment1.png");
+		case 3: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment1.png");
 						break;
-		case 8:	yparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/parchment2.png");
+		case 8:	yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment2.png");
 						break;
-		case 12: yparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/parchment3.png");
+		case 12: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment3.png");
 						 break;
-		case 14: yparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/parchment4.png");
+		case 14: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment4.png");
 						 break;
-		case 16: yparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/parchment5.png");
+		case 16: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment5.png");
 						 break;
-		case 21: yparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/parchment6.png");
+		case 21: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment6.png");
 						 break;
 
 	}
@@ -277,7 +277,7 @@ void showparchment (SDL_Renderer *renderer,uint *parchment) {
 
 void redparchment (SDL_Renderer *renderer,struct hero *jean) {
 
-	SDL_Texture *rparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/redparch.png");
+	SDL_Texture *rparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/redparch.png");
 	SDL_RenderCopy(renderer,rparchment,NULL,NULL);
 	SDL_DestroyTexture(rparchment);
 
@@ -287,7 +287,7 @@ void redparchment (SDL_Renderer *renderer,struct hero *jean) {
 
 void blueparchment (SDL_Renderer *renderer,struct hero *jean) {
 
-	SDL_Texture *bparchment = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/blueparch.png");
+	SDL_Texture *bparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/blueparch.png");
 	SDL_RenderCopy(renderer,bparchment,NULL,NULL);
 	SDL_DestroyTexture(bparchment);
 

@@ -14,9 +14,9 @@ void gameover (SDL_Window *screen,uint *state) {
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	
-	SDL_Texture *gameover = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/gameover.png");
+	SDL_Texture *gameover = IMG_LoadTexture(renderer, DATADIR "/graphics/gameover.png");
 	
-	Mix_Music *bso = Mix_LoadMUS("/usr/share/abbayev2/sounds/GameOverV2N.ogg");
+	Mix_Music *bso = Mix_LoadMUS(DATADIR "/sounds/GameOverV2N.ogg");
 
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer,gameover,NULL,NULL);

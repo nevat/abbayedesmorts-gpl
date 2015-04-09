@@ -15,7 +15,7 @@ void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 	temp[3] = 0;
 
 	/* Loading file */
-	datafile = fopen("/usr/share/abbayev2/data/map.txt", "r");
+	datafile = fopen(DATADIR "/data/map.txt", "r");
 	fgets (line, 129, datafile);
 	fgets (line, 129, datafile);
 
@@ -36,7 +36,7 @@ void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 	/* Cerramos fichero */
 	fclose (datafile);
 
-	datafile = fopen("/usr/share/abbayev2/data/enemies.txt", "r");
+	datafile = fopen(DATADIR "/data/enemies.txt", "r");
 	fgets (line2, 61, datafile);
 	fgets (line2, 61, datafile);
 
@@ -61,22 +61,22 @@ void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 void loadingmusic(Mix_Music *bso[],Mix_Chunk *fx[]) {
 
 	/* Musics */
-	bso[0] = Mix_LoadMUS("/usr/share/abbayev2/sounds/PrayerofHopeN.ogg");
-	bso[1] = Mix_LoadMUS("/usr/share/abbayev2/sounds/AreaIChurchN.ogg");
-	bso[2] = Mix_LoadMUS("/usr/share/abbayev2/sounds/GameOverV2N.ogg");
-	bso[3] = Mix_LoadMUS("/usr/share/abbayev2/sounds/HangmansTree.ogg");
-	bso[4] = Mix_LoadMUS("/usr/share/abbayev2/sounds/AreaIICavesV2N.ogg");
-	bso[5] = Mix_LoadMUS("/usr/share/abbayev2/sounds/EvilFightN.ogg");
-	bso[6] = Mix_LoadMUS("/usr/share/abbayev2/sounds/AreaIIIHellN.ogg");
-	bso[7] = Mix_LoadMUS("/usr/share/abbayev2/sounds/ManhuntwoodN.ogg");
+	bso[0] = Mix_LoadMUS(DATADIR "/sounds/PrayerofHopeN.ogg");
+	bso[1] = Mix_LoadMUS(DATADIR "/sounds/AreaIChurchN.ogg");
+	bso[2] = Mix_LoadMUS(DATADIR "/sounds/GameOverV2N.ogg");
+	bso[3] = Mix_LoadMUS(DATADIR "/sounds/HangmansTree.ogg");
+	bso[4] = Mix_LoadMUS(DATADIR "/sounds/AreaIICavesV2N.ogg");
+	bso[5] = Mix_LoadMUS(DATADIR "/sounds/EvilFightN.ogg");
+	bso[6] = Mix_LoadMUS(DATADIR "/sounds/AreaIIIHellN.ogg");
+	bso[7] = Mix_LoadMUS(DATADIR "/sounds/ManhuntwoodN.ogg");
 
 	/* Fxs */
-	fx[0] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/shoot.ogg");
-	fx[1] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/doorfx.ogg");
-	fx[2] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/Item.ogg");
-	fx[3] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/jump.ogg");
-	fx[4] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/slash.ogg");
-	fx[5] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/mechanismn.ogg");
-	fx[6] = Mix_LoadWAV ("/usr/share/abbayev2/sounds/onedeathn.ogg");
+	fx[0] = Mix_LoadWAV (DATADIR "/sounds/shoot.ogg");
+	fx[1] = Mix_LoadWAV (DATADIR "/sounds/doorfx.ogg");
+	fx[2] = Mix_LoadWAV (DATADIR "/sounds/Item.ogg");
+	fx[3] = Mix_LoadWAV (DATADIR "/sounds/jump.ogg");
+	fx[4] = Mix_LoadWAV (DATADIR "/sounds/slash.ogg");
+	fx[5] = Mix_LoadWAV (DATADIR "/sounds/mechanismn.ogg");
+	fx[6] = Mix_LoadWAV (DATADIR "/sounds/onedeathn.ogg");
 
 }
