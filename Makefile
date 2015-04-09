@@ -20,7 +20,7 @@ SRCS=		src/drawing.c \
 
 all: $(PROG)
 
-$(PROG): ./src/main.c ./src/loading.c ./src/startscreen.c ./src/history.c ./src/game.c ./src/jean.c ./src/enemies.c ./src/gameover.c ./src/ending.c ./src/drawing.c
+$(PROG): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(PROG) $(LIBS)
 
 clean:
