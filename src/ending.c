@@ -14,13 +14,13 @@ void ending (SDL_Window *screen,uint *state) {
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 
-	SDL_Texture *tiles = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/tiles.png");
-	SDL_Texture *text = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/ending.png");
+	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
+	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/ending.png");
 
 	SDL_Rect srcdoor = {600,72,64,48};
 	SDL_Rect desdoor = {96,72,64,48};
 
-	Mix_Music *bso = Mix_LoadMUS("/usr/share/abbayev2/sounds/PrayerofHopeN.ogg");
+	Mix_Music *bso = Mix_LoadMUS(DATADIR "/sounds/PrayerofHopeN.ogg");
 
 	int i = 0;
 	int x = 0;

@@ -12,7 +12,7 @@
 # include "SDL2/SDL_image.h"
 # include "SDL2/SDL_mixer.h"
 
-main () {
+int main () {
 
 	uint exit = 0;
 	uint state = 0; /* 0-intro,1-history,2-game */

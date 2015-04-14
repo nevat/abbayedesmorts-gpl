@@ -22,11 +22,11 @@ void startscreen(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) 
 	SDL_Event keyp;
 
 	/* Loading PNG */
-	SDL_Texture *intro = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/intro.png");
-	SDL_Texture *intromd = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/intromd.png");
+	SDL_Texture *intro = IMG_LoadTexture(renderer, DATADIR "/graphics/intro.png");
+	SDL_Texture *intromd = IMG_LoadTexture(renderer, DATADIR "/graphics/intromd.png");
 
 	/* Load audio */
-	Mix_Music *music = Mix_LoadMUS("/usr/share/abbayev2/sounds/MainTitleN.ogg");
+	Mix_Music *music = Mix_LoadMUS(DATADIR "/sounds/MainTitleN.ogg");
 
 	while (exit != 1) {
 

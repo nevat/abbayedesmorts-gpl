@@ -2,6 +2,7 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <unistd.h>
 # include "SDL2/SDL.h"
 # include "SDL2/SDL_image.h"
 # include "SDL2/SDL_mixer.h"
@@ -45,11 +46,11 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
 	/* Loading PNG */
 	SDL_Texture *tiles = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STATIC,1000,240);
-	SDL_Surface *tilesb = IMG_Load("/usr/share/abbayev2/graphics/tiles.png");
+	SDL_Surface *tilesb = IMG_Load(DATADIR "/graphics/tiles.png");
 	SDL_SetColorKey(tilesb, SDL_TRUE, SDL_MapRGB(tilesb->format, 0, 0, 0) );
 	tiles = SDL_CreateTextureFromSurface(renderer, tilesb);
 	SDL_FreeSurface(tilesb);
-	SDL_Texture *fonts = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/fonts.png");
+	SDL_Texture *fonts = IMG_LoadTexture(renderer, DATADIR "/graphics/fonts.png");
 
 	/* Loading musics */
 	loadingmusic(bso,fx);

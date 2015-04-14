@@ -16,11 +16,11 @@ void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	SDL_Event keyp;
 
 	/* Load audio */
-	Mix_Music *music = Mix_LoadMUS("/usr/share/abbayev2/sounds/ManhuntN.ogg");
+	Mix_Music *music = Mix_LoadMUS(DATADIR "/sounds/ManhuntN.ogg");
 
 	/* Loading PNG */
-	SDL_Texture *tiles = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/tiles.png");
-	SDL_Texture *text = IMG_LoadTexture(renderer,"/usr/share/abbayev2/graphics/history.png");
+	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
+	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/history.png");
 
 	SDL_Rect srcjean = {384,88,16,24};
 	SDL_Rect desjean = {0,100,16,24};
