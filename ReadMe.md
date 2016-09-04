@@ -1,7 +1,8 @@
 # Abbaye-SDL
 
 Port of indie game "l'Abbaye des Morts". Originally released by Locomalito to Windows
-platform in year 2010. This port uses C language with SDL libraries.
+platform in year 2010.
+This port uses C language with SDL libraries.
 
 # Media / Screenshots
 
@@ -38,7 +39,7 @@ Enter the directory created an run:
 
 As root, install the game with:
 
-`# make install' (Ubuntu users run: `$ sudo make install`)
+`# make install` (Ubuntu users run: `$ sudo make install`)
 
 An icon will appear in your application menu, in game section.
 Alternatively you can run the game with `abbayev2`.
@@ -55,8 +56,7 @@ Abbaye des Morts is a freeware game made by LocoMalito (with the help of Gryzor8
 music side) in 2010. Was developed with Gamemaker and only runs natively in Microsoft
 Windows systems.
 
-This is a port to GNU/Linux systems & any system that supports C and SDL libraries. It is
-written in C code with the help of SDL2 libraries.
+This is a port to GNU/Linux systems & any system that supports C and SDL libraries.
 
 The version 2.0 of the game is a port from SDL1.2 to SDL2 libraries. This includes a nice
 set of features: OpenGL rendering, auto-scaling, Android & IOS support, VSync, etc.
