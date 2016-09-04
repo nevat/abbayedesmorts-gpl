@@ -33,7 +33,6 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	int enemydata[25][7][15];
 	uint room[2] = {5,5}; /* Room, previous room */
 	uint exit = 0;
-	int coord[2] = {0,0}; /* Coord X and Y */
 	uint changeflag = 1; /* Screen change */
 	uint counter[3] = {0,0,0}; /* Counters */
 	uint changetiles=*grapset;

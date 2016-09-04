@@ -150,7 +150,6 @@ void collisions (struct hero *jean,uint stagedata[][22][32],int room[]) {
 	int blroof[2] = {0,0};
 	int points[8] = {0,0,0,0,0,0,0,0};
 	int n = 0;
-	int pixel = 0;
 	int r = 0;
 
 	points[0] = (jean->x + 1) / 8;
@@ -520,11 +519,9 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 void contact (struct hero *jean,struct enem enemies,float proyec[],uint room[]) {
 
 	int i = 0;
-	int half = 0; /* Half size of enemy sprite */
 	int points[4] = {0,0,0,0}; /* 4 points of collision of enemy sprite */
 	int x = 0;
 	int y = 0;
-	int n = 0;
 
 	/* Collisions with enemies */
 	for (i=0;i<7;i++) {

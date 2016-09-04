@@ -115,8 +115,6 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 void movenemies (struct enem *enemies,uint stagedata[][22][32],uint counter[],float proyec[],struct hero jean,Mix_Chunk *fx[]) {
 
 	int i = 0;
-	int tilex = 0;
-	int tiley = 0;
 	int n = 0;
 
 	for (i=0; i<7; i++) {

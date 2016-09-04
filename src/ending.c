@@ -24,9 +24,6 @@ void ending (SDL_Window *screen,uint *state) {
 
 	int i = 0;
 	int x = 0;
-	int height = 0;
-	int width = 0;
-	char message[25];
 
 	Mix_PlayMusic (bso,0);
 
