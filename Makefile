@@ -24,8 +24,7 @@ $(PROG): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(PROG) $(LIBS)
 
 clean:
-
-	rm -rf ./abbayev2
+	rm -f ./abbayev2
 
 # Installation
 install: $(PROG)
