@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [2.0.1] - 2016-09-04
+
+This is a bugfix release. Some compiler warnings have been fixed and a memory leak has been patched. Furthermore, the packaging has been made easier.
+
 ## [1.2] - 2014-08-25
 
 Carsten Teibes has ported the code to Nintendo Wii (thanks Carsten!) ! Check out [the download page](http://wiibrew.org/wiki/Abbaye). All changes made by Carsten has integrated on the project, also I made some optimizations to SDL1 branch, this should make the game faster. [Here is download link !](https://drive.google.com/file/d/0B7kvXgaMw2iNcE1XNkFKZGV6RW8/edit?usp=sharing)
