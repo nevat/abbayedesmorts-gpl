@@ -28,12 +28,15 @@ clean:
 
 # Installation
 install: $(PROG)
-	cp $(PROG) $(DESTDIR)$(PREFIX)/bin/
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp $(PROG) $(DESTDIR)$(PREFIX)/bin
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	cp abbaye.desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
 	cp ./sounds/* $(DESTDIR)$(PREFIX)/share/abbayev2/sounds
 	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/data
 	cp ./data/* $(DESTDIR)$(PREFIX)/share/abbayev2/data
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	cp abbaye.png $(DESTDIR)$(PREFIX)/share/pixmaps
 	mkdir -p $(DESTDIR)$(PREFIX)/share/abbayev2/graphics
 	cp -r ./graphics/* $(DESTDIR)$(PREFIX)/share/abbayev2/graphics
@@ -43,3 +46,7 @@ uninstall:
 	rm $(DESTDIR)$(PREFIX)/share/applications/abbaye.desktop
 	rm $(DESTDIR)$(PREFIX)/share/pixmaps/abbaye.png
 	rm -rf $(DESTDIR)$(PREFIX)/share/abbayev2
+	# ignore if not empty
+	-rmdir $(DESTDIR)$(PREFIX)/bin
+	-rmdir $(DESTDIR)$(PREFIX)/share/applications
+	-rmdir $(DESTDIR)$(PREFIX)/share/pixmaps
