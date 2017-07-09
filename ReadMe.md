@@ -5,10 +5,10 @@ libraries.
 
 ## Media / Screenshots
 
-[![shot1](https://picload.org/image/rrwogddo/1473017079_th.png)](https://pl.vc/bcnge)
-[![shot2](https://picload.org/image/rrwogdag/1473017146_th.png)](https://pl.vc/b5qoo)
-[![shot3](https://picload.org/image/rrwogddc/1473017093_th.png)](https://pl.vc/155ocq)
-[![shot4](https://picload.org/image/rrwogddp/1473017123_th.png)](https://pl.vc/7vdx8)
+[![shot1](screenshots/title_thumb.png)](screenshots/title.png)
+[![shot2](screenshots/title-md_thumb.png)](screenshots/title-md.png)
+[![shot3](screenshots/ingame_thumb.png)](screenshots/ingame.png)
+[![shot4](screenshots/ingame-md_thumb.png)](screenshots/ingame-md.png)
 
 ## Platforms
 
