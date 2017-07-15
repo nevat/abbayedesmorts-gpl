@@ -25,6 +25,9 @@ int main () {
 	/* Creating window */
 	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,SDL_WINDOW_OPENGL);
 
+	/* Hide mouse cursor */
+	SDL_ShowCursor(SDL_DISABLE);
+
 	/* Init audio */
 	Mix_OpenAudio (44100,MIX_DEFAULT_FORMAT,2,4096);
 	Mix_AllocateChannels(5);
