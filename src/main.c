@@ -19,8 +19,14 @@ int main () {
 	uint grapset = 0; /* 0-8bits, 1-16bits */
 	uint fullscreen = 0; /* 0-Windowed,1-Fullscreen */
 
+	/* SDL2 initialization */
+	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_JOYSTICK);
+
 	/* Creating window */
 	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,SDL_WINDOW_OPENGL);
+
+	/* Hide mouse cursor */
+	SDL_ShowCursor(SDL_DISABLE);
 
 	/* Init audio */
 	Mix_OpenAudio (44100,MIX_DEFAULT_FORMAT,2,4096);
@@ -45,6 +51,7 @@ int main () {
 
 	/* Cleaning */
 	SDL_DestroyWindow(screen);
+	SDL_Quit();	
 
 	/* Exiting normally */
 	return 0;
