@@ -1,7 +1,7 @@
 PREFIX?=	/usr
 
 CC?=		gcc
-CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard
+CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -Wno-unused-result
 
 CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"./\""
 LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm

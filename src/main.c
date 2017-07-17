@@ -6,11 +6,8 @@
 
 /* GPL v3 license */
 
-# include <stdio.h>
-# include <stdlib.h>
-# include "SDL2/SDL.h"
-# include "SDL2/SDL_image.h"
-# include "SDL2/SDL_mixer.h"
+ 
+# include "main.h"
 
 int main () {
 

@@ -1,12 +1,6 @@
 /* jean.c */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
-#include "SDL2/SDL_mixer.h"
-#include "structs.h"
+# include "jean.h"
 
 void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 

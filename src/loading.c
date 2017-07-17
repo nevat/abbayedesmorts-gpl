@@ -1,9 +1,6 @@
 /* loading.c */
 
-# include <stdio.h>
-# include <stdlib.h>
-# include "SDL2/SDL.h"
-# include "SDL2/SDL_mixer.h"
+# include "loading.h"
 
 void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 

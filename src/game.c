@@ -1,21 +1,6 @@
 /* game.c */
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include "SDL2/SDL.h"
-# include "SDL2/SDL_image.h"
-# include "SDL2/SDL_mixer.h"
-
-# include "structs.h"
-
-void keybpause (uint *keyp);
-void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag);
-void changescreen (struct hero *jean,uint room[],uint *changeflag);
-void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]);
-void control (struct hero *jean,uint *keyp);
-void counters (uint counter[]);
-void animation (uint stagedata[][22][32],int room[],int counter[]);
+# include "game.h"
 
 void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
