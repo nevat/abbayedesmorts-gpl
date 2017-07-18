@@ -18,12 +18,11 @@ void ending (SDL_Window *screen,uint *state) {
 
 	Mix_Music *bso = Mix_LoadMUS(DATADIR "/sounds/PrayerofHopeN.ogg");
 
-	int i = 0;
-	int x = 0;
+	int16_t x = 0;
 
 	Mix_PlayMusic (bso,0);
 
-	for (i=0;i<951;i++) {
+	for (int16_t i=0;i<951;i++) {
 
 		/* Cleaning the renderer */
 		SDL_RenderClear(renderer);

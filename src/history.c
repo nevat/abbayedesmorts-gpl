@@ -23,12 +23,11 @@ void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	SDL_Rect srcenem = {96,64,16,24};
 	SDL_Rect desenem = {0,100,16,24};
 
-	uint exit = 0;
+	uint8_t exit = 0;
 	float posjean = -16;
 	float posenem[4] = {-17,-17,-17,-17};
-	uint animation = 0;
-	uint i = 0;
-	uint musicload = 0;
+	uint8_t animation = 0;
+	uint8_t musicload = 0;
 
 	while (exit != 1) {
 
@@ -61,12 +60,12 @@ void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
 		/* Crusaders running */
 		/* When start running */
-		for (i=0;i<4;i++) {
+		for (uint16_t i=0;i<4;i++) {
 			if (posjean > (35 + (30 * i)))
 				posenem[i] += 0.65;
 		}
 		/* Draw */
-		for (i=0;i<4;i++) {
+		for (uint16_t i=0;i<4;i++) {
 			if ((posenem[i] > -17) && (posenem[i] < 257)) {
 				desenem.x = posenem[i];
 				srcenem.x = 96 + ((animation / 7) * 16);

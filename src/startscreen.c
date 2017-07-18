@@ -9,8 +9,8 @@ void startscreen(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) 
 	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
 
-	uint exit = 0;
-	uint musicplay = 0;
+	uint8_t exit = 0;
+	uint8_t musicplay = 0;
 
 	SDL_Rect srcintro = {0,0,256,192};
 	SDL_Rect desintro = {0,0,256,192};
