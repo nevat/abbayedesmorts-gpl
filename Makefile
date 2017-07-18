@@ -1,7 +1,8 @@
 PREFIX?=	/usr
 
 CC?=		gcc
-CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize -Wno-unused-result 
+CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize -Wno-unused-result
+LDFLAGS?=	-Wl,-z,relro
 
 CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"$(PREFIX)/share/abbayev2\""
 LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm
@@ -21,7 +22,7 @@ SRCS=		src/drawing.c \
 all: $(PROG)
 
 $(PROG): $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(PROG) $(LIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(PROG) $(LIBS)
 
 clean:
 	rm -f ./abbayev2
