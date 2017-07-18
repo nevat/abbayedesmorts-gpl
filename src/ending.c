@@ -1,6 +1,6 @@
 /* ending.c */
 
-# include "ending.h"
+# include "base.h"
 
 void ending (SDL_Window *screen,uint *state) {
 

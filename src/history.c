@@ -1,6 +1,6 @@
 /* history.c */
 
-# include "history.h"
+# include "base.h"
 
 void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 

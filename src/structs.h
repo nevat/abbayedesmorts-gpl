@@ -1,5 +1,7 @@
 /* structs.h */
 
+#pragma once
+
 /* Structs */
 struct enem {
   int type[7];

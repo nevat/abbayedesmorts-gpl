@@ -1,6 +1,6 @@
 /* loading.c */
 
-# include "loading.h"
+# include "base.h"
 
 void loaddata(uint stagedata[][22][32],int enemydata[][7][15]) {
 
