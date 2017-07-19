@@ -4,9 +4,7 @@
 
 void searchenemies (uint room[], struct enem *enemies,uint *changeflag, int enemydata[][7][15]) {
 
-	int y = 0;
-
-  for (y=0; y<7; y++) {
+	for (uint8_t y=0; y<7; y++) {
 		enemies->type[y] = enemydata[room[0]][y][0];
 		enemies->x[y] = enemydata[room[0]][y][1];
 		enemies->y[y] = enemydata[room[0]][y][2];
@@ -22,9 +20,9 @@ void searchenemies (uint room[], struct enem *enemies,uint *changeflag, int enem
 		enemies->adjustx2[y] = enemydata[room[0]][y][12];
 		enemies->adjusty1[y] = enemydata[room[0]][y][13];
 		enemies->adjusty2[y] = enemydata[room[0]][y][14];
-  }
+	}
 
-  *changeflag -= 1;
+	*changeflag -= 1;
 
 }
 
@@ -33,57 +31,55 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 	SDL_Rect srctile = {0,0,16,16};
 	SDL_Rect destile = {0,0,16,16};
 
-	int i = 0;
-
-	for (i=0; i<7; i++) {
+	for (uint8_t i=0; i<7; i++) {
 		if ((enemies->type[i] > 0) && (enemies->type[i] < 16)) {
-	  	if ((enemies->type[i] == 3) || (enemies->type[i] == 5) || (enemies->type[i] == 15)) {
+	  		if ((enemies->type[i] == 3) || (enemies->type[i] == 5) || (enemies->type[i] == 15)) {
 				srctile.h = 24;
 				destile.h = 24;
 			}
-	  	else {
+	  		else {
 				srctile.h = 16;
 				destile.h = 16;
 			}
-	  	if (enemies->type[i] == 6) {
+	  		if (enemies->type[i] == 6) {
 				srctile.x = enemies->tilex[i] + (enemies->animation[i] * 24);
 				srctile.w = 24;
 				destile.w = 24;
-	  	}
-	  	else {
+	  		}
+	  		else {
 				if (enemies->type[i] == 15)
 					srctile.x = enemies->tilex[i] + (enemies->animation[i] * 16);
 				else
 					srctile.x = enemies->tilex[i] + (enemies->animation[i] * 16);
 				srctile.w = 16;
 				destile.w = 16;
-	  	}
-	  	srctile.y = enemies->tiley[i] + (changetiles * 120);
-	  	destile.x = enemies->x[i];
-	  	destile.y = enemies->y[i];
-	  	if (((enemies->type[i] != 13) && (enemies->type[i] != 14)) || (((enemies->type[i] == 13) || (enemies->type[i] == 14)) && (enemies->y[i] < enemies->limright[i] - 8)))
+	  		}
+	  		srctile.y = enemies->tiley[i] + (changetiles * 120);
+	  		destile.x = enemies->x[i];
+	  		destile.y = enemies->y[i];
+	  		if (((enemies->type[i] != 13) && (enemies->type[i] != 14)) || (((enemies->type[i] == 13) || (enemies->type[i] == 14)) && (enemies->y[i] < enemies->limright[i] - 8)))
 				SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 
-	  	if (enemies->type[i] == 13) { /* Water movement */
+	  		if (enemies->type[i] == 13) { /* Water movement */
 				if (((enemies->speed[i] > 30) && (enemies->speed[i] < 40)) || ((enemies->y[i] == enemies->limright[i] - 16) && (enemies->direction[i] == 1))) {
-		  		srctile.x = 368;
+		  			srctile.x = 368;
 					srctile.y = 32 + (changetiles * 120);
-				  srctile.h = 8;
+				  	srctile.h = 8;
 					destile.h = 8;
-				  destile.y = enemies->limright[i];
+				  	destile.y = enemies->limright[i];
 					SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 					if ((enemies->speed[i] > 30) && (enemies->speed[i] < 40))
 						Mix_PlayChannel(-1, fx[4], 0);;
 				}
 				if (((enemies->speed[i] > 39) && (enemies->speed[i] < 45)) || ((enemies->y[i] == enemies->limright[i] - 10) && (enemies->direction[i] == 1))) {
-			  	srctile.x = 384;
+			  		srctile.x = 384;
 					srctile.y = 32 + (changetiles * 120);
-				  srctile.h = 8;
+					srctile.h = 8;
 					destile.h = 8;
-				  destile.y = enemies->limright[i];
+				  	destile.y = enemies->limright[i];
 					SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 				}
-	  	}
+	  		}
 		}
 		/* Draw smoke */
 		if (enemies->type[i] == 88) {
@@ -109,10 +105,7 @@ void drawenemies (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles
 
 void movenemies (struct enem *enemies,uint stagedata[][22][32],uint counter[],float proyec[],struct hero jean,Mix_Chunk *fx[]) {
 
-	int i = 0;
-	int n = 0;
-
-	for (i=0; i<7; i++) {
+	for (uint8_t i=0; i<7; i++) {
 		if ((enemies->type[i] > 0) && (enemies->type[i] < 10)) {
 			if (enemies->direction[i] == 0) { /* Go right */
 				if ((enemies->x[i] + 1) < enemies->limright[i])
@@ -201,7 +194,7 @@ void movenemies (struct enem *enemies,uint stagedata[][22][32],uint counter[],fl
 			}
 			/* Enable fire */
 			if (enemies->speed[i] == 50) {
-				for (n=0; n<=4; n+=2) {
+				for (uint8_t n=0; n<=4; n+=2) {
 					if (proyec[n] == 0) {
 						enemies->fire[i] = 1;
 						proyec[n] = enemies->x[i] - 8;
@@ -271,12 +264,9 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 	SDL_Rect destile = {0,0,16,16};
 	SDL_Rect srcfire = {660,32,4,4};
 	SDL_Rect desfire = {0,0,4,4};
-	int n = 0;
-	int r = 0;
 
 	/* Animation */
-
-	for (n=1; n<4; n++) {
+	for (uint8_t n=1; n<4; n++) {
 		if (enemies->speed[n] < (140 + ((n-1) * 30)))
 			enemies->speed[n] ++;
 		else
@@ -296,9 +286,9 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
   }
 
 	/* Init fire */
-	for (n=1; n<4; n++) {
+	for (uint8_t n=1; n<4; n++) {
 		if (enemies->speed[n] == 135 + ((n-1) * 30)) {
-	 	 r = (n-1) * 4;
+	 		int16_t r = (n-1) * 4;
 	  	proyec[r] = enemies->x[n] - 1;
 	  	proyec[r+1] = enemies->y[n] - 1;
 	  	proyec[r+2] = enemies->x[n] + 16;
@@ -308,8 +298,8 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 	}
 
 	/* Move fires */
-	for (n=1; n<4; n++) {
-		r = (n-1) * 4;
+	for (uint8_t n=1; n<4; n++) {
+		uint16_t r = (n-1) * 4;
 		if (proyec[r] > 0) {
 			if (enemies->direction[n] == 0) {
 				if (enemies->y[n] - proyec[r+1] < 24) {
@@ -355,8 +345,8 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 	}
 
 	/* Draw fire */
-	for (n=1; n<4; n++) {
-		r = (n-1) * 4;
+	for (uint8_t n=1; n<4; n++) {
+		uint16_t r = (n-1) * 4;
 		if (proyec[r] > 0) {
 			srcfire.y = 32 + (changetiles * 120);
 			desfire.x = proyec[r];
@@ -378,9 +368,8 @@ void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,u
 
 	SDL_Rect srctile = {96,64,16,24};
 	SDL_Rect destile = {0,0,16,24};
-	int i = 0;
 
-	for (i=0; i<7; i++) {
+	for (uint8_t i=0; i<7; i++) {
 
 		/* Init values */
 		if (enemies->type[i] == 17) {
@@ -506,7 +495,7 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 
 	/* Init axes */
 	if ((enemies->speed[0] == 45) && (enemies->x[0] > 48)) {
-	  for (x=0; x<8; x+=2) {
+	  for (uint8_t x=0; x<8; x+=2) {
 			if (proyec[x] == 0) {
 			  proyec[x] = enemies->y[0] + 35;
 			  proyec[x+1] = enemies->x[0];
@@ -541,12 +530,12 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 
 	/* Axes movement */
-  for (n=0; n<8; n+=2) {
+	for (uint8_t n=0; n<8; n+=2) {
 
 		if (proyec[n] > 0) {
 	  	/* Locating axe */
-		  x = proyec[n+1] / 8;
-		  y = proyec[n] / 8;
+		  int8_t x = proyec[n+1] / 8;
+		  int8_t y = proyec[n] / 8;
 
 		  /* Touching ground, take out & cleaning */
 		  if (y == 20) {
@@ -568,12 +557,12 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
   }
 
 	/* Draw axe */
-	for (n=0; n<8; n+=2) {
+	for (uint8_t n=0; n<8; n+=2) {
 		if (proyec[n] > 0) {
-	  	desaxe.x = proyec[n+1];
-		  desaxe.y = proyec[n];
-		  /* Rotation */
-		  srcaxe.x = 576 + (16 * (counter[2] / 2));
+	  		desaxe.x = proyec[n+1];
+		  	desaxe.y = proyec[n];
+		  	/* Rotation */
+		  	srcaxe.x = 576 + (16 * (counter[2] / 2));
 			srcaxe.y = 56 + (changetiles * 120);
 			SDL_RenderCopy(renderer,tiles,&srcaxe,&desaxe);
 		}
@@ -585,7 +574,6 @@ void dragon (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 
 	SDL_Rect srctile = {456,72,16,8};
 	SDL_Rect destile = {120,40,16,8};
-	int n = 0;
 
 	/* Draw front paw */
 	srctile.y = 72 + (changetiles * 120);
@@ -612,6 +600,7 @@ void dragon (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 	destile.x = 120;
 	destile.y = 8 + (enemies->animation[0] * 3);
 	SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+
 	/* Draw snout */
 	srctile.h = 16;
 	srctile.x = 448;
@@ -643,7 +632,7 @@ void dragon (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 	/* Make fire in ground */
 	if (enemies->speed[0] == 150) {
 	  Mix_PlayChannel(-1, fx[0], 0);;
-	  for (n=0; n<16; n+=8) {
+	  for (uint8_t n=0; n<16; n+=8) {
 			if (proyec[n] == 0) {
 			  proyec[n] = 120;
 			  proyec[n+1] = 464;
@@ -659,39 +648,39 @@ void dragon (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 	}
 
 	/* Fire movement & animation */
-	for (n=0; n<16; n+=2) {
-	  if (proyec[n] > 0) {
+	for (uint8_t n=0; n<16; n+=2) {
+		if (proyec[n] > 0) {
 			if ((n < 3) || ((n>7) && (n<11))) {
-		  	if (proyec[n] > 48) {
+		  		if (proyec[n] > 48) {
 					proyec[n] -= 0.3;
 					/* Animation */
 					if (counter[0] % 8 == 0) {
-			  		if (proyec[n+1] == 464)
+			  			if (proyec[n+1] == 464)
 							proyec[n+1] = 472;
-			  		else
+			  			else
 							proyec[n+1] = 464;
-					}
-		  	}
-		  	else {
+						}
+		  		}
+		  		else {
 					proyec[n] = 0;
 					proyec[n+1] = 0;
-		  	}
+		  		}
 			}
 			else {
-		  	if (proyec[n] < 248) {
+		  		if (proyec[n] < 248) {
 					proyec[n] += 0.3;
 					/* Animation */
 					if (counter[0] % 8 == 0) {
-			  		if (proyec[n+1] == 464)
+			  			if (proyec[n+1] == 464)
 							proyec[n+1] = 472;
-			  		else
+			  			else
 							proyec[n+1] = 464;
 					}
-		  	}
-		  	else {
+		  		}
+		  		else {
 					proyec[n] = 0;
 					proyec[n+1] = 0;
-		  	}
+		  		}
 			}
 			srctile.x = proyec[n+1];
 			srctile.y = 0 + (changetiles * 120);
@@ -712,9 +701,6 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	SDL_Rect destile = {192,0,32,24};
 	SDL_Rect srcfire = {656,32,4,4};
 	SDL_Rect desfire = {0,0,4,4};
-	int n = 0;
-	int r = 0;
-	int x = 0;
 
 	/* Movement */
 	if (enemies->direction[0] == 0) { /* Subiendo */
@@ -749,10 +735,11 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 
 	/* Init shoots */
 	if (((enemies->y[0] == 37) && (enemies->direction[0] == 0)) || ((enemies->y[0] == 20) && (enemies->direction[0] == 1)) || ((enemies->y[0] == 62) && (enemies->direction[0] == 0))) {
-		x = enemies->y[0];
+		int8_t x = enemies->y[0];
+		uint8_t r = 0;
 		switch (x) {
-		  case 20: r = 0;
-				   		 break;
+		  /* case 20: r = 0;
+				   		 break; */
 		  case 37: r = 6;
 				   	 	 break;
 		  case 62: r = 12;
@@ -770,8 +757,8 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	}
 
 	/* Move shoots */
-	for (n=0; n<17; n+=2) {
-	  if ((proyec[n] > 16) && ((proyec[n+1] > 8) && (proyec[n+1] < 160))) {
+	for (uint8_t n=0; n<17; n+=2) {
+		if ((proyec[n] > 16) && ((proyec[n+1] > 8) && (proyec[n+1] < 160))) {
 			proyec[n] -= 2;
 			if ((n+1 == 3) || (n+1 == 9) || (n+1 == 15))
 			  proyec[n+1] -= 0.75;
@@ -794,12 +781,10 @@ void fireball (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,ui
 
 	SDL_Rect srctile = {576,40,16,16};
 	SDL_Rect destile = {0,0,16,16};
-	int x = 0;
-	int y = 0;
 
 	/* Current tile X and Y */
-	x = enemies->x[0] / 8;
-	y = enemies->y[0] / 8;
+	int16_t x = enemies->x[0] / 8;
+	int16_t y = enemies->y[0] / 8;
 
 	/* Follow Jean */
 	if (enemies->x[0] < jean.x + 1) {
