@@ -20,7 +20,7 @@ int main () {
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_JOYSTICK);
 
 	/* Creating window */
-	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,SDL_WINDOW_OPENGL);
+	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0.1",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,0);
 
 	/* Hide mouse cursor */
 	SDL_ShowCursor(SDL_DISABLE);
