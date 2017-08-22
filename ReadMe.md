@@ -19,6 +19,8 @@ Currently, this port works on:
  * OpenPandora
  * CGW Zero
  * Nintendo Wii
+ * PSP [Link](https://t.co/AkH3HvG3kr)
+ * XBox [Link](https://t.co/rLwe4UCi43) 
 
 Feel free to port this program to other systems. It is open source, take the code and
 modify it to fit your platforms needs!
