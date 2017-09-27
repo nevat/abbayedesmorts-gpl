@@ -4,11 +4,6 @@
 
 void startscreen(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
-	/* Renderer (with VSync, nice !) */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
-
 	uint8_t exit = 0;
 	uint8_t musicplay = 0;
 
@@ -99,6 +94,4 @@ void startscreen(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) 
 	/* Cleaning */
 	SDL_DestroyTexture(intro);
 	SDL_DestroyTexture(intromd);
-	SDL_DestroyRenderer(renderer);
-
 }

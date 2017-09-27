@@ -4,12 +4,6 @@
 
 void ending (SDL_Window *screen,uint *state) {
 
-	/* Creating renderer */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
-	SDL_SetRenderDrawColor(renderer,0,0,0,255);
-
 	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
 	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/ending.png");
 
@@ -47,7 +41,6 @@ void ending (SDL_Window *screen,uint *state) {
 	SDL_DestroyTexture (tiles);
 	SDL_DestroyTexture(text);
 	Mix_FreeMusic (bso);
-	SDL_DestroyRenderer (renderer);
 
 	*state = 0;
 

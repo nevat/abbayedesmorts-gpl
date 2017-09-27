@@ -4,11 +4,6 @@
 
 void gameover (SDL_Window *screen,uint *state) {
 
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
-	SDL_SetRenderDrawColor(renderer,0,0,0,255);
-	
 	SDL_Texture *gameover = IMG_LoadTexture(renderer, DATADIR "/graphics/gameover.png");
 	
 	Mix_Music *bso = Mix_LoadMUS(DATADIR "/sounds/GameOverV2N.ogg");
@@ -26,7 +21,6 @@ void gameover (SDL_Window *screen,uint *state) {
 	/* Cleaning */
 	Mix_FreeMusic (bso);
 	SDL_DestroyTexture(gameover);
-	SDL_DestroyRenderer(renderer);
 
 	*state = 0;
 

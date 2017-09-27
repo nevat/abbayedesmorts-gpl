@@ -4,12 +4,6 @@
 
 void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
-	/* Renderer */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
-	SDL_SetRenderDrawColor(renderer,0,0,0,255);
-
 	/* Sounds */
 	Mix_Music *bso[8];
 	Mix_Chunk *fx[7];
@@ -272,7 +266,6 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
 	SDL_DestroyTexture(fonts);
-	SDL_DestroyRenderer(renderer);
 	for (i=0;i<8;i++)
 		Mix_FreeMusic(bso[i]);
 	for (i=0;i<7;i++)

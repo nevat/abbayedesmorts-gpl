@@ -17,10 +17,21 @@ int main () {
 	uint fullscreen = 0; /* 0-Windowed,1-Fullscreen */
 
 	/* SDL2 initialization */
-	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
 	/* Creating window */
-	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0.1",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,0);
+	SDL_Window *screen; 
+	if (fullscreen)
+		screen = SDL_CreateWindow(NULL, 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	else	
+		screen = SDL_CreateWindow("Abbaye des Morts v2.0.1",
+			SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,0);
+
+	/* Create renderer (with VSync, nice !) */
+	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "linear");
+	renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+	SDL_RenderSetLogicalSize(renderer, 256, 192);
+	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 
 	/* Init joystick if there's one connected */
 	SDL_Joystick *joystick = NULL;
@@ -57,6 +68,7 @@ int main () {
 
 	/* Cleaning */
 	SDL_JoystickClose(joystick);
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(screen);
 	SDL_Quit();	
 
