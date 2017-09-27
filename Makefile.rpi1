@@ -1,7 +1,7 @@
 PREFIX?=	/usr
 
 CC?=		gcc
-CFLAGS?=	-O0 -ggdb
+CFLAGS?=	-O3 -march=armv6j -mfpu=vfp -mfloat-abi=hard
 
 #CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"$(PREFIX)/share/abbayev2\""
 CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"./\""
