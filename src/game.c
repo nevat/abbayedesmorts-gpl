@@ -393,8 +393,45 @@ void control (struct hero *jean,uint *keyp) {
 				jean->push[3] = 0;
 		}
 
-	}
+		if (event.type == SDL_JOYAXISMOTION) {
+			if (event.jaxis.axis == X_JOYAXIS) {
+				if (event.jaxis.value < 0) {  // BUTTONDOWN LEFT	
+					jean->push[2] = 1;
+					jean->push[3] = 0;
+				}
+				if (event.jaxis.value > 0) {  // BUTTONDOWN RIGHT
+					jean->push[3] = 1;
+					jean->push[2] = 0;
+				}
+				if (event.jaxis.value == 0) { // BUTTONUP	
+					jean->push[2] = 0;
+					jean->push[3] = 0;
+				}
+			}
+			if (event.jaxis.axis == Y_JOYAXIS) {
+				if (event.jaxis.value > 0) {  // BUTTONDOWN DUCK
+					jean->push[1] = 1;
+					jean->ducking = 1;
+				}
+				if (event.jaxis.value == 0) { // BUTTONUP
+					jean->push[1] = 0;
+					jean->ducking = 0;
+				}
+			}
 
+		}
+
+		if (event.type == SDL_JOYBUTTONDOWN) {
+			if (event.jbutton.button == JUMP_JOYBUTTON)
+				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
+					jean->jump = 1;
+		}
+		
+		if (event.type == SDL_JOYBUTTONUP) {
+				if (event.jbutton.button == JUMP_JOYBUTTON)
+					jean->push[0] = 0;
+		}
+	}
 }
 
 void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]) {
@@ -698,6 +735,11 @@ void keybpause (uint *keyp) {
 		if (event.type == SDL_KEYDOWN) {
 			if ((event.key.keysym.sym == SDLK_SPACE) || (event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
 					*keyp = 1;
+		}
+		if (event.type == SDL_JOYBUTTONDOWN) {
+			if (event.jbutton.button == JUMP_JOYBUTTON || event.jbutton.button == START_JOYBUTTON) {
+					*keyp = 1;
+			}
 		}
 	}
 

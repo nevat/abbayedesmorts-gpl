@@ -76,12 +76,24 @@ void startscreen(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) 
 					exit = 1;
 				}
 				if (keyp.key.keysym.sym == SDLK_ESCAPE) { /* Exit game */
-      		exit = 1;
+      					exit = 1;
 					*state = 6;
 				}
 			}
+			
+			if (keyp.type == SDL_JOYBUTTONDOWN) {
+				if (keyp.jbutton.button == JUMP_JOYBUTTON || keyp.jbutton.button == START_JOYBUTTON) {
+					*state = 1;
+					exit = 1;
+				}
+				if (keyp.jbutton.button == SELECT_JOYBUTTON) {
+					if (*grapset == 0)
+						*grapset = 1;
+					else
+						*grapset = 0;
+				}
+			}
 		}
-
 	}
 
 	/* Cleaning */

@@ -17,10 +17,19 @@ int main () {
 	uint fullscreen = 0; /* 0-Windowed,1-Fullscreen */
 
 	/* SDL2 initialization */
-	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_JOYSTICK);
+	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
 
 	/* Creating window */
 	SDL_Window *screen = SDL_CreateWindow("Abbaye des Morts v2.0.1",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,0);
+
+	/* Init joystick if there's one connected */
+	SDL_Joystick *joystick = NULL;
+
+	if ( SDL_Init(SDL_INIT_JOYSTICK) >= 0 )
+	{
+		joystick = SDL_NumJoysticks() > 0 ? SDL_JoystickOpen(0) : NULL; 
+		SDL_JoystickEventState(SDL_ENABLE);
+	}
 
 	/* Hide mouse cursor */
 	SDL_ShowCursor(SDL_DISABLE);
@@ -47,6 +56,7 @@ int main () {
 	}
 
 	/* Cleaning */
+	SDL_JoystickClose(joystick);
 	SDL_DestroyWindow(screen);
 	SDL_Quit();	
 
