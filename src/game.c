@@ -418,6 +418,9 @@ void control (struct hero *jean,uint *keyp) {
 			if (event.jbutton.button == JUMP_JOYBUTTON)
 				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
 					jean->jump = 1;
+		
+			if (event.jbutton.button == SELECT_JOYBUTTON)
+      				*keyp = 10;
 		}
 		
 		if (event.type == SDL_JOYBUTTONUP) {
