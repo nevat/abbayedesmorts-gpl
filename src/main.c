@@ -13,8 +13,8 @@ int main () {
 
 	uint exit = 0;
 	uint state = 0; /* 0-intro,1-history,2-game */
-	uint grapset = 1; /* 0-8bits, 1-16bits */
-	uint fullscreen = 1; /* 0-Windowed,1-Fullscreen */
+	uint grapset = 0; /* 0-8bits, 1-16bits */
+	uint fullscreen = 0; /* 0-Windowed,1-Fullscreen */
 
 	/* SDL2 initialization */
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
