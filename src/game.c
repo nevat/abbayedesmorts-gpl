@@ -4,12 +4,6 @@
 
 void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
-	/* Renderer */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
-	SDL_SetRenderDrawColor(renderer,0,0,0,255);
-
 	/* Sounds */
 	Mix_Music *bso[8];
 	Mix_Chunk *fx[7];
@@ -272,7 +266,6 @@ void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
 	SDL_DestroyTexture(fonts);
-	SDL_DestroyRenderer(renderer);
 	for (i=0;i<8;i++)
 		Mix_FreeMusic(bso[i]);
 	for (i=0;i<7;i++)
@@ -393,8 +386,48 @@ void control (struct hero *jean,uint *keyp) {
 				jean->push[3] = 0;
 		}
 
-	}
+		if (event.type == SDL_JOYAXISMOTION) {
+			if (event.jaxis.axis == X_JOYAXIS) {
+				if (event.jaxis.value < 0) {  // BUTTONDOWN LEFT	
+					jean->push[2] = 1;
+					jean->push[3] = 0;
+				}
+				if (event.jaxis.value > 0) {  // BUTTONDOWN RIGHT
+					jean->push[3] = 1;
+					jean->push[2] = 0;
+				}
+				if (event.jaxis.value == 0) { // BUTTONUP	
+					jean->push[2] = 0;
+					jean->push[3] = 0;
+				}
+			}
+			if (event.jaxis.axis == Y_JOYAXIS) {
+				if (event.jaxis.value > 0) {  // BUTTONDOWN DUCK
+					jean->push[1] = 1;
+					jean->ducking = 1;
+				}
+				if (event.jaxis.value == 0) { // BUTTONUP
+					jean->push[1] = 0;
+					jean->ducking = 0;
+				}
+			}
 
+		}
+
+		if (event.type == SDL_JOYBUTTONDOWN) {
+			if (event.jbutton.button == JUMP_JOYBUTTON)
+				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
+					jean->jump = 1;
+		
+			if (event.jbutton.button == SELECT_JOYBUTTON)
+      				*keyp = 10;
+		}
+		
+		if (event.type == SDL_JOYBUTTONUP) {
+				if (event.jbutton.button == JUMP_JOYBUTTON)
+					jean->push[0] = 0;
+		}
+	}
 }
 
 void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]) {
@@ -698,6 +731,11 @@ void keybpause (uint *keyp) {
 		if (event.type == SDL_KEYDOWN) {
 			if ((event.key.keysym.sym == SDLK_SPACE) || (event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
 					*keyp = 1;
+		}
+		if (event.type == SDL_JOYBUTTONDOWN) {
+			if (event.jbutton.button == JUMP_JOYBUTTON || event.jbutton.button == START_JOYBUTTON) {
+					*keyp = 1;
+			}
 		}
 	}
 

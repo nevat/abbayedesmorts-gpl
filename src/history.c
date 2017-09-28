@@ -4,11 +4,6 @@
 
 void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 
-	/* Renderer */
-	SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED);
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "0");
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
-
 	SDL_Event keyp;
 
 	/* Load audio */
@@ -98,8 +93,21 @@ void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 					exit = 1;
 				}
 				if (keyp.key.keysym.sym == SDLK_ESCAPE) { /* Exit game */
-      		exit = 1;
+      					exit = 1;
 					*state = 6;
+				}
+			}
+			
+			if (keyp.type == SDL_JOYBUTTONDOWN) {
+				if (keyp.jbutton.button == JUMP_JOYBUTTON || keyp.jbutton.button == START_JOYBUTTON) {
+					*state = 2;
+					exit = 1;
+				}
+				if (keyp.jbutton.button == SELECT_JOYBUTTON) {
+					if (*grapset == 0)
+						*grapset = 1;
+					else
+						*grapset = 0;
 				}
 			}
 		}
@@ -117,7 +125,6 @@ void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
 	/* Cleaning */
 	SDL_DestroyTexture(tiles);
 	SDL_DestroyTexture(text);
-	SDL_DestroyRenderer(renderer);
 	Mix_FreeMusic(music);
 
 }

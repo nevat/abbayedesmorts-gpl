@@ -1,10 +1,27 @@
 PREFIX?=	/usr
 
 CC?=		gcc
+
+ifeq ($(DEBUG),1)
+CFLAGS?=	-O0 -ggdb
+else
 CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize -Wno-unused-result
+endif
+
+ifeq ($(PLATFORM), rpi1)
+CFLAGS=		-O2 -march=armv6j -mfpu=vfp -mfloat-abi=hard
+DATADIR= "\"./\""
+endif
+
+ifeq ($(PLATFORM), rpi23)
+CFLAGS=		-O2 -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard
+DATADIR= "\"./\""
+endif
+
+DATADIR?="\"$(PREFIX)/share/abbayev2\""
 LDFLAGS?=	-Wl,-z,relro
 
-CFLAGS+=	`sdl2-config --cflags` -DDATADIR="\"$(PREFIX)/share/abbayev2\""
+CFLAGS+=	`sdl2-config --cflags` -DDATADIR=$(DATADIR)
 LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm
 
 PROG=		abbayev2
