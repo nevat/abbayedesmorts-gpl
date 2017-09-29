@@ -2,7 +2,7 @@
 
 # include "base.h"
 
-void ending (SDL_Window *screen,uint *state) {
+void ending (SDL_Window *screen,uint8_t *state) {
 
 	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
 	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/ending.png");

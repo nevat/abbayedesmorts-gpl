@@ -2,7 +2,7 @@
 
 # include "gameover.h"
 
-void gameover (SDL_Window *screen,uint *state) {
+void gameover (SDL_Window *screen,uint8_t *state) {
 
 	SDL_Texture *gameover = IMG_LoadTexture(renderer, DATADIR "/graphics/gameover.png");
 	

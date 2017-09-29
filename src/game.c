@@ -2,7 +2,7 @@
 
 # include "game.h"
 
-void game(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
+void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
 	/* Sounds */
 	Mix_Music *bso[8];

@@ -2,7 +2,7 @@
 
 # include "base.h"
 
-void history(SDL_Window *screen,uint *state,uint *grapset,uint *fullscreen) {
+void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
 	SDL_Event keyp;
 
