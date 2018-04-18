@@ -13,7 +13,7 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
 	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/history.png");
 
-	SDL_Rect srcjean = {384,88,16,24};
+	SDL_Rect srcjean = {320,88,16,24};
 	SDL_Rect desjean = {0,100,16,24};
 	SDL_Rect srcenem = {96,64,16,24};
 	SDL_Rect desenem = {0,100,16,24};
@@ -48,9 +48,9 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 		if (posjean < 257) {
 			posjean += 0.75;
 			desjean.x = posjean;
-			srcjean.x = 384 + ((animation / 7) * 16); /* Walking animation */
+			srcjean.x = 320 + ((animation / 7) * 16); /* Walking animation */
 			srcjean.y = 88 + (*grapset * 120); /* 8 or 16 bits sprite */
-			SDL_RenderCopy(renderer,tiles,&srcjean,&desjean);
+			SDL_RenderCopyEx(renderer,tiles,&srcjean,&desjean,0,0,1);
 		}
 
 		/* Crusaders running */

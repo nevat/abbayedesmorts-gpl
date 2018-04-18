@@ -73,22 +73,22 @@ void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int c
 		}
 
  		if (jean->ducking == 0) {
-			srctile.x += (64 * jean->direction) + ((jean->animation / 7) * 16) + (r * 32);
+			srctile.x += ((jean->animation / 7) * 16) + (r * 32);
 		 	destile.y = jean->y;
 			destile.x = jean->x;
 			if (jean->y > 152)
 				srctile.h = (176 - jean->y);
 			if (changetiles == 1)
 				srctile.y = 208;
-			SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+			SDL_RenderCopyEx(renderer,tiles,&srctile,&destile,0,0,jean->direction);
 		}
 		else {
-  		srcducktile.x += (jean->direction * 36) + ((jean->animation / 7) * 18);
+  		srcducktile.x += ((jean->animation / 7) * 18);
   		desducktile.y = jean->y + 11;
 			desducktile.x = jean->x;
 			if (changetiles == 1)
 				srcducktile.y = 208;
-			SDL_RenderCopy(renderer,tiles,&srcducktile,&desducktile);
+			SDL_RenderCopyEx(renderer,tiles,&srcducktile,&desducktile,0,0,jean->direction);
 		}
 	}
 
