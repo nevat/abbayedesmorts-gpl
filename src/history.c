@@ -15,7 +15,7 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 
 	SDL_Rect srcjean = {320,88,16,24};
 	SDL_Rect desjean = {0,100,16,24};
-	SDL_Rect srcenem = {96,64,16,24};
+	SDL_Rect srcenem = {64,64,16,24};
 	SDL_Rect desenem = {0,100,16,24};
 
 	uint8_t exit = 0;
@@ -63,9 +63,9 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 		for (uint16_t i=0;i<4;i++) {
 			if ((posenem[i] > -17) && (posenem[i] < 257)) {
 				desenem.x = posenem[i];
-				srcenem.x = 96 + ((animation / 7) * 16);
+				srcenem.x = 64 + ((animation / 7) * 16);
 				srcenem.y = 64 + (*grapset * 120);
-				SDL_RenderCopy(renderer,tiles,&srcenem,&desenem);
+				SDL_RenderCopyEx(renderer,tiles,&srcenem,&desenem,0,0,1);
 			}
 		}
 
