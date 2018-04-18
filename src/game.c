@@ -438,7 +438,7 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 
 	if (room[0] == 4) {
 		if (jean->temp < 7) {
-			/* Mover a Jean */
+			/* Moving Jean */
 			if (counter[1] == 45) {
 				switch (jean->direction) {
 					case 0: jean->direction = 1;

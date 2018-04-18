@@ -124,7 +124,7 @@ void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int c
 		}
 	}
 
-	/* Animation hab. 24 */
+	/* Animation room 24 */
 	if ((jean->flags[6] == 5) && (counter[1] == 45)) {
 		switch (jean->direction) {
 			case 0: jean->direction = 1;

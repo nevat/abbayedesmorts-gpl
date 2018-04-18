@@ -479,7 +479,7 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	else
 	  enemies->speed[0] = 0;
 
-	/* Movimiento */
+	/* Movement */
 	if (enemies->direction[0] == 0) { /* Left mov. */
 		if (enemies->x[0] > enemies->limleft[0])
 			enemies->x[0] --;
@@ -703,13 +703,13 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	SDL_Rect desfire = {0,0,4,4};
 
 	/* Movement */
-	if (enemies->direction[0] == 0) { /* Subiendo */
+	if (enemies->direction[0] == 0) { /* Go up */
 		if (enemies->y[0] > enemies->limleft[0])
 			enemies->y[0] -= 0.5;
 		else
 			enemies->direction[0] = 1;
 	}
-	if (enemies->direction[0] == 1) { /* Bajando */
+	if (enemies->direction[0] == 1) { /* Go down */
 		if (enemies->y[0] < enemies->limright[0])
 			enemies->y[0] += 0.5;
 		else
