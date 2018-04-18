@@ -21,7 +21,7 @@ Currently, this port works on:
  * Nintendo Wii
  * PSP [Link](https://t.co/AkH3HvG3kr)
  * XBox [Link](https://t.co/rLwe4UCi43) 
- * Nintendo 3DS [Link](http://www.nintendomax.com/viewtopic.php?t=16450)
+ * Nintendo 3DS (replaced SDL2) [Link](http://www.nintendomax.com/viewtopic.php?t=16450)
 
 Feel free to port this program to other systems. It is open source, take the code and
 modify it to fit your platforms needs!
