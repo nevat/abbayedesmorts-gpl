@@ -279,13 +279,10 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 void animation (uint stagedata[][22][32],int room[],int counter[]) {
 
-	int i = 0;
-	int j = 0;
+	uint16_t data = 0;
 
-	uint data = 0;
-
-	for (j=0; j<=21; j++) {
-		for (i=0; i<=31; i++) {
+	for (int8_t j=0; j<=21; j++) {
+		for (int8_t i=0; i<=31; i++) {
 
 			data = stagedata[room[0]][j][i];
 
@@ -432,9 +429,8 @@ void control (struct hero *jean,uint *keyp) {
 
 void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]) {
 
-	int i = 0;
-	int x = 0;
-	int y = 0;
+	int8_t x = 0;
+	int8_t y = 0;
 
 	if (room[0] == 4) {
 		if (jean->temp < 7) {
@@ -587,7 +583,7 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 				enemies->speed[0] ++;
 			else {
 				enemies->speed[0] = 0;
-				enemies->type[i] = 0;
+				enemies->type[0] = 0;
 				enemies->x[0] = 0;
 				enemies->y[0] = 0;
 				enemies->type[0] = 17;
@@ -708,18 +704,18 @@ void changescreen (struct hero *jean,uint room[], uint *changeflag) {
 		jean->x = 1;
 		*changeflag = 1;
   }
-	if ((jean->y + 12 < -16) && (jean->jump == 1)) {
+  if ((jean->y + 12 < -16) && (jean->jump == 1)) {
 		room[1] = room[0];
 		room[0] -=5;
 		jean->y = 152;
 		*changeflag = 1;
-	}
-	if ((jean->y > 175) && (jean->jump != 1)) {
+  }
+  if ((jean->y > 175) && (jean->jump != 1)) {
 		room[1] = room[0];
 		room[0] +=5;
 		jean->y = -16;
 		*changeflag = 1;
-	}
+  }
 
 }
 
