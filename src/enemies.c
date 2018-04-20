@@ -366,7 +366,7 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 
 void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint counter[],uint room[],uint changetiles) {
 
-	SDL_Rect srctile = {96,64,16,24};
+	SDL_Rect srctile = {64,64,16,24};
 	SDL_Rect destile = {0,0,16,24};
 
 	for (uint8_t i=0; i<7; i++) {
@@ -453,11 +453,11 @@ void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,u
 
 		/* Draw */
 		if ((enemies->x[i] > -8) && (enemies->x[i] < 257)) {
-			srctile.x = 96 + (16 * (enemies->animation[i] / 7));
+			srctile.x = 64 + (16 * (enemies->animation[i] / 7));
 			srctile.y = 64 + (changetiles * 120);
 			destile.x = enemies->x[i];
 			destile.y = enemies->y[i];
-			SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+			SDL_RenderCopyEx(renderer,tiles,&srctile,&destile,0,0,1);
 		}
 
 	}
@@ -470,9 +470,6 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	SDL_Rect desaxe = {0,0,16,16};
 	SDL_Rect srctile = {0,88,32,32};
 	SDL_Rect destile = {0,8,32,32};
-	int x = 0;
-	int y = 0;
-	int n = 0;
 
 	if (enemies->speed[0] < 60)
 	  enemies->speed[0]++;
@@ -524,10 +521,10 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 	}
 
 	/* Draw */
-	srctile.x = 0 + (enemies->animation[0] * 32) + (enemies->direction[0] * 96);
+	srctile.x = enemies->animation[0] * 32;
 	srctile.y = 88 + (changetiles * 120);
 	destile.x = enemies->x[0];
-	SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+	SDL_RenderCopyEx(renderer,tiles,&srctile,&destile,0,0,enemies->direction[0]);
 
 	/* Axes movement */
 	for (uint8_t n=0; n<8; n+=2) {
@@ -833,10 +830,10 @@ void fireball (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,ui
 	enemies->animation[0] = counter[0] / 15;
 
 	/* Draw */
-	srctile.x = 576 + (enemies->animation[0] * 16) + (enemies->direction[0] * 32);
+	srctile.x = 576 + (enemies->animation[0] * 16);
 	srctile.y = 40 + (changetiles * 120);
 	destile.x = enemies->x[0];
 	destile.y = enemies->y[0];
-	SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+	SDL_RenderCopyEx(renderer,tiles,&srctile,&destile,0,0,enemies->direction[0]);
 
 }
