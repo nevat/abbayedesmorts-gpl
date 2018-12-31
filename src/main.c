@@ -55,18 +55,24 @@ int main (int argc, char** argv) {
 
 	while (exit != 1) {
 		switch (state) {
-			case 0: startscreen(screen,&state,&grapset,&fullscreen);
-							break;
-			case 1: history(screen,&state,&grapset,&fullscreen);
-							break;
-			case 2: game(screen,&state,&grapset,&fullscreen);
-							break;
-			case 3: gameover(screen,&state);
-							break;
-			case 4: ending(screen,&state);
-							break;
-			case 6: exit = 1;
-							break;
+			case 0:
+				startscreen(screen,&state,&grapset,&fullscreen);
+				break;
+			case 1:
+				history(screen,&state,&grapset,&fullscreen);
+				break;
+			case 2:
+				game(screen,&state,&grapset,&fullscreen);
+				break;
+			case 3:
+				gameover(screen,&state);
+				break;
+			case 4:
+				ending(screen,&state);
+				break;
+			case 6:
+				exit = 1;
+				break;
 		}
 	}
 

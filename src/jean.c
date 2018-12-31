@@ -127,10 +127,12 @@ void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int c
 	/* Animation room 24 */
 	if ((jean->flags[6] == 5) && (counter[1] == 45)) {
 		switch (jean->direction) {
-			case 0: jean->direction = 1;
-							break;
-			case 1: jean->direction = 0;
-							break;
+			case 0:
+				jean->direction = 1;
+				break;
+			case 1:
+				jean->direction = 0;
+				break;
 		}
 	}
 
@@ -423,14 +425,16 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 		if ((room[0] == 10) || (room[0] == 19)) {
 			if (stagedata[room[0]][y][x] == 154) {
 				switch (room[0]) {
-					case 10: room[0] = 19;
-									 jean->x = 160;
-									 jean->y = 120;
-									 break;
-				  case 19: room[0] = 10;
-									 jean->x = 176;
-									 jean->y = 136;
-								   break;
+					case 10:
+						room[0] = 19;
+						jean->x = 160;
+						jean->y = 120;
+						break;
+					case 19:
+						room[0] = 10;
+						jean->x = 176;
+						jean->y = 136;
+						break;
 				}
 				Mix_PlayChannel(-1, fx[1], 0);;
 				*changeflag = 1;

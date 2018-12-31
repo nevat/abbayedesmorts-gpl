@@ -127,32 +127,35 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 
 	for (uint8_t i=0; i<=2; i++) {
 		switch (i) {
-			case 0: 	srcnumbers.x = lifes * 10;
-						SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-						break;
-			case 1: 	if (crosses < 10) {
-							desnumbers.x = 50;
-							srcnumbers.x = crosses * 10;
-							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-						}
-						else {
-							desnumbers.x = 50;
-							srcnumbers.x = 10;
-							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-							desnumbers.x = 55;
-							srcnumbers.x = (crosses - 10) * 10;
-							SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-						}
-						break;
-			case 2: 	if ((room[0] > 0) && (room[0] < 4)) {
-							srctext.y = (room[0] - 1) * 20;
-							SDL_RenderCopy(renderer,fonts,&srctext,&destext);
-					  	}
-						if (room[0] > 4) {
-							srctext.y = (room[0] - 2) * 20;
-							SDL_RenderCopy(renderer,fonts,&srctext,&destext);
-						}
-						break;
+			case 0:
+				srcnumbers.x = lifes * 10;
+				SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+				break;
+			case 1:
+				if (crosses < 10) {
+					desnumbers.x = 50;
+					srcnumbers.x = crosses * 10;
+					SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+				}
+				else {
+					desnumbers.x = 50;
+					srcnumbers.x = 10;
+					SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+					desnumbers.x = 55;
+					srcnumbers.x = (crosses - 10) * 10;
+					SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+				}
+				break;
+			case 2:
+				if ((room[0] > 0) && (room[0] < 4)) {
+					srctext.y = (room[0] - 1) * 20;
+					SDL_RenderCopy(renderer,fonts,&srctext,&destext);
+				}
+				if (room[0] > 4) {
+					srctext.y = (room[0] - 2) * 20;
+					SDL_RenderCopy(renderer,fonts,&srctext,&destext);
+				}
+				break;
 		}
 
 	}
@@ -214,21 +217,23 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 	  		destile.w = srctile.w;
 			destile.h = srctile.h;
 
-	  		/* Draw shoot */
-	  		switch (enemies->direction[i]) {
-					case 0: 	if ((proyec[n] < (enemies->limright[i] - 8)) && (proyec[n] != 0)) {
-							  		destile.x = proyec[n];
-									destile.y = enemies->y[i] + 8;
-									SDL_RenderCopy(renderer,tiles,&srctile,&destile);
-								}
-								break;
-					case 1: 	if (proyec[n] > (enemies->limleft[i] + 8)) {
-									destile.x = proyec[n];
-									destile.y = enemies->y[i] + 8;
-									SDL_RenderCopy(renderer,tiles,&srctile,&destile);
-								}
-								break;
-	  		}
+			/* Draw shoot */
+			switch (enemies->direction[i]) {
+				case 0:
+					if ((proyec[n] < (enemies->limright[i] - 8)) && (proyec[n] != 0)) {
+						destile.x = proyec[n];
+						destile.y = enemies->y[i] + 8;
+						SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+					}
+					break;
+				case 1:
+					if (proyec[n] > (enemies->limleft[i] + 8)) {
+						destile.x = proyec[n];
+						destile.y = enemies->y[i] + 8;
+						SDL_RenderCopy(renderer,tiles,&srctile,&destile);
+					}
+					break;
+			}
 		}
 
 	}
@@ -240,19 +245,24 @@ void showparchment (SDL_Renderer *renderer,uint *parchment) {
 	SDL_Texture *yparchment = NULL;
 
 	switch (*parchment) {
-		case 3: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment1.png");
-						break;
-		case 8:	yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment2.png");
-						break;
-		case 12: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment3.png");
-						 break;
-		case 14: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment4.png");
-						 break;
-		case 16: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment5.png");
-						 break;
-		case 21: yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment6.png");
-						 break;
-
+		case 3:
+			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment1.png");
+			break;
+		case 8:
+			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment2.png");
+			break;
+		case 12:
+			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment3.png");
+			break;
+		case 14:
+			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment4.png");
+			break;
+		case 16:
+			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment5.png");
+			break;
+		case 21:
+			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment6.png");
+			break;
 	}
 
 	SDL_RenderCopy(renderer,yparchment,NULL,NULL);

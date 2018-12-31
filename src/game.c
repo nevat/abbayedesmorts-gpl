@@ -437,10 +437,12 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 			/* Moving Jean */
 			if (counter[1] == 45) {
 				switch (jean->direction) {
-					case 0: jean->direction = 1;
-									break;
-					case 1: jean->direction = 0;
-									break;
+					case 0:
+						jean->direction = 1;
+						break;
+					case 1:
+						jean->direction = 0;
+						break;
 				}
 				jean->temp ++;
 			}
@@ -530,42 +532,54 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 		if ((jean->flags[6] == 1) && (jean->state[1] > 0) && (counter[0] == 0)) {
 			/* Putting crosses */
 			switch (jean->state[1]) {
-				case 1: x=11;
-							  y=5;
-							  break;
-				case 2: x=10;
-							  y=5;
-							  break;
-				case 3: x=8;
-							  y=8;
-							  break;
-				case 4: x=5;
-							  y=8;
-							  break;
-				case 5: x=4;
-							  y=8;
-							  break;
-				case 6: x=2;
-							  y=12;
-							  break;
-				case 7: x=5;
-							  y=14;
-							  break;
-				case 8: x=6;
-							  y=14;
-							  break;
-				case 9: x=9;
-							  y=14;
-							  break;
-				case 10: x=10;
-								 y=14;
-								 break;
-				case 11: x=13;
-								 y=13;
-								 break;
-				case 12: x=15;
-								 y=16;
-								 break;
+				case 1:
+					x=11;
+					y=5;
+					break;
+				case 2:
+					x=10;
+					y=5;
+					break;
+				case 3:
+					x=8;
+					y=8;
+					break;
+				case 4:
+					x=5;
+					y=8;
+					break;
+				case 5:
+					x=4;
+					y=8;
+					break;
+				case 6:
+					x=2;
+					y=12;
+					break;
+				case 7:
+					x=5;
+					y=14;
+					break;
+				case 8:
+					x=6;
+					y=14;
+					break;
+				case 9:
+					x=9;
+					y=14;
+					break;
+				case 10:
+					x=10;
+					y=14;
+					break;
+				case 11:
+					x=13;
+					y=13;
+					break;
+				case 12:
+					x=15;
+					y=16;
+					break;
 			}
 			stagedata[24][y][x] = 84;
 			jean->state[1] --;

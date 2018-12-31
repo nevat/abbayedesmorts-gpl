@@ -735,12 +735,17 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 		int8_t x = enemies->y[0];
 		uint8_t r = 0;
 		switch (x) {
-		  /* case 20: r = 0;
-				   		 break; */
-		  case 37: r = 6;
-				   	 	 break;
-		  case 62: r = 12;
-							 break;
+			/*
+			case 20:
+				r = 0;
+				break;
+			*/
+			case 37:
+				r = 6;
+				break;
+			case 62:
+				r = 12;
+				break;
 		}
 		if ((proyec[r] == 0) && (proyec[r+2] == 0) && (proyec[r+4] == 0)) {
 			proyec[r] = 190;
