@@ -23,6 +23,10 @@ int main (int argc, char** argv) {
 	/* SDL2 initialization */
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
+#ifdef __SWITCH__
+	romfsInit();
+#endif
+
 	/* Creating window */
 	SDL_Window *screen; 
 	if (fullscreen)
@@ -81,6 +85,10 @@ int main (int argc, char** argv) {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(screen);
 	SDL_Quit();	
+
+#ifdef __SWITCH__
+	romfsExit();
+#endif
 
 	/* Exiting normally */
 	return 0;
