@@ -1,6 +1,6 @@
 /* startscreen.c */
 
-# include "base.h"
+#include "base.h"
 
 void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -71,7 +71,7 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 					exit = 1;
 				}
 				if (keyp.key.keysym.sym == SDLK_ESCAPE) { /* Exit game */
-      					exit = 1;
+					exit = 1;
 					*state = 6;
 				}
 			}
@@ -88,6 +88,12 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 						*grapset = 0;
 				}
 			}
+
+			if (keyp.type == SDL_QUIT) { /* Exit game */
+				exit = 1;
+				*state = 6;
+			}
+
 		}
 	}
 

@@ -1,6 +1,6 @@
 /* gameover.c */
 
-# include "gameover.h"
+#include "gameover.h"
 
 void gameover (SDL_Window *screen,uint8_t *state) {
 

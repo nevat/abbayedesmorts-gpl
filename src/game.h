@@ -2,10 +2,10 @@
 
 #pragma once
 
-# include <unistd.h>
-# include "base.h"
+#include <unistd.h>
+#include "base.h"
 
-# include "structs.h"
+#include "structs.h"
 
 void keybpause (uint *keyp);
 void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag);

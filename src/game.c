@@ -1,6 +1,6 @@
 /* game.c */
 
-# include "game.h"
+#include "game.h"
 
 void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -338,7 +338,7 @@ void control (struct hero *jean,uint *keyp) {
 
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT)
-	   	exit(0);
+			*keyp = 10;
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_UP) {
 				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
@@ -366,9 +366,9 @@ void control (struct hero *jean,uint *keyp) {
 				*keyp = 6;
 			if (event.key.keysym.sym == SDLK_c)
 				*keyp = 9;
-	   	if (event.key.keysym.sym == SDLK_ESCAPE)
-      	*keyp = 10;
-		}
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+				*keyp = 10;
+			}
 
 		if (event.type == SDL_KEYUP) {
 			if (event.key.keysym.sym == SDLK_UP)
@@ -417,7 +417,7 @@ void control (struct hero *jean,uint *keyp) {
 					jean->jump = 1;
 		
 			if (event.jbutton.button == SELECT_JOYBUTTON)
-      				*keyp = 10;
+				*keyp = 10;
 		}
 		
 		if (event.type == SDL_JOYBUTTONUP) {
@@ -726,12 +726,15 @@ void keybpause (uint *keyp) {
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_KEYDOWN) {
 			if ((event.key.keysym.sym == SDLK_SPACE) || (event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
-					*keyp = 1;
+				*keyp = 1;
 		}
 		if (event.type == SDL_JOYBUTTONDOWN) {
 			if (event.jbutton.button == JUMP_JOYBUTTON || event.jbutton.button == START_JOYBUTTON) {
-					*keyp = 1;
+				*keyp = 1;
 			}
+		}
+		if (event.type == SDL_QUIT) {
+			*keyp = 10;
 		}
 	}
 

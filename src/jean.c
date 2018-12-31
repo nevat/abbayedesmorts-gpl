@@ -1,6 +1,6 @@
 /* jean.c */
 
-# include "jean.h"
+#include "jean.h"
 
 void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 

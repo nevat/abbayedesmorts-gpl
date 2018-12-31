@@ -2,7 +2,7 @@
 
 #pragma once
 
-# include "base.h"
+#include "base.h"
 
 void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen);
 void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen);

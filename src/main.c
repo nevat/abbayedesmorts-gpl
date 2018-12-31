@@ -7,9 +7,13 @@
 /* GPL v3 license */
 
  
-# include "main.h"
+#include "main.h"
 
-int main () {
+int main (int argc, char** argv) {
+
+	// TODO: support arguments for fullscreen, etc.
+	(void) argc;
+	(void) argv;
 
 	uint8_t exit = 0;
 	uint8_t state = 0; /* 0-intro,1-history,2-game,3-gameover,4-ending,5-exit */
