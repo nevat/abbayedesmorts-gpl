@@ -93,7 +93,7 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 					exit = 1;
 				}
 				if (keyp.key.keysym.sym == SDLK_ESCAPE) { /* Exit game */
-      					exit = 1;
+					exit = 1;
 					*state = 6;
 				}
 			}

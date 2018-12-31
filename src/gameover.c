@@ -19,7 +19,7 @@ void gameover (SDL_Window *screen,uint8_t *state) {
 	sleep(12);
 
 	/* Cleaning */
-	Mix_FreeMusic (bso);
+	Mix_FreeMusic(bso);
 	SDL_DestroyTexture(gameover);
 
 	*state = 0;

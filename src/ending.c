@@ -14,7 +14,7 @@ void ending (SDL_Window *screen,uint8_t *state) {
 
 	int16_t x = 0;
 
-	Mix_PlayMusic (bso,0);
+	Mix_PlayMusic(bso,0);
 
 	for (int16_t i=0;i<951;i++) {
 
@@ -38,9 +38,9 @@ void ending (SDL_Window *screen,uint8_t *state) {
 	}
 
 	/* Cleaning */
-	SDL_DestroyTexture (tiles);
+	SDL_DestroyTexture(tiles);
 	SDL_DestroyTexture(text);
-	Mix_FreeMusic (bso);
+	Mix_FreeMusic(bso);
 
 	*state = 0;
 

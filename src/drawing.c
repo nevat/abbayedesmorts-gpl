@@ -171,8 +171,8 @@ void drawrope (struct enem enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uin
 		int16_t blocks = (enemies.y[i] - (enemies.limleft[i] - 8)) / 8;
 		for (uint8_t j=0; j<=blocks; j++) {
 			srctile.y = 8 + (changetiles * 120);
-	  		destile.x = enemies.x[i];
-	  		destile.y = (enemies.limleft[i] - 8) + (8 * j);
+			destile.x = enemies.x[i];
+			destile.y = (enemies.limleft[i] - 8) + (8 * j);
 			SDL_RenderCopy(renderer,tiles,&srctile,&destile);
 		}
 	}
@@ -189,32 +189,32 @@ void drawshoots (float proyec[],SDL_Texture *tiles,SDL_Renderer *renderer,struct
 
 	for (uint8_t n=0; n<=4; n+=2) {
 		if (proyec[n] > 0) {
-	  		uint8_t i = proyec[n+1];
-	  		if (enemies->type[i] == 15) {
+			uint8_t i = proyec[n+1];
+			if (enemies->type[i] == 15) {
 				srctile.h = 16;
 				srctile.x = 640 - (16 * enemies->direction[i]);
-	  		}
+			}
 
-		  	/* Move shoot */
-		  	if (enemies->direction[i] == 1) {
-					if (proyec[n] > enemies->limleft[i])
-					  proyec[n] -= 2.5;
-					else {
-					  enemies->fire[i] = 0;
-					  enemies->speed[i] = 0;
-					  proyec[n] = 0;
-					}
-	  		}
-	  		else {
-					if (proyec[n] < enemies->limright[i])
-		  			proyec[n] += 2.5;
-					else {
-		  			enemies->fire[i] = 0;
-					  enemies->speed[i] = 0;
-					  proyec[n] = 0;
-					}
-	  		}
-	  		destile.w = srctile.w;
+			/* Move shoot */
+			if (enemies->direction[i] == 1) {
+				if (proyec[n] > enemies->limleft[i])
+					proyec[n] -= 2.5;
+				else {
+					enemies->fire[i] = 0;
+					enemies->speed[i] = 0;
+					proyec[n] = 0;
+				}
+			}
+			else {
+				if (proyec[n] < enemies->limright[i])
+					proyec[n] += 2.5;
+				else {
+					enemies->fire[i] = 0;
+					enemies->speed[i] = 0;
+					proyec[n] = 0;
+				}
+			}
+			destile.w = srctile.w;
 			destile.h = srctile.h;
 
 			/* Draw shoot */

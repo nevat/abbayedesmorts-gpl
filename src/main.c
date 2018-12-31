@@ -50,7 +50,7 @@ int main (int argc, char** argv) {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	/* Init audio */
-	Mix_OpenAudio (44100,MIX_DEFAULT_FORMAT,2,4096);
+	Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,4096);
 	Mix_AllocateChannels(5);
 
 	while (exit != 1) {

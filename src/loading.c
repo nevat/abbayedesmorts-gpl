@@ -67,12 +67,12 @@ void loadingmusic(Mix_Music *bso[],Mix_Chunk *fx[]) {
 	bso[7] = Mix_LoadMUS(DATADIR "/sounds/ManhuntwoodN.ogg");
 
 	/* Fxs */
-	fx[0] = Mix_LoadWAV (DATADIR "/sounds/shoot.ogg");
-	fx[1] = Mix_LoadWAV (DATADIR "/sounds/doorfx.ogg");
-	fx[2] = Mix_LoadWAV (DATADIR "/sounds/Item.ogg");
-	fx[3] = Mix_LoadWAV (DATADIR "/sounds/jump.ogg");
-	fx[4] = Mix_LoadWAV (DATADIR "/sounds/slash.ogg");
-	fx[5] = Mix_LoadWAV (DATADIR "/sounds/mechanismn.ogg");
-	fx[6] = Mix_LoadWAV (DATADIR "/sounds/onedeathn.ogg");
+	fx[0] = Mix_LoadWAV(DATADIR "/sounds/shoot.ogg");
+	fx[1] = Mix_LoadWAV(DATADIR "/sounds/doorfx.ogg");
+	fx[2] = Mix_LoadWAV(DATADIR "/sounds/Item.ogg");
+	fx[3] = Mix_LoadWAV(DATADIR "/sounds/jump.ogg");
+	fx[4] = Mix_LoadWAV(DATADIR "/sounds/slash.ogg");
+	fx[5] = Mix_LoadWAV(DATADIR "/sounds/mechanismn.ogg");
+	fx[6] = Mix_LoadWAV(DATADIR "/sounds/onedeathn.ogg");
 
 }

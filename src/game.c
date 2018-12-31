@@ -151,7 +151,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 		/* Shoots */
 		if ((proyec[0] > 0) && ((room[0] == 17) || (room[0] == 20) || (room[0] == 21) || (room[0] == 22)))
-		  drawshoots (proyec,tiles,renderer,&enemies,changetiles);
+			drawshoots (proyec,tiles,renderer,&enemies,changetiles);
 
 		/* Jean management */
 		if (jean.death == 0) {
@@ -187,7 +187,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 				jean.death = 0;
 				jean.temp = 1;
 				music (room,bso,&changeflag,jean.flags[6]);
-				Mix_ResumeMusic ();
+				Mix_ResumeMusic();
 			}
 			else {
 				jean.death = 0;
@@ -208,7 +208,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 				searchenemies (room,&enemies,&changeflag,enemydata);
 			music (room,bso,&changeflag,jean.flags[6]);
 			for (n=0; n<24; n++) { /* Reset enemyshoots */
-			  proyec[n] = 0;
+				proyec[n] = 0;
 			}
 			counter[0] = 0;
 			changeflag = 0;
@@ -226,14 +226,14 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 		if (parchment > 0) {
 			Mix_PlayChannel(-1, fx[2], 0);
-			Mix_PauseMusic ();
+			Mix_PauseMusic();
 			/* Waiting a key */
 			while (keyp == 0)
 				keybpause (&keyp);
 			jean.push[2] = 0;
 			jean.push[3] = 0;
 			keyp = 0;
-			Mix_ResumeMusic ();
+			Mix_ResumeMusic();
 			parchment = 0;
 		}
 		if (jean.flags[6] == 4) {
@@ -385,11 +385,11 @@ void control (struct hero *jean,uint *keyp) {
 
 		if (event.type == SDL_JOYAXISMOTION) {
 			if (event.jaxis.axis == X_JOYAXIS) {
-				if (event.jaxis.value < 0) {  // BUTTONDOWN LEFT	
+				if (event.jaxis.value < 0) { // BUTTONDOWN LEFT	
 					jean->push[2] = 1;
 					jean->push[3] = 0;
 				}
-				if (event.jaxis.value > 0) {  // BUTTONDOWN RIGHT
+				if (event.jaxis.value > 0) { // BUTTONDOWN RIGHT
 					jean->push[3] = 1;
 					jean->push[2] = 0;
 				}
@@ -399,7 +399,7 @@ void control (struct hero *jean,uint *keyp) {
 				}
 			}
 			if (event.jaxis.axis == Y_JOYAXIS) {
-				if (event.jaxis.value > 0) {  // BUTTONDOWN DUCK
+				if (event.jaxis.value > 0) { // BUTTONDOWN DUCK
 					jean->push[1] = 1;
 					jean->ducking = 1;
 				}
@@ -700,36 +700,36 @@ void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag) {
 	if ((room[0] == 24) && (flag == 5))
 		Mix_PlayMusic(bso[7], -1);
 
- 	*changeflag -= 1;
+	*changeflag -= 1;
 
 }
 
 void changescreen (struct hero *jean,uint room[], uint *changeflag) {
 
-  if ((jean->x < 1) && (room[0] != 5)) {
+	if ((jean->x < 1) && (room[0] != 5)) {
 		room[1] = room[0];
 		room[0] -= 1;
 		jean->x = 240;
 		*changeflag = 1;
-  }
-  if ((jean->x + 8) > 256) {
+	}
+	if ((jean->x + 8) > 256) {
 		room[1] = room[0];
 		room[0] += 1;
 		jean->x = 1;
 		*changeflag = 1;
-  }
-  if ((jean->y + 12 < -16) && (jean->jump == 1)) {
+	}
+	if ((jean->y + 12 < -16) && (jean->jump == 1)) {
 		room[1] = room[0];
 		room[0] -=5;
 		jean->y = 152;
 		*changeflag = 1;
-  }
-  if ((jean->y > 175) && (jean->jump != 1)) {
+	}
+	if ((jean->y > 175) && (jean->jump != 1)) {
 		room[1] = room[0];
 		room[0] +=5;
 		jean->y = -16;
 		*changeflag = 1;
-  }
+	}
 
 }
 

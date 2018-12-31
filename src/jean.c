@@ -26,9 +26,9 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 		jean->direction = 1;
 		if (jean->collision[3] == 0) {
 			if (jean->jump == 0) {
-			  if (jean->animation < 13)
+				if (jean->animation < 13)
 					jean->animation ++;
-			  else
+				else
 					jean->animation = 0;
 			}
 			if (jean->push[1] == 1)
@@ -43,9 +43,9 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 		jean->direction = 0;
 		if (jean->collision[2] == 0) {
 			if (jean->jump == 0) {
-			  if (jean->animation < 13)
+				if (jean->animation < 13)
 					jean->animation ++;
-			  else
+				else
 					jean->animation = 0;
 			}
 			if (jean->push[1] == 1)
@@ -72,9 +72,9 @@ void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int c
 			jean->animation = 0;
 		}
 
- 		if (jean->ducking == 0) {
+		if (jean->ducking == 0) {
 			srctile.x += ((jean->animation / 7) * 16) + (r * 32);
-		 	destile.y = jean->y;
+			destile.y = jean->y;
 			destile.x = jean->x;
 			if (jean->y > 152)
 				srctile.h = (176 - jean->y);
@@ -83,8 +83,8 @@ void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int c
 			SDL_RenderCopyEx(renderer,tiles,&srctile,&destile,0,0,jean->direction);
 		}
 		else {
-  		srcducktile.x += ((jean->animation / 7) * 18);
-  		desducktile.y = jean->y + 11;
+			srcducktile.x += ((jean->animation / 7) * 18);
+			desducktile.y = jean->y + 11;
 			desducktile.x = jean->x;
 			if (changetiles == 1)
 				srcducktile.y = 208;
@@ -97,7 +97,7 @@ void drawjean (SDL_Renderer *renderer,SDL_Texture *tiles,struct hero *jean,int c
 		jean->death += 1;
 		destile.x = jean->x;
 		destile.y = jean->y;
-		Mix_PauseMusic ();
+		Mix_PauseMusic();
 		if (jean->death == 2)
 			Mix_PlayChannel(-1, fx[6], 0);
 		if ((jean->death < 8) || ((jean->death > 23) && (jean->death < 32)) || ((jean->death > 47) && (jean->death < 56))) {
@@ -295,7 +295,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 		}
 
 		/* Touch checkpoint */
-		if (((stagedata[room[0]][y][x] > 320) &&  (stagedata[room[0]][y][x] < 325)) || ((stagedata[room[0]][y][x+1] > 320) &&  (stagedata[room[0]][y][x+1] < 325))) {
+		if (((stagedata[room[0]][y][x] > 320) && (stagedata[room[0]][y][x] < 325)) || ((stagedata[room[0]][y][x+1] > 320) && (stagedata[room[0]][y][x+1] < 325))) {
 			for (v=0;v<22;v++) {
 				for (h=0;h<32;h++) {
 					if ((stagedata[room[0]][v][h] > 320) && (stagedata[room[0]][v][h] < 325))
@@ -318,7 +318,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 
 		/* Touch bell */
 		if (room[0] == 2) {
-			if (((stagedata[room[0]][y+1][x] > 300) &&  (stagedata[room[0]][y+1][x] < 305)) || ((stagedata[room[0]][y+1][x+1] > 300) &&  (stagedata[room[0]][y+1][x+1] < 305))) {
+			if (((stagedata[room[0]][y+1][x] > 300) && (stagedata[room[0]][y+1][x] < 305)) || ((stagedata[room[0]][y+1][x+1] > 300) && (stagedata[room[0]][y+1][x+1] < 305))) {
 				for (v=1;v<3;v++) {
 					for (h=5;h<7;h++) {
 						if ((stagedata[room[0]][v][h] > 300) && (stagedata[room[0]][v][h] < 305))
@@ -326,10 +326,10 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 					}
 				}
 				jean->flags[1] = 1;
-				Mix_PauseMusic ();
+				Mix_PauseMusic();
 				Mix_PlayChannel(-1, fx[5], 0);
 				sleep(2);
-				Mix_ResumeMusic ();
+				Mix_ResumeMusic();
 			}
 		}
 
@@ -347,16 +347,16 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 				jean->flags[2] = 1;
 			if (room[0] == 20)
 				jean->flags[4] = 1;
-			Mix_PauseMusic ();
+			Mix_PauseMusic();
 			Mix_PlayChannel(-1, fx[5], 0);
 			sleep(2);
-			Mix_ResumeMusic ();
+			Mix_ResumeMusic();
 		}
 
 
 		/* Touch hearts */
 		if (room[0] == 23) {
-			if (((stagedata[room[0]][y+1][x] > 400) &&  (stagedata[room[0]][y+1][x] < 405)) || ((stagedata[room[0]][y+1][x+1] > 400) &&  (stagedata[room[0]][y+1][x+1] < 405))) {
+			if (((stagedata[room[0]][y+1][x] > 400) && (stagedata[room[0]][y+1][x] < 405)) || ((stagedata[room[0]][y+1][x+1] > 400) && (stagedata[room[0]][y+1][x+1] < 405))) {
 				if (jean->x > 160) {
 					stagedata[23][7][23] = 0;
 					stagedata[23][7][24] = 0;
@@ -375,7 +375,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 			}
 		}
 		else {
-			if (((stagedata[room[0]][y+1][x] > 400) &&  (stagedata[room[0]][y+1][x] < 405)) || ((stagedata[room[0]][y+1][x+1] > 400) &&  (stagedata[room[0]][y+1][x+1] < 405))) {
+			if (((stagedata[room[0]][y+1][x] > 400) && (stagedata[room[0]][y+1][x] < 405)) || ((stagedata[room[0]][y+1][x+1] > 400) && (stagedata[room[0]][y+1][x+1] < 405))) {
 				for (v=0;v<22;v++) {
 					for (h=0;h<32;h++) {
 						if ((stagedata[room[0]][v][h] > 400) && (stagedata[room[0]][v][h] < 405))
@@ -389,7 +389,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 		}
 
 		/* Touch crosses */
-		if (((stagedata[room[0]][y+1][x] > 408) &&  (stagedata[room[0]][y+1][x] < 413)) || ((stagedata[room[0]][y+1][x+1] > 408) &&  (stagedata[room[0]][y+1][x+1] < 413)) || ((stagedata[room[0]][y+2][x] > 408) &&  (stagedata[room[0]][y+2][x] < 413))) {
+		if (((stagedata[room[0]][y+1][x] > 408) && (stagedata[room[0]][y+1][x] < 413)) || ((stagedata[room[0]][y+1][x+1] > 408) && (stagedata[room[0]][y+1][x+1] < 413)) || ((stagedata[room[0]][y+2][x] > 408) && (stagedata[room[0]][y+2][x] < 413))) {
 			for (v=0;v<22;v++) {
 				for (h=0;h<32;h++) {
 					if ((stagedata[room[0]][v][h] > 408) && (stagedata[room[0]][v][h] < 413))
@@ -401,7 +401,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 		}
 
 		/* Touch yellow parchment */
-		if (((stagedata[room[0]][y+1][x] > 316) &&  (stagedata[room[0]][y+1][x] < 321)) || ((stagedata[room[0]][y+1][x+1] > 316) &&  (stagedata[room[0]][y+1][x+1] < 321))) {
+		if (((stagedata[room[0]][y+1][x] > 316) && (stagedata[room[0]][y+1][x] < 321)) || ((stagedata[room[0]][y+1][x+1] > 316) && (stagedata[room[0]][y+1][x+1] < 321))) {
 			for (v=0;v<22;v++) {
 				for (h=0;h<32;h++) {
 					if ((stagedata[room[0]][v][h] > 316) && (stagedata[room[0]][v][h] < 321))
@@ -412,7 +412,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 		}
 
 		/* Touch red parchment */
-		if (((stagedata[room[0]][y+1][x] > 338) &&  (stagedata[room[0]][y+1][x] < 343)) || ((stagedata[room[0]][y+1][x+1] > 338) &&  (stagedata[room[0]][y+1][x+1] < 343))) {
+		if (((stagedata[room[0]][y+1][x] > 338) && (stagedata[room[0]][y+1][x] < 343)) || ((stagedata[room[0]][y+1][x+1] > 338) && (stagedata[room[0]][y+1][x+1] < 343))) {
 			jean->flags[6] = 3;
 			/* Delete parchment */
 			stagedata[24][14][28] = 0;
@@ -455,7 +455,7 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 					}
 				}
 				jean->flags[5] = 1;
-				/* Flapping all crosses  */
+				/* Flapping all crosses */
 				for (r=1; r<25; r++) {
 					for (v=0; v<22; v++) {
 						for (h=0; h<32; h++) {
@@ -471,17 +471,17 @@ void touchobj (struct hero *jean,uint stagedata[][22][32],uint room[],uint *parc
 						}
 					}
 				}
-			Mix_PauseMusic ();
+			Mix_PauseMusic();
 			Mix_PlayChannel(-1, fx[5], 0);;
 			sleep(2);
-			Mix_ResumeMusic ();
+			Mix_ResumeMusic();
 			}
 		}
 
 		/* Touch cup */
 		if (room[0] == 24) {
 			if ((stagedata[room[0]][y][x+1] == 650) || (stagedata[room[0]][y+1][x+1] == 650) || (stagedata[room[0]][y+2][x+1] == 650)) {
-				Mix_HaltMusic ();
+				Mix_HaltMusic();
 				Mix_PlayChannel(-1, fx[5], 0);
 				sleep(2);
 				stagedata[24][3][15] = 0; /* Delete cup */
@@ -540,7 +540,7 @@ void contact (struct hero *jean,struct enem enemies,float proyec[],uint room[]) 
 								x=points[1] + 1;
 							}
 							else {
-								/* Mix_HaltMusic (); */
+								/* Mix_HaltMusic(); */
 								jean->flags[6] = 6;
 							}
 						}
