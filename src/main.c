@@ -8,7 +8,7 @@
 
  
 #include "main.h"
-
+SDL_Renderer *renderer;
 int main (int argc, char** argv) {
 
 	// TODO: support arguments for fullscreen, etc.
