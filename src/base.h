@@ -14,7 +14,7 @@
 
 // SDL2 renderer. Needs to be declared here because several different units access to it
 // directly to draw on it because there's no discrete graphics unit, but it works, so no complains :D
-SDL_Renderer *renderer;
+extern SDL_Renderer *renderer;
 
 // Default layout to PSX gamepad with USB adapter
 #define JUMP_JOYBUTTON 2
