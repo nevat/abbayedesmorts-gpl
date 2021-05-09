@@ -36,7 +36,7 @@ int main (int argc, char** argv) {
 			SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,0);
 
 	/* Create renderer (with VSync, nice !) */
-	SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "linear");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	SDL_RenderSetLogicalSize(renderer, 256, 192);
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);

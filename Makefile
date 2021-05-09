@@ -18,6 +18,11 @@ CFLAGS=		-O2 -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard
 DATADIR= "\"./\""
 endif
 
+ifeq ($(PLATFORM), rpi4_64)
+CFLAGS=		-O2 -march=armv8-a+crc+simd -mtune=cortex-a72
+DATADIR= "\"./\""
+endif
+
 DATADIR?="\"$(PREFIX)/share/abbayev2\""
 LDFLAGS?=	-Wl,-z,relro
 
