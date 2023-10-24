@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [2.0.2] - 2023-10-24
+
+Bugfix releae. Small improvements for better performance. Added bigger pngs logos for Flatpak requeriments.
+
 ## [2.0.1] - 2016-09-04
 
 This is a bugfix release. Some compiler warnings have been fixed and a memory leak has been patched. Furthermore, the packaging has been made easier.
