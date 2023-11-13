@@ -3,9 +3,9 @@ PREFIX?=	/usr
 CC?=		gcc
 
 ifeq ($(DEBUG),1)
-CFLAGS?=	-O0 -ggdb
+CFLAGS?=	-O0 -ggdb -DDEBUG -Wall
 else
-CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize -Wno-unused-result
+CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize
 endif
 
 ifeq ($(PLATFORM), rpi1)

@@ -1,25 +1,27 @@
 /* enemies.c */
 
 #include "enemies.h"
+#include "rooms.h"
+#include "drawing.h"
 
-void searchenemies (uint room[], struct enem *enemies,uint *changeflag, int enemydata[][7][15]) {
+void searchenemies (uint room, struct enem *enemies,uint *changeflag, int enemydata[][7][15]) {
 
 	for (uint8_t y=0; y<7; y++) {
-		enemies->type[y] = enemydata[room[0]][y][0];
-		enemies->x[y] = enemydata[room[0]][y][1];
-		enemies->y[y] = enemydata[room[0]][y][2];
-		enemies->direction[y] = enemydata[room[0]][y][3];
-		enemies->tilex[y] = enemydata[room[0]][y][4];
-		enemies->tiley[y] = enemydata[room[0]][y][5];
-		enemies->animation[y] = enemydata[room[0]][y][6];
-		enemies->limleft[y] = enemydata[room[0]][y][7];
-		enemies->limright[y] = enemydata[room[0]][y][8];
-		enemies->speed[y] = enemydata[room[0]][y][9];
-		enemies->fire[y] = enemydata[room[0]][y][10];
-		enemies->adjustx1[y] = enemydata[room[0]][y][11];
-		enemies->adjustx2[y] = enemydata[room[0]][y][12];
-		enemies->adjusty1[y] = enemydata[room[0]][y][13];
-		enemies->adjusty2[y] = enemydata[room[0]][y][14];
+		enemies->type[y] = enemydata[room][y][0];
+		enemies->x[y] = enemydata[room][y][1];
+		enemies->y[y] = enemydata[room][y][2];
+		enemies->direction[y] = enemydata[room][y][3];
+		enemies->tilex[y] = enemydata[room][y][4];
+		enemies->tiley[y] = enemydata[room][y][5];
+		enemies->animation[y] = enemydata[room][y][6];
+		enemies->limleft[y] = enemydata[room][y][7];
+		enemies->limright[y] = enemydata[room][y][8];
+		enemies->speed[y] = enemydata[room][y][9];
+		enemies->fire[y] = enemydata[room][y][10];
+		enemies->adjustx1[y] = enemydata[room][y][11];
+		enemies->adjustx2[y] = enemydata[room][y][12];
+		enemies->adjusty1[y] = enemydata[room][y][13];
+		enemies->adjusty2[y] = enemydata[room][y][14];
 	}
 
 	*changeflag -= 1;
@@ -364,7 +366,7 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 
 }
 
-void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint counter[],uint room[],uint changetiles) {
+void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint counter[],uint room,uint changetiles) {
 
 	SDL_Rect srctile = {64,64,16,24};
 	SDL_Rect destile = {0,0,16,24};
@@ -380,17 +382,17 @@ void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,u
 
 		/* Mover & animation */
 		/* Jump when needed */
-		if (room[0] == 5) {
+		if (room == ROOM_ESCAPE) {
 			if ((enemies->x[i] == 146) || (enemies->x[i] == 160))
 				(enemies->fire[i] = 1); /* Using fire as jump flag */
 		}
-		if (room[0] == 6) {
+		if (room == ROOM_CLOSE) {
 			if ((enemies->x[i] == 76) || (enemies->x[i] == 124.75) || (enemies->x[i] == 155))
 				enemies->fire[i] = 2;
 			if ((enemies->x[i] == 208.25) || (enemies->x[i] == 220.50))
 				enemies->fire[i] = 1; /* Using fire as jump flag */
 		}
-		if (room[0] == 24) {
+		if (room == ROOM_SATAN) {
 			if ((enemies->x[i] == 144) || (enemies->x[i] == 152) || (enemies->x[i] == 160) || (enemies->x[i] == 168))
 				(enemies->fire[i] = 1);
 		}
@@ -435,7 +437,7 @@ void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,u
 			enemies->animation[i] = 0;
 
 		/* Fall */
-		if (room[0] == 5) {
+		if (room == ROOM_ESCAPE) {
 			if (enemies->x[i] > 206) {
 				if (enemies->speed[i] < 8) {
 					enemies->speed[i] ++;
@@ -446,7 +448,7 @@ void crusaders (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,u
 		}
 
 		/* Movement */
-		if ((room[0] == 6) && (enemies->speed[i] > 0))
+		if ((room == ROOM_CLOSE) && (enemies->speed[i] > 0))
 			enemies->x[i] += 0.75;
 		else
 			enemies->x[i] += 0.5;
@@ -541,7 +543,7 @@ void death (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 			}
 			else {
 				/* Touching a solid tile ? Move */
-				if (((stagedata[18][y+2][x] != 73) && (stagedata[18][y+2][x] != 75)) && ((stagedata[18][y+2][x+1] != 73) && (stagedata[18][y+2][x+1] != 75)))
+				if (((stagedata[ROOM_BANQUET][y+2][x] != 73) && (stagedata[ROOM_BANQUET][y+2][x] != 75)) && ((stagedata[ROOM_BANQUET][y+2][x+1] != 73) && (stagedata[ROOM_BANQUET][y+2][x+1] != 75)))
 					proyec[n] ++;
 				else
 					proyec[n+1] --;
@@ -779,7 +781,7 @@ void satan (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint 
 
 }
 
-void fireball (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint counter[],struct hero jean, int stagedata[][22][32], uint changetiles) {
+void fireball (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint counter[],struct hero jean, uint stagedata[][22][32], uint changetiles) {
 
 	SDL_Rect srctile = {576,40,16,16};
 	SDL_Rect destile = {0,0,16,16};
@@ -791,20 +793,20 @@ void fireball (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,ui
 	/* Follow Jean */
 	if (enemies->x[0] < jean.x + 1) {
 		enemies->direction[0] = 1;
-		if (((stagedata[11][y][x+2] == 0) || (stagedata[11][y][x+2] > 99) || (stagedata[11][y][x+2] == 37)) && ((stagedata[11][y+1][x+2] == 0) || (stagedata[11][y+1][x+2] > 99) || (stagedata[11][y+1][x+2] == 37))) {
+		if (((stagedata[ROOM_CAVE][y][x+2] == 0) || (stagedata[ROOM_CAVE][y][x+2] > 99) || (stagedata[ROOM_CAVE][y][x+2] == 37)) && ((stagedata[ROOM_CAVE][y+1][x+2] == 0) || (stagedata[ROOM_CAVE][y+1][x+2] > 99) || (stagedata[ROOM_CAVE][y+1][x+2] == 37))) {
 			if (enemies->fire[0] == 0)
 				enemies->x[0] += 0.3;
 		}
 	}
 	if (enemies->x[0] > jean.x - 1) {
 		enemies->direction[0] = 0;
-		if (((stagedata[11][y][x-1] == 0) || (stagedata[11][y][x-1] > 99) || (stagedata[11][y][x-1] == 37)) && ((stagedata[11][y+1][x-1] == 0) || (stagedata[11][y+1][x-1] > 99) || (stagedata[11][y+1][x-1] == 37))) {
+		if (((stagedata[ROOM_CAVE][y][x-1] == 0) || (stagedata[ROOM_CAVE][y][x-1] > 99) || (stagedata[ROOM_CAVE][y][x-1] == 37)) && ((stagedata[ROOM_CAVE][y+1][x-1] == 0) || (stagedata[ROOM_CAVE][y+1][x-1] > 99) || (stagedata[ROOM_CAVE][y+1][x-1] == 37))) {
 			if (enemies->fire[0] == 0)
 				enemies->x[0] -= 0.3;
 		}
 	}
 	if (enemies->y[0] < jean.y + 1) {
-		if (((stagedata[11][y+2][x] == 0) || (stagedata[11][y+2][x] > 99)) && ((stagedata[11][y+2][x+1] == 0) || (stagedata[11][y+2][x+1] > 99))) {
+		if (((stagedata[ROOM_CAVE][y+2][x] == 0) || (stagedata[ROOM_CAVE][y+2][x] > 99)) && ((stagedata[ROOM_CAVE][y+2][x+1] == 0) || (stagedata[ROOM_CAVE][y+2][x+1] > 99))) {
 			if (enemies->fire[0] == 0)
 				enemies->y[0] +=0.3;
 			enemies->fire[0] = 0;
@@ -818,7 +820,7 @@ void fireball (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,ui
 		}
 	}
 	if (enemies->y[0] > jean.y + 1) {
-		if (((stagedata[11][y-1][x] == 0) || (stagedata[11][y-1][x] > 99) || (stagedata[11][y-1][x] == 37)) && ((stagedata[11][y-1][x+1] == 0) || (stagedata[11][y-1][x+1] > 99) || (stagedata[11][y-1][x+1] == 37))) {
+		if (((stagedata[ROOM_CAVE][y-1][x] == 0) || (stagedata[ROOM_CAVE][y-1][x] > 99) || (stagedata[ROOM_CAVE][y-1][x] == 37)) && ((stagedata[ROOM_CAVE][y-1][x+1] == 0) || (stagedata[ROOM_CAVE][y-1][x+1] > 99) || (stagedata[ROOM_CAVE][y-1][x+1] == 37))) {
 			enemies->y[0] -=0.3;
 			enemies->fire[0] = 0;
 		}

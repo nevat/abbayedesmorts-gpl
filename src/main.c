@@ -2,13 +2,21 @@
 /* Version 2.0 */
 
 /* (c) 2010 - Locomalito & Gryzor87 */
-/* 2013 - David "Nevat" Lara */
+/* 2013-2023 - David "Nevat" Lara */
+/* 2015-2023 - Carsten Teibes */
 
 /* GPL v3 license */
 
  
 #include "main.h"
+#include "startscreen.h"
+#include "history.h"
+#include "game.h"
+#include "gameover.h"
+#include "ending.h"
+
 SDL_Renderer *renderer;
+
 int main (int argc, char** argv) {
 
 	// TODO: support arguments for fullscreen, etc.
@@ -27,25 +35,24 @@ int main (int argc, char** argv) {
 	romfsInit();
 #endif
 
+	/* Missing data files, exit with error */
+	if(!check_data()) return 1;
+
 	/* Creating window */
-	SDL_Window *screen; 
-	if (fullscreen)
-		screen = SDL_CreateWindow(NULL, 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	else	
-		screen = SDL_CreateWindow("Abbaye des Morts v2.0.2",
-			SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,768,576,0);
+	SDL_Window *screen = SDL_CreateWindow(GAME_TITLE,
+		SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SCREEN_W * 3,SCREEN_H * 3,
+		fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 
 	/* Create renderer (with VSync, nice !) */
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
-	SDL_RenderSetLogicalSize(renderer, 256, 192);
+	SDL_RenderSetLogicalSize(renderer, SCREEN_W, SCREEN_H);
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 
 	/* Init joystick if there's one connected */
 	SDL_Joystick *joystick = NULL;
 
-	if ( SDL_Init(SDL_INIT_JOYSTICK) >= 0 )
-	{
+	if (SDL_Init(SDL_INIT_JOYSTICK) >= 0) {
 		joystick = SDL_NumJoysticks() > 0 ? SDL_JoystickOpen(0) : NULL; 
 		SDL_JoystickEventState(SDL_ENABLE);
 	}
@@ -60,18 +67,22 @@ int main (int argc, char** argv) {
 	while (exit != 1) {
 		switch (state) {
 			case 0:
+				update_title(screen, NULL);
 				startscreen(screen,&state,&grapset,&fullscreen);
 				break;
 			case 1:
+				update_title(screen, "History");
 				history(screen,&state,&grapset,&fullscreen);
 				break;
 			case 2:
 				game(screen,&state,&grapset,&fullscreen);
 				break;
 			case 3:
+				update_title(screen, "GAME OVER");
 				gameover(screen,&state);
 				break;
 			case 4:
+				update_title(screen, "THE END");
 				ending(screen,&state);
 				break;
 			case 6:
@@ -93,4 +104,50 @@ int main (int argc, char** argv) {
 	/* Exiting normally */
 	return 0;
 
+}
+
+int check_data() {
+	const int NUM_CHECKS = 4;
+
+	/* Check every kind of data */
+	const char* files[] = {
+		DATADIR "/graphics/tiles.png",
+		DATADIR "/sounds/MainTitleN.ogg",
+		DATADIR "/data/map.txt",
+		DATADIR "/data/enemies.txt"
+	};
+
+	/* Try to open each file */
+	int missing = NUM_CHECKS;
+	SDL_RWops *rw;
+	for(int i = 0; i < NUM_CHECKS; i++) {
+		rw = SDL_RWFromFile(files[i], "rb");
+		if (rw) {
+			SDL_RWclose(rw);
+			missing--;
+		}
+	}
+
+	/* Everything found */
+	if (!missing) return 1;
+
+	const char* errormsg = "Cannot find data!\nFiles are expected under \"" DATADIR
+		"\",\nbut nothing was found.\n\nPlease check your installation.";
+
+	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, GAME_TITLE, errormsg, NULL)) {
+		/* Fallback error message to terminal */
+		printf("ERROR: %s\n", errormsg);
+	}
+
+	return 0;
+}
+
+void update_title(SDL_Window *screen, const char* title) {
+	static char buf[64];
+	strcpy(buf, GAME_TITLE);
+	if (title) {
+		strcat(buf, " - ");
+		strcat(buf, title);
+	}
+	SDL_SetWindowTitle(screen, buf);
 }

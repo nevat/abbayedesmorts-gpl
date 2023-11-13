@@ -1,6 +1,6 @@
 /* history.c */
 
-#include "base.h"
+#include "history.h"
 
 void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -112,7 +112,7 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 			}
 		}
 
-		if (posenem[3] > 256) { /* Ending history */
+		if (posenem[3] > SCREEN_W) { /* Ending history */
 			exit = 1;
 			*state = 2;
 		}

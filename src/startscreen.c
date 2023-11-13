@@ -1,6 +1,6 @@
 /* startscreen.c */
 
-#include "base.h"
+#include "startscreen.h"
 
 void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -8,8 +8,8 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 	uint8_t musicplay = 0;
     uint8_t change = 1;
 
-	SDL_Rect srcintro = {0,0,256,192};
-	SDL_Rect desintro = {0,0,256,192};
+	SDL_Rect srcintro = {0,0,SCREEN_W,SCREEN_H};
+	SDL_Rect desintro = {0,0,SCREEN_W,SCREEN_H};
 
 	SDL_Event keyp;
 
@@ -59,7 +59,7 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 				if (keyp.key.keysym.sym == SDLK_i) { /* Show instructions */
                     change = 1; /* enable redraw */
 					if (srcintro.y == 0)
-						srcintro.y = 192;
+						srcintro.y = SCREEN_H;
 					else {
 						srcintro.y = 0;
 						musicplay = 0;
@@ -102,6 +102,10 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 			if (keyp.type == SDL_QUIT) { /* Exit game */
 				exit = 1;
 				*state = 6;
+			}
+
+			if (keyp.type == SDL_WINDOWEVENT) { /* window changed */
+				change = 1;
 			}
 
 		}

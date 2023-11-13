@@ -1,6 +1,13 @@
 /* game.c */
 
 #include "game.h"
+#include "loading.h"
+#include "jean.h"
+#include "enemies.h"
+#include "drawing.h"
+#define INSIDE_GAME_C
+#include "rooms.h"
+#include "main.h"
 
 void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -10,7 +17,8 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 	uint stagedata[25][22][32];
 	int enemydata[25][7][15];
-	uint room[2] = {5,5}; /* Room, previous room */
+	uint room = ROOM_ESCAPE; /* Room and previous room */
+	uint lastroom = ROOM_ESCAPE;
 	uint exit = 0;
 	uint changeflag = 1; /* Screen change */
 	uint counter[3] = {0,0,0}; /* Counters */
@@ -119,7 +127,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 		drawscreen(renderer,stagedata,tiles,room,counter,changeflag,fx,changetiles);
 
 		/* Draw statusbar */
-		if (room[0] != 4)
+		if (room != ROOM_THEEND)
 			statusbar(renderer,tiles,room,jean.state[0],jean.state[1],fonts,changetiles);
 
 		/* Draw Jean */
@@ -128,29 +136,29 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 		/* Enemies */
 		if (enemies.type[0] > 0) {
-			if (room[0] != 4)
+			if (room != ROOM_THEEND)
 				movenemies (&enemies,stagedata,counter,proyec,jean,fx);
-			if ((room[0] == 5) || (room[0] == 6))
+			if ((room == ROOM_ESCAPE) || (room == ROOM_CLOSE))
 				crusaders (&enemies,renderer,tiles,counter,room,changetiles);
-			if (room[0] == 10)
+			if (room == ROOM_BEAST)
 				dragon (&enemies,renderer,tiles,counter,proyec,fx,changetiles);
-			if (room[0] == 11)
+			if (room == ROOM_CAVE)
 				fireball (&enemies,renderer,tiles,counter,jean,stagedata,changetiles);
-			if (room[0] == 14)
+			if (room == ROOM_GARDEN)
 				plants (&enemies,renderer,tiles,counter,proyec,fx,changetiles);
-			if (room[0] == 9)
+			if (room == ROOM_HANGMAN)
 				drawrope (enemies,renderer,tiles,changetiles);
-			if (room[0] == 18)
+			if (room == ROOM_BANQUET)
 				death (&enemies,renderer,tiles,counter,proyec,stagedata,fx,changetiles);
-			if ((room[0] == 24) && (enemies.type[0] == 18))
+			if ((room == ROOM_SATAN) && (enemies.type[0] == 18))
 				satan (&enemies,renderer,tiles,counter,proyec,fx,changetiles);
-			if ((room[0] == 24) && (jean.flags[6] == 5))
+			if ((room == ROOM_SATAN) && (jean.flags[6] == 5))
 				crusaders (&enemies,renderer,tiles,counter,room,changetiles);
 			drawenemies (&enemies,renderer,tiles,fx,changetiles);
 		}
 
 		/* Shoots */
-		if ((proyec[0] > 0) && ((room[0] == 17) || (room[0] == 20) || (room[0] == 21) || (room[0] == 22)))
+		if ((proyec[0] > 0) && ((room == ROOM_WHEEL) || (room == ROOM_GATE) || (room == ROOM_EVIL) || (room == ROOM_SOULS)))
 			drawshoots (proyec,tiles,renderer,&enemies,changetiles);
 
 		/* Jean management */
@@ -163,8 +171,8 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 					collisions (&jean,stagedata,room);
 					movejean (&jean,fx);
 			}
-			if (room[0] != 4) {
-				touchobj (&jean,stagedata,room,&parchment,&changeflag,&enemies,proyec,fx);
+			if (room != ROOM_THEEND) {
+				touchobj (&jean,stagedata,&room,&lastroom,&parchment,&changeflag,&enemies,proyec,fx);
 				contact (&jean,enemies,proyec,room);
 			}
 			events (&jean,stagedata,room,counter,&enemies,fx);
@@ -172,8 +180,9 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 		/* Jean death */
 		if (jean.death == 98) {
-			if (room[0] != 4) {
-				room[0] = jean.checkpoint[0];
+			if (room != ROOM_THEEND) {
+				room = jean.checkpoint[0];
+				lastroom = jean.checkpoint[0];
 				jean.x = jean.checkpoint[1];
 				jean.y = jean.checkpoint[2];
 				jean.jump = 0;
@@ -186,7 +195,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 				jean.state[0] --;
 				jean.death = 0;
 				jean.temp = 1;
-				music (room,bso,&changeflag,jean.flags[6]);
+				music (room,lastroom,bso,&changeflag,jean.flags[6]);
 				Mix_ResumeMusic();
 			}
 			else {
@@ -202,16 +211,25 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 			*state = 4;
 			exit = 1;
 		}
-		changescreen (&jean,room,&changeflag);
+		changescreen (&jean,&room,&lastroom,&changeflag);
+
 		if (changeflag > 0) {
 			if ((jean.flags[6] < 4) || (jean.flags[6] > 5))
 				searchenemies (room,&enemies,&changeflag,enemydata);
-			music (room,bso,&changeflag,jean.flags[6]);
+			music (room,lastroom,bso,&changeflag,jean.flags[6]);
 			for (n=0; n<24; n++) { /* Reset enemyshoots */
 				proyec[n] = 0;
 			}
 			counter[0] = 0;
 			changeflag = 0;
+
+			/* Update window title */
+			update_title(screen, room_names[room]);
+#if DEBUG
+			if (room != lastroom)
+				printf("Room change: \"%s\" (%d) -> \"%s\" (%d)\n",
+					room_names[lastroom], lastroom, room_names[room], room);
+#endif
 		}
 		/* Parchments */
 		if (parchment > 0)
@@ -238,16 +256,16 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 		}
 		if (jean.flags[6] == 4) {
 			Mix_PlayChannel(-1, fx[2], 0);
-			sleep(5);
+			SDL_Delay(5 * 1000);
 			jean.flags[6] = 5;
 			jean.direction = 0;
-			music (room,bso,&changeflag,jean.flags[6]);
+			music (room,lastroom,bso,&changeflag,jean.flags[6]);
 		}
 		if (jean.flags[6] == 6) {
-			sleep(5);
+			SDL_Delay(5 * 1000);
 			jean.death = 0;
 			changeflag = 1;
-			room[0] = 4;
+			room = ROOM_THEEND;
 			jean.flags[6] = 7;
 			jean.x = 125;
 			jean.y = 115;
@@ -273,18 +291,16 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 
 	*fullscreen = winfull;
 
-
-
 }
 
-void animation (uint stagedata[][22][32],int room[],int counter[]) {
+void animation (uint stagedata[][22][32],uint room,uint counter[]) {
 
 	uint16_t data = 0;
 
 	for (int8_t j=0; j<=21; j++) {
 		for (int8_t i=0; i<=31; i++) {
 
-			data = stagedata[room[0]][j][i];
+			data = stagedata[room][j][i];
 
 			/* Fire animation */
 			if ((data == 59) || (data == 60)) {
@@ -304,7 +320,7 @@ void animation (uint stagedata[][22][32],int room[],int counter[]) {
 					data = 501;
 			}
 
-			stagedata[room[0]][j][i] = data;
+			stagedata[room][j][i] = data;
 
 		}
 	}
@@ -427,102 +443,94 @@ void control (struct hero *jean,uint *keyp) {
 	}
 }
 
-void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter[],struct enem *enemies,Mix_Chunk *fx[]) {
+void events (struct hero *jean,uint stagedata[][22][32],uint room,uint counter[],struct enem *enemies,Mix_Chunk *fx[]) {
 
 	int8_t x = 0;
 	int8_t y = 0;
 
-	if (room[0] == 4) {
+	if (room == ROOM_THEEND) {
 		if (jean->temp < 7) {
 			/* Moving Jean */
 			if (counter[1] == 45) {
-				switch (jean->direction) {
-					case 0:
-						jean->direction = 1;
-						break;
-					case 1:
-						jean->direction = 0;
-						break;
-				}
+				jean->direction ^= 1;
 				jean->temp ++;
 			}
-		}
-		else {
+		} else {
 			jean->direction = 0;
 			jean->death = 1;
 		}
 	}
 
-	if (room[0] == 7) {
+	if (room == ROOM_CHURCH) {
 		/* Close door */
 		if ((jean->x > 24) && (jean->flags[0] == 0)) {
-			stagedata[7][14][0] = 347;
-			stagedata[7][15][0] = 348;
-			stagedata[7][16][0] = 349;
-			stagedata[7][17][0] = 350;
+			stagedata[ROOM_CHURCH][14][0] = 347;
+			stagedata[ROOM_CHURCH][15][0] = 348;
+			stagedata[ROOM_CHURCH][16][0] = 349;
+			stagedata[ROOM_CHURCH][17][0] = 350;
 			jean->flags[0] = 1;
 			Mix_PlayChannel(-1, fx[1], 0);
-			sleep(1);
+			SDL_Delay(1 * 1000);
 		}
 	}
 
-	if (room[0] == 8) {
+	if (room == ROOM_ALTAR) {
 		/* Open ground */
-		if ((jean->x > 15) && (jean->flags[1] == 1) && (stagedata[8][20][26] == 7)) {
-			stagedata[8][20][26] = 38;
-			stagedata[8][20][27] = 0;
-			stagedata[8][21][26] = 0;
-			stagedata[8][21][27] = 0;
+		if ((jean->x > 15) && (jean->flags[1] == 1) && (stagedata[ROOM_ALTAR][20][26] == 7)) {
+			stagedata[ROOM_ALTAR][20][26] = 38;
+			stagedata[ROOM_ALTAR][20][27] = 0;
+			stagedata[ROOM_ALTAR][21][26] = 0;
+			stagedata[ROOM_ALTAR][21][27] = 0;
 			Mix_PlayChannel(-1, fx[1], 0);
-			sleep(1);
+			SDL_Delay(1 * 1000);
 		}
 		/* Open door */
-		if ((jean->x > 211) && (jean->flags[2] == 1) && (stagedata[8][14][31] == 343)) {
-			stagedata[8][14][31] = 0;
-			stagedata[8][15][31] = 0;
-			stagedata[8][16][31] = 0;
-			stagedata[8][17][31] = 0;
+		if ((jean->x > 211) && (jean->flags[2] == 1) && (stagedata[ROOM_ALTAR][14][31] == 343)) {
+			stagedata[ROOM_ALTAR][14][31] = 0;
+			stagedata[ROOM_ALTAR][15][31] = 0;
+			stagedata[ROOM_ALTAR][16][31] = 0;
+			stagedata[ROOM_ALTAR][17][31] = 0;
 			Mix_PlayChannel(-1, fx[1], 0);
-			sleep(1);
+			SDL_Delay(1 * 1000);
 		}
 	}
-	if (room[0] == 10) {
+	if (room == ROOM_BEAST) {
 		/* Dragon fire kills Jean */
 		if (((jean->x > 127) && (jean->x < 144)) && (jean->y < 89)) {
 			if ((enemies->speed[0] > 109) && (enemies->speed[0] < 146))
 				jean->death = 1;
 		}
 	}
-	if (room[0] == 19) {
+	if (room == ROOM_RIVER) {
 		/* Open door */
-		if ((jean->y > 16) && (jean->flags[3] == 1) && (stagedata[19][16][0] == 347)) {
-			stagedata[19][16][0] = 0;
-			stagedata[19][17][0] = 0;
-			stagedata[19][18][0] = 0;
-			stagedata[19][19][0] = 0;
+		if ((jean->y > 16) && (jean->flags[3] == 1) && (stagedata[ROOM_RIVER][16][0] == 347)) {
+			stagedata[ROOM_RIVER][16][0] = 0;
+			stagedata[ROOM_RIVER][17][0] = 0;
+			stagedata[ROOM_RIVER][18][0] = 0;
+			stagedata[ROOM_RIVER][19][0] = 0;
 			Mix_PlayChannel(-1, fx[1], 0);
-			sleep(1);
+			SDL_Delay(1 * 1000);
 		}
 	}
-	if (room[0] == 20) {
+	if (room == ROOM_GATE) {
 		/* Open door */
-		if ((jean->x > 208) && (jean->flags[4] == 1) && (stagedata[20][14][31] == 343)) {
-			stagedata[20][14][31] = 0;
-			stagedata[20][15][31] = 0;
-			stagedata[20][16][31] = 0;
-			stagedata[20][17][31] = 0;
+		if ((jean->x > 208) && (jean->flags[4] == 1) && (stagedata[ROOM_GATE][14][31] == 343)) {
+			stagedata[ROOM_GATE][14][31] = 0;
+			stagedata[ROOM_GATE][15][31] = 0;
+			stagedata[ROOM_GATE][16][31] = 0;
+			stagedata[ROOM_GATE][17][31] = 0;
 			Mix_PlayChannel(-1, fx[1], 0);
-			sleep(1);
+			SDL_Delay(1 * 1000);
 		}
 	}
 
-	if (room[0] == 24) {
+	if (room == ROOM_SATAN) {
 		if ((jean->state[1] == 12) && (jean->x > 8) && (jean->flags[6] == 0)) {
 			/* Block entry */
-			stagedata[24][16][0] = 99;
-			stagedata[24][17][0] = 99;
-			stagedata[24][18][0] = 99;
-			stagedata[24][19][0] = 99;
+			stagedata[ROOM_SATAN][16][0] = 99;
+			stagedata[ROOM_SATAN][17][0] = 99;
+			stagedata[ROOM_SATAN][18][0] = 99;
+			stagedata[ROOM_SATAN][19][0] = 99;
 			jean->flags[6] = 1;
 			/* Mark checkpoint */
 			jean->checkpoint[0] = 24;
@@ -581,13 +589,13 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 					y=16;
 					break;
 			}
-			stagedata[24][y][x] = 84;
+			stagedata[ROOM_SATAN][y][x] = 84;
 			jean->state[1] --;
 			Mix_PlayChannel(-1, fx[1], 0);
 		}
 		if ((jean->flags[6] == 1) && (jean->state[1] == 0) && (counter[0] == 29)) {
 			/* Draw cup */
-			stagedata[24][3][15] = 650;
+			stagedata[ROOM_SATAN][3][15] = 650;
 			jean->flags[6] = 2;
 			Mix_PlayChannel(-1, fx[1], 0);
 		}
@@ -602,135 +610,134 @@ void events (struct hero *jean,uint stagedata[][22][32],uint room[],uint counter
 				enemies->y[0] = 0;
 				enemies->type[0] = 17;
 				/* Putting red parchment */
-				stagedata[24][14][28] = 339;
-				stagedata[24][14][29] = 340;
-				stagedata[24][15][28] = 341;
-				stagedata[24][15][29] = 342;
+				stagedata[ROOM_SATAN][14][28] = 339;
+				stagedata[ROOM_SATAN][14][29] = 340;
+				stagedata[ROOM_SATAN][15][28] = 341;
+				stagedata[ROOM_SATAN][15][29] = 342;
 			}
 		}
 	}
 }
 
-void music (uint room[],Mix_Music *bso[],uint *changeflag,int flag) {
+void music (uint room,uint lastroom,Mix_Music *bso[],uint *changeflag,int flag) {
 
-	if (room[0] == 1) {
+	if (room == ROOM_PRAYER) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[0], 0);
 	}
-	if ((room[0] == 2) && (room[1] == 1)) {
+	if ((room == ROOM_TOWER) && (lastroom == ROOM_PRAYER)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[1], -1);
 	}
-	if (room[0] == 4) {
+	if (room == ROOM_THEEND) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[2], 0);
 	}
-	if ((room[0] == 5) && (room[1] != 6)) {
+	if ((room == ROOM_ESCAPE) && (lastroom != ROOM_CLOSE)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[7], -1);
 	}
-	if ((room[0] == 6) && (room[1] == 7)) {
+	if ((room == ROOM_CLOSE) && (lastroom == ROOM_CHURCH)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[7], -1);
 	}
-	if ((room[0] == 7) && (room[1] == 6)) {
+	if ((room == ROOM_CHURCH) && (lastroom == ROOM_CLOSE)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[1], -1);
 	}
-	if (((room[0] == 8) && (room[1] == 9)) || ((room[0] == 8) && (*changeflag == 2))) {
+	if (((room == ROOM_ALTAR) && (lastroom == ROOM_HANGMAN)) || ((room == ROOM_ALTAR) && (*changeflag == 2))) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[1], -1);
 	}
-	if (room[0] == 9) {
+	if (room == ROOM_HANGMAN) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[3], 0);
 	}
-	if (((room[0] == 11) && (room[1] == 12)) || ((room[0] == 11) && (*changeflag == 2))) {
+	if (((room == ROOM_CAVE) && (lastroom == ROOM_RUINS)) || ((room == ROOM_CAVE) && (*changeflag == 2))) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[4], -1);
 	}
-	if (((room[0] == 12) && (room[1] == 11)) || ((room[0] == 12) && (*changeflag == 2))) {
+	if (((room == ROOM_RUINS) && (lastroom == ROOM_CAVE)) || ((room == ROOM_RUINS) && (*changeflag == 2))) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[1], -1);
 	}
-	if ((room[0] == 13) && (room[1] == 14)) {
+	if ((room == ROOM_CATACOMBS) && (lastroom == ROOM_GARDEN)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[1], -1);
 	}
-	if (((room[0] == 14) && (room[1] == 13)) || ((room[0] == 14) && (*changeflag == 2))) {
+	if (((room == ROOM_GARDEN) && (lastroom == ROOM_CATACOMBS)) || ((room == ROOM_GARDEN) && (*changeflag == 2))) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[4], -1);
 	}
-	if ((room[0] == 15) && (*changeflag == 2)) {
+	if ((room == ROOM_TUNELS) && (*changeflag == 2)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[4], -1);
 	}
-	if ((room[0] == 16) && (room[1] == 17)) {
+	if ((room == ROOM_LAKE) && (lastroom == ROOM_WHEEL)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[4], -1);
 	}
-	if ((room[0] == 17) && (room[1] == 16)) {
+	if ((room == ROOM_WHEEL) && (lastroom == ROOM_LAKE)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[1], -1);
 	}
-	if (room[0] == 18) {
+	if (room == ROOM_BANQUET) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[5], -1);
 	}
-	if (((room[0] == 19) && (room[1] == 18)) || ((room[0] == 19) && (*changeflag == 2))) {
+	if (((room == ROOM_RIVER) && (lastroom == ROOM_BANQUET)) || ((room == ROOM_RIVER) && (*changeflag == 2))) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[4], -1);
 	}
-	if ((room[0] == 20) && (room[1] == 21)) {
+	if ((room == ROOM_GATE) && (lastroom == ROOM_EVIL)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[4], -1);
 	}
-	if ((room[0] == 21) && (room[1] == 20)) {
+	if ((room == ROOM_EVIL) && (lastroom == ROOM_GATE)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[6], -1);
 	}
-	if ((room[0] == 23) && (room[1] == 24)) {
+	if ((room == ROOM_ASHES) && (lastroom == ROOM_SATAN)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[6], -1);
 	}
-	if ((room[0] == 24) && (flag != 5)) {
+	if ((room == ROOM_SATAN) && (flag != 5)) {
 		Mix_HaltMusic();
 		Mix_PlayMusic(bso[5], -1);
 	}
-	if ((room[0] == 24) && (flag == 5))
+	if ((room == ROOM_SATAN) && (flag == 5))
 		Mix_PlayMusic(bso[7], -1);
 
 	*changeflag -= 1;
 
 }
 
-void changescreen (struct hero *jean,uint room[], uint *changeflag) {
+void changescreen (struct hero *jean,uint *room, uint *lastroom, uint *changeflag) {
 
-	if ((jean->x < 1) && (room[0] != 5)) {
-		room[1] = room[0];
-		room[0] -= 1;
+	if ((jean->x < -8) && (*room != ROOM_ESCAPE)) { /* Cannot go left to end room */
+		*lastroom = *room;
+		*room -= 1;
 		jean->x = 240;
 		*changeflag = 1;
 	}
-	if ((jean->x + 8) > 256) {
-		room[1] = room[0];
-		room[0] += 1;
+	if ((jean->x + 8) > SCREEN_W) {
+		*lastroom = *room;
+		*room += 1;
 		jean->x = 1;
 		*changeflag = 1;
 	}
 	if ((jean->y + 12 < -16) && (jean->jump == 1)) {
-		room[1] = room[0];
-		room[0] -=5;
+		*lastroom = *room;
+		*room -= 5;
 		jean->y = 152;
 		*changeflag = 1;
 	}
 	if ((jean->y > 175) && (jean->jump != 1)) {
-		room[1] = room[0];
-		room[0] +=5;
+		*lastroom = *room;
+		*room += 5;
 		jean->y = -16;
 		*changeflag = 1;
 	}
-
 }
 
 void keybpause (uint *keyp) {

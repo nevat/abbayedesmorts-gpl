@@ -4,9 +4,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
+
+#define uint unsigned int
 
 #ifdef __SWITCH__
 #  include <switch.h>
@@ -22,3 +26,6 @@ extern SDL_Renderer *renderer;
 #define START_JOYBUTTON 9
 #define X_JOYAXIS 0
 #define Y_JOYAXIS 1
+
+#define SCREEN_W 256
+#define SCREEN_H 192

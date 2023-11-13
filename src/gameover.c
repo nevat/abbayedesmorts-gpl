@@ -16,7 +16,7 @@ void gameover (SDL_Window *screen,uint8_t *state) {
 	Mix_PlayMusic(bso, 0);
 
 	/* Wait */
-	sleep(12);
+	SDL_Delay(12 * 1000);
 
 	/* Cleaning */
 	Mix_FreeMusic(bso);

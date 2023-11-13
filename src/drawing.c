@@ -1,15 +1,16 @@
 /* drawing.c */
 
 #include "drawing.h"
+#include "rooms.h"
 
-void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *tiles,uint room[],uint counter[],uint changeflag,Mix_Chunk *fx[],uint changetiles) {
+void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *tiles,uint room,uint counter[],uint changeflag,Mix_Chunk *fx[],uint changetiles) {
 
 	SDL_Rect srctiles = {0,0,8,8};
 	SDL_Rect destiles = {0,0,8,8};
 
 	for (uint8_t coordy=0; coordy<=21; coordy++) {
 		for (uint8_t coordx=0; coordx<=31; coordx++) {
-			uint16_t data = stagedata[room[0]][coordy][coordx];
+			uint16_t data = stagedata[room][coordy][coordx];
 			if ((data > 0) && (data != 99)) {
 				destiles.x = coordx * 8;
 				destiles.y = coordy * 8;
@@ -24,7 +25,7 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 							srctiles.x = (data - 1) * 8;
 					}
 					else {
-						if (data == 154) {
+						if (data == 154) { /* Door */
 							srctiles.x=600 + ((counter[0] / 8) * 16);
 							srctiles.y=0;
 							srctiles.w=16;
@@ -48,7 +49,7 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 					srctiles.w = 8;
 					srctiles.h = 8;
 					/* Door movement */
-					if ((room[0] == 7) && ((counter[1] > 59) && (counter[1] < 71))) {
+					if ((room == ROOM_CHURCH) && ((counter[1] > 59) && (counter[1] < 71))) {
 						if ((data == 347) || (data == 348) || (data == 349) || (data == 350)) {
 							destiles.x += 2;
 							if ((data == 350) && (counter[1] == 70))
@@ -107,7 +108,7 @@ void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *ti
 
 }
 
-void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,int crosses,SDL_Texture *fonts,uint changetiles) {
+void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room,int lifes,int crosses,SDL_Texture *fonts,uint changetiles) {
 
 	SDL_Rect srcbar = {448,104,13,12};
 	SDL_Rect desbar = {0,177,13,12};
@@ -125,41 +126,27 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room[],int lifes,i
 	desbar.x = 32;
 	SDL_RenderCopy(renderer,tiles,&srcbar,&desbar);
 
-	for (uint8_t i=0; i<=2; i++) {
-		switch (i) {
-			case 0:
-				srcnumbers.x = lifes * 10;
-				SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-				break;
-			case 1:
-				if (crosses < 10) {
-					desnumbers.x = 50;
-					srcnumbers.x = crosses * 10;
-					SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-				}
-				else {
-					desnumbers.x = 50;
-					srcnumbers.x = 10;
-					SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-					desnumbers.x = 55;
-					srcnumbers.x = (crosses - 10) * 10;
-					SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
-				}
-				break;
-			case 2:
-				if ((room[0] > 0) && (room[0] < 4)) {
-					srctext.y = (room[0] - 1) * 20;
-					SDL_RenderCopy(renderer,fonts,&srctext,&destext);
-				}
-				if (room[0] > 4) {
-					srctext.y = (room[0] - 2) * 20;
-					SDL_RenderCopy(renderer,fonts,&srctext,&destext);
-				}
-				break;
-		}
+	srcnumbers.x = lifes * 10;
+	SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
 
+	if (crosses < 10) {
+		desnumbers.x = 50;
+		srcnumbers.x = crosses * 10;
+		SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+	} else {
+		desnumbers.x = 50;
+		srcnumbers.x = 10;
+		SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
+		desnumbers.x = 55;
+		srcnumbers.x = (crosses - 10) * 10;
+		SDL_RenderCopy(renderer,fonts,&srcnumbers,&desnumbers);
 	}
 
+	/* Show room name */
+	srctext.y = (room - 1) * 20;
+	if (room > ROOM_THEEND) /* Skip empty last room */
+		srctext.y -= 20;
+	SDL_RenderCopy(renderer,fonts,&srctext,&destext);
 }
 
 void drawrope (struct enem enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint changetiles) {

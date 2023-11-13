@@ -4,8 +4,7 @@
 
 #include "base.h"
 
-void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen);
-void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen);
-void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen);
-void gameover(SDL_Window *screen,uint8_t *state);
-void ending (SDL_Window *screen,uint8_t *state);
+int check_data();
+void update_title(SDL_Window *screen, const char* title);
+
+#define GAME_TITLE "Abbaye des Morts v2.0.3"

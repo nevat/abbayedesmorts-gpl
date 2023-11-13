@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [2.0.3] - TBA
+
+Refactored room handling and check data files, fix window redrawing in intro.
+
 ## [2.0.2] - 2023-10-24
 
 Bugfix releae. Small improvements for better performance. Added bigger pngs logos for Flatpak requeriments.

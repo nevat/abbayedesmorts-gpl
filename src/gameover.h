@@ -2,5 +2,6 @@
 
 #pragma once
 
-#include <unistd.h>
 #include "base.h"
+
+void gameover(SDL_Window *screen,uint8_t *state);
