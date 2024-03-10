@@ -427,6 +427,27 @@ void control (struct hero *jean,uint *keyp) {
 
 		}
 
+		if (event.type == SDL_JOYHATMOTION) {
+			jean->push[1] = 0;
+			jean->push[2] = 0;
+			jean->push[3] = 0;
+			jean->ducking = 0;
+			if (event.jhat.value & SDL_HAT_LEFT) {
+				jean->push[2] = 1;
+				jean->push[3] = 0;
+			} else if (event.jhat.value & SDL_HAT_RIGHT) {
+				jean->push[3] = 1;
+				jean->push[2] = 0;
+			}
+			if (event.jhat.value & SDL_HAT_DOWN) {
+				jean->push[1] = 1;
+				jean->ducking = 1;
+			} else if (event.jhat.value & SDL_HAT_UP) {
+				jean->push[1] = 0;
+				jean->ducking = 0;
+			}
+		}
+
 		if (event.type == SDL_JOYBUTTONDOWN) {
 			if (event.jbutton.button == JUMP_JOYBUTTON)
 				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
