@@ -41,13 +41,23 @@ SRCS=		src/drawing.c \
 		src/main.c \
 		src/startscreen.c
 
+OBJS = $(SRCS:%.c=%.o)
+
+
 all: $(PROG)
 
-$(PROG): $(SRCS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(PROG) $(LIBS)
+$(PROG): $(OBJS)
+	@echo linking $@
+	@$(CC) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
+
+.SUFFIXES: .c .o
+.c.o:
+	@echo compile $<
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f ./abbayev2
+	@echo cleaning...
+	@rm -f $(OBJS) $(PROG)
 
 # Installation
 install: $(PROG)

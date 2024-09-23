@@ -1,5 +1,8 @@
 abbayev2
 
+# build
+*.o
+
 # switch
 *.elf
 *.nacp
