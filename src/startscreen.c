@@ -2,6 +2,7 @@
 
 #include "startscreen.h"
 #include "loading.h"
+#include "main.h"
 
 void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -35,7 +36,7 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
                 SDL_RenderCopy(renderer, intromd, &srcintro, &desintro);
 
             /* Flip ! */
-            SDL_RenderPresent(renderer);
+            renderpresent(renderer);
             
             change = 0;
             

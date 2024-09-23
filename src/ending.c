@@ -2,6 +2,7 @@
 
 #include "ending.h"
 #include "loading.h"
+#include "main.h"
 
 void ending (SDL_Window *screen,uint8_t *state) {
 
@@ -34,7 +35,7 @@ void ending (SDL_Window *screen,uint8_t *state) {
 		SDL_RenderCopy(renderer,tiles,&srcdoor,&desdoor);
 
 		/* Flip */
-		SDL_RenderPresent(renderer);
+		renderpresent(renderer);
 
 	}
 

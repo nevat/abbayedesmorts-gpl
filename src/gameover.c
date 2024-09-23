@@ -2,6 +2,7 @@
 
 #include "gameover.h"
 #include "loading.h"
+#include "main.h"
 
 void gameover (SDL_Window *screen,uint8_t *state) {
 
@@ -12,7 +13,7 @@ void gameover (SDL_Window *screen,uint8_t *state) {
 	SDL_RenderCopy(renderer,gameover,NULL,NULL);
 
 	/* Flip */
-	SDL_RenderPresent(renderer);
+	renderpresent(renderer);
 	Mix_PlayMusic(bso, 0);
 
 	/* Wait */

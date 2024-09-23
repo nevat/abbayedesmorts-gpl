@@ -240,7 +240,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 			blueparchment (renderer,&jean);
 
 		/* Flip ! */
-		SDL_RenderPresent(renderer);
+		renderpresent(renderer);
 
 		if (parchment > 0) {
 			Mix_PlayChannel(-1, fx[2], 0);

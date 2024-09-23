@@ -41,13 +41,22 @@ int main (int argc, char** argv) {
 	/* Creating window */
 	SDL_Window *screen = SDL_CreateWindow(GAME_TITLE,
 		SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SCREEN_W * 3,SCREEN_H * 3,
-		fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+		fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE);
 
 	/* Create renderer (with VSync, nice !) */
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(screen, -1,
+		SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	SDL_RenderSetLogicalSize(renderer, SCREEN_W, SCREEN_H);
+
+	/* Create a render target for smooth scaling */
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	SDL_Texture *target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_TARGET, SCREEN_W, SCREEN_H);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+	SDL_SetRenderTarget(renderer, target);
+
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
+	SDL_RenderClear(renderer);
 
 	/* Init joystick if there's one connected */
 	SDL_Joystick *joystick = NULL;
@@ -93,6 +102,7 @@ int main (int argc, char** argv) {
 
 	/* Cleaning */
 	SDL_JoystickClose(joystick);
+	SDL_DestroyTexture(target);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(screen);
 	SDL_Quit();	
@@ -150,4 +160,15 @@ void update_title(SDL_Window *screen, const char* title) {
 		strcat(buf, title);
 	}
 	SDL_SetWindowTitle(screen, buf);
+}
+
+void renderpresent(SDL_Renderer *renderer) {
+	SDL_Texture *target = SDL_GetRenderTarget(renderer);
+	SDL_SetRenderTarget(renderer, NULL);
+
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, target, NULL, NULL);
+	SDL_RenderPresent(renderer);
+
+	SDL_SetRenderTarget(renderer, target);
 }

@@ -116,7 +116,7 @@ void statusbar (SDL_Renderer *renderer,SDL_Texture *tiles,int room,int lifes,int
 	SDL_Rect srcnumbers = {0,460,10,10};
 	SDL_Rect desnumbers = {18,178,10,10};
 	SDL_Rect srctext = {0,0,140,20};
-	SDL_Rect destext = {115,176,136,18};
+	SDL_Rect destext = {115,174,140,20};
 
 	/* Show heart and crosses sprites */
 	if (changetiles == 1)

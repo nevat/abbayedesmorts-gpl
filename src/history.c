@@ -2,6 +2,7 @@
 
 #include "history.h"
 #include "loading.h"
+#include "main.h"
 
 void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -119,7 +120,7 @@ void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscr
 		}
 
 		/* Flip ! */
-		SDL_RenderPresent(renderer);
+		renderpresent(renderer);
 
 	}
 
