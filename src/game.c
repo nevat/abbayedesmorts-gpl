@@ -35,7 +35,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 	SDL_SetColorKey(tilesb, SDL_TRUE, SDL_MapRGB(tilesb->format, 0, 0, 0) );
 	SDL_Texture *tiles = SDL_CreateTextureFromSurface(renderer, tilesb);
 	SDL_FreeSurface(tilesb);
-	SDL_Texture *fonts = IMG_LoadTexture(renderer, DATADIR "/graphics/fonts.png");
+	SDL_Texture *fonts = loadtexture(renderer, "fonts");
 
 	/* Loading musics */
 	loadingmusic(bso,fx);

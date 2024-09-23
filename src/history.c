@@ -1,17 +1,18 @@
 /* history.c */
 
 #include "history.h"
+#include "loading.h"
 
 void history(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
 	SDL_Event keyp;
 
 	/* Load audio */
-	Mix_Music *music = Mix_LoadMUS(DATADIR "/sounds/ManhuntN.ogg");
+	Mix_Music *music = loadmus("ManhuntN");
 
 	/* Loading PNG */
-	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
-	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/history.png");
+	SDL_Texture *tiles = loadtexture(renderer, "tiles");
+	SDL_Texture *text = loadtexture(renderer, "history");
 
 	SDL_Rect srcjean = {320,88,16,24};
 	SDL_Rect desjean = {0,100,16,24};

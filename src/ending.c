@@ -1,16 +1,17 @@
 /* ending.c */
 
 #include "ending.h"
+#include "loading.h"
 
 void ending (SDL_Window *screen,uint8_t *state) {
 
-	SDL_Texture *tiles = IMG_LoadTexture(renderer, DATADIR "/graphics/tiles.png");
-	SDL_Texture *text = IMG_LoadTexture(renderer, DATADIR "/graphics/ending.png");
+	SDL_Texture *tiles = loadtexture(renderer, "tiles");
+	SDL_Texture *text = loadtexture(renderer, "ending");
 
 	SDL_Rect srcdoor = {600,72,64,48};
 	SDL_Rect desdoor = {96,72,64,48};
 
-	Mix_Music *bso = Mix_LoadMUS(DATADIR "/sounds/PrayerofHopeN.ogg");
+	Mix_Music *bso = loadmus("PrayerofHopeN");
 
 	int16_t x = 0;
 

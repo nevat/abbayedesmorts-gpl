@@ -1,6 +1,7 @@
 /* startscreen.c */
 
 #include "startscreen.h"
+#include "loading.h"
 
 void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
@@ -14,11 +15,11 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 	SDL_Event keyp;
 
 	/* Loading PNG */
-	SDL_Texture *intro = IMG_LoadTexture(renderer, DATADIR "/graphics/intro.png");
-	SDL_Texture *intromd = IMG_LoadTexture(renderer, DATADIR "/graphics/intromd.png");
+	SDL_Texture *intro = loadtexture(renderer, "intro");
+	SDL_Texture *intromd = loadtexture(renderer, "intromd");
 
 	/* Load audio */
-	Mix_Music *music = Mix_LoadMUS(DATADIR "/sounds/MainTitleN.ogg");
+	Mix_Music *music = loadmus("MainTitleN");
 
 	while (exit != 1) {
         

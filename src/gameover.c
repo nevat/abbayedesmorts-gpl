@@ -1,12 +1,12 @@
 /* gameover.c */
 
 #include "gameover.h"
+#include "loading.h"
 
 void gameover (SDL_Window *screen,uint8_t *state) {
 
-	SDL_Texture *gameover = IMG_LoadTexture(renderer, DATADIR "/graphics/gameover.png");
-	
-	Mix_Music *bso = Mix_LoadMUS(DATADIR "/sounds/GameOverV2N.ogg");
+	SDL_Texture *gameover = loadtexture(renderer, "gameover");
+	Mix_Music *bso = loadmus("GameOverV2N");
 
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer,gameover,NULL,NULL);

@@ -2,6 +2,7 @@
 
 #include "drawing.h"
 #include "rooms.h"
+#include "loading.h"
 
 void drawscreen (SDL_Renderer *renderer,uint stagedata[][22][32],SDL_Texture *tiles,uint room,uint counter[],uint changeflag,Mix_Chunk *fx[],uint changetiles) {
 
@@ -233,22 +234,22 @@ void showparchment (SDL_Renderer *renderer,uint *parchment) {
 
 	switch (*parchment) {
 		case 3:
-			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment1.png");
+			yparchment = loadtexture(renderer, "parchment1");
 			break;
 		case 8:
-			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment2.png");
+			yparchment = loadtexture(renderer, "parchment2");
 			break;
 		case 12:
-			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment3.png");
+			yparchment = loadtexture(renderer, "parchment3");
 			break;
 		case 14:
-			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment4.png");
+			yparchment = loadtexture(renderer, "parchment4");
 			break;
 		case 16:
-			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment5.png");
+			yparchment = loadtexture(renderer, "parchment5");
 			break;
 		case 21:
-			yparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/parchment6.png");
+			yparchment = loadtexture(renderer, "parchment6");
 			break;
 	}
 
@@ -259,7 +260,7 @@ void showparchment (SDL_Renderer *renderer,uint *parchment) {
 
 void redparchment (SDL_Renderer *renderer,struct hero *jean) {
 
-	SDL_Texture *rparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/redparch.png");
+	SDL_Texture *rparchment = loadtexture(renderer, "redparch");
 	SDL_RenderCopy(renderer,rparchment,NULL,NULL);
 	SDL_DestroyTexture(rparchment);
 
@@ -269,7 +270,7 @@ void redparchment (SDL_Renderer *renderer,struct hero *jean) {
 
 void blueparchment (SDL_Renderer *renderer,struct hero *jean) {
 
-	SDL_Texture *bparchment = IMG_LoadTexture(renderer, DATADIR "/graphics/blueparch.png");
+	SDL_Texture *bparchment = loadtexture(renderer, "blueparch");
 	SDL_RenderCopy(renderer,bparchment,NULL,NULL);
 	SDL_DestroyTexture(bparchment);
 
