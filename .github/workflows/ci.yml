@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [master, feature/**, bugfix/**, pr/**]
+    tags:
+      - v[0-9].[0-9].[0-9]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  prepare:
+    name: General preparations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Get version, tag and pull request info
+        id: vars
+        run: |
+          pull="no"
+          if [[ "${{ github.ref }}" == refs/heads/* ]]; then
+            # branch build
+            version="$(git describe --tags --long --always "$GITHUB_SHA")"
+          elif [[ "${{ github.ref }}" == refs/pull/* ]]; then
+            # pull request
+            pull="yes"
+            version="pull${{ github.event.number }}"
+          else
+            # tag
+            version="${{ github.ref_name }}"
+          fi
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "pull=${pull}" >> $GITHUB_OUTPUT
+      - name: Check version, tag and pull request info
+        run: |
+          echo "version = ${{ steps.vars.outputs.version }}"
+          echo "pull = ${{ steps.vars.outputs.pull }}"
+    outputs:
+      version: ${{ steps.vars.outputs.version }}
+      pull: ${{ steps.vars.outputs.pull }}
+
+  dist:
+    name: Distribution archives
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -yqq
+          sudo apt-get install -yqq git
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Archives
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          git archive -o abbaye-${VERSION}.tar.gz --prefix=abbaye-${VERSION}/ ${GITHUB_SHA}
+          git archive -o abbaye-${VERSION}.zip --prefix=abbaye-${VERSION}/ ${GITHUB_SHA}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: abbaye-dist
+          path: abbaye-*.*
+
+  linux-clang:
+    name: Build (Ubuntu 22.04 LTS x86_64, Clang-15)
+    needs: prepare
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -yqq
+          sudo apt-get install -yqq build-essential clang-15 \
+            libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Abbaye (slim)
+        run: |
+          export CC=clang
+          export CFLAGS="-Wall -O2 -ffunction-sections -fdata-sections"
+          export LDFLAGS="-Wl,--gc-sections"
+          export MAKEFLAGS=-j$(nproc)
+          export DATADIR='\"./\"'
+          make
+          ls -l abbayev2
+
+      - name: Prepare artifact
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          mkdir abbaye-${VERSION}
+          cp abbayev2 ReadMe.md COPYING abbaye-${VERSION}/
+          cp -r data graphics sounds abbaye-${VERSION}/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: abbaye-linux-glibc2.35-x86_64
+          path: abbaye-*/
