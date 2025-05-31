@@ -38,11 +38,7 @@ ifneq ($(PLATFORM), mac)
 LDFLAGS?=      -Wl,-z,relro
 endif
 
-ifeq ($(PLATFORM), mac)
-CFLAGS+=	-I/opt/homebrew/include -D_THREAD_SAFE -DDATADIR=$(DATADIR)
-else
-CFLAGS+=	`sdl2-config --config` -DDATADIR=$(DATADIR)
-endif
+CFLAGS+=	`sdl2-config --cflags` -DDATADIR=$(DATADIR)
 LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm
 
 PROG=		abbayev2

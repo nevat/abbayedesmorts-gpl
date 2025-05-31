@@ -33,6 +33,16 @@ Under GNU/Linux and FreeBSD, in order to compile this program, you need to
 install SDL2, SDL2_image and SDL2_mixer libraries. Check your distribution
 instructions on how to install them.
 
+For example, on Fedora:
+
+    sudo dnf install SDL2-devel SDL2_image-devel SDL2_mixer-devel
+
+And on Debian:
+
+    sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
+
+Now we can proceed to the main build:
+
     tar xf abbaye-<version>.tar.gz # unpack the source code file (or download from Github)
     cd abbaye-<version>            # enter the directory
     make                           # build the game executable
@@ -43,7 +53,7 @@ Alternatively you can run the game with `abbayev2`.
 
 ### Mac installation
 
-To build on Macs, we use Homebrew as the package manager for dependencies.
+To build on Macs, we use Homebrew as the package manager for dependencies. Note that we must specify `PLATFORM=mac` to the make commands
 
     brew install SDL2 SDL2_image SDL2_mixer
     tar xf abbaye-<version>.tar.gz # unpack the source code file (or download from Github)
