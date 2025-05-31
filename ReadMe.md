@@ -16,6 +16,7 @@ Currently, this port works on:
 
  * GNU/Linux (32 & 64 bits), including Raspberry Pi
  * FreeBSD
+ * Mac (must specify PLATFORM=mac to make commands)
  * OpenPandora
  * CGW Zero
  * Nintendo Wii
@@ -32,13 +33,24 @@ Under GNU/Linux and FreeBSD, in order to compile this program, you need to
 install SDL2, SDL2_image and SDL2_mixer libraries. Check your distribution
 instructions on how to install them.
 
-    tar xf abbaye-<version>.tar.gz # unpack the source code file
+    tar xf abbaye-<version>.tar.gz # unpack the source code file (or download from Github)
     cd abbaye-<version>            # enter the directory
     make                           # build the game executable
     make install                   # install the game (as root)
 
 An icon will appear in your application menu, in game section.
 Alternatively you can run the game with `abbayev2`.
+
+### Mac installation
+
+To build on Macs, we use Homebrew as the package manager for dependencies.
+
+    brew install SDL2 SDL2_image SDL2_mixer
+    tar xf abbaye-<version>.tar.gz # unpack the source code file (or download from Github)
+    cd abbaye-<version>            # enter the directory
+    make PLATFORM=mac              # build the game executable
+    sudo make install PLATFORM=mac # install the game (as root)
+
 
 ## Uninstallation from source
 

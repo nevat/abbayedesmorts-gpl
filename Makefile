@@ -1,11 +1,19 @@
+ifeq ($(PLATFORM), mac)
+PREFIX?=	/opt/abbayev2
+else
 PREFIX?=	/usr
+endif
 
 CC?=		gcc
 
 ifeq ($(DEBUG),1)
 CFLAGS?=	-O0 -ggdb -DDEBUG -Wall
 else
+  ifeq ($(PLATFORM), mac)
+CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -ftree-vectorize
+  else
 CFLAGS?=	-O2 -finline-functions -funswitch-loops -fgcse-after-reload -fpredictive-commoning -ftree-vectorize
+  endif
 endif
 
 ifeq ($(PLATFORM), rpi1)
@@ -24,9 +32,17 @@ DATADIR= "\"./\""
 endif
 
 DATADIR?="\"$(PREFIX)/share/abbayev2\""
-LDFLAGS?=	-Wl,-z,relro
+ifneq ($(PLATFORM), mac)
+# This needs to be disabled for Macs, I think b/c RELRO is an ELF-specific feature
+# and does not apply to Mach-O binaries.
+LDFLAGS?=      -Wl,-z,relro
+endif
 
-CFLAGS+=	`sdl2-config --cflags` -DDATADIR=$(DATADIR)
+ifeq ($(PLATFORM), mac)
+CFLAGS+=	-I/opt/homebrew/include -D_THREAD_SAFE -DDATADIR=$(DATADIR)
+else
+CFLAGS+=	`sdl2-config --config` -DDATADIR=$(DATADIR)
+endif
 LIBS=		`sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lm
 
 PROG=		abbayev2
@@ -52,15 +68,16 @@ $(PROG): $(OBJS)
 
 .SUFFIXES: .c .o
 .c.o:
-	@echo compile $<
+	@echo Compiling $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo cleaning...
+	@echo Cleaning...
 	@rm -f $(OBJS) $(PROG)
 
 # Installation
 install: $(PROG)
+	@echo Installing to $(DESTDIR)$(PREFIX)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp $(PROG) $(DESTDIR)$(PREFIX)/bin
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
@@ -77,6 +94,7 @@ install: $(PROG)
 	cp ./appdata/abbaye.appdata.xml $(DESTDIR)$(PREFIX)/share/appdata
 
 uninstall:
+	@echo Uninstalling from $(DESTDIR)$(PREFIX)
 	rm $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	rm $(DESTDIR)$(PREFIX)/share/applications/abbaye.desktop
 	rm $(DESTDIR)$(PREFIX)/share/pixmaps/abbaye.png
