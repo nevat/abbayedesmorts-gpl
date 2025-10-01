@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -62,7 +62,7 @@ jobs:
           sudo apt-get install -yqq git
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate Archives
         env:
@@ -89,7 +89,7 @@ jobs:
             libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build Abbaye (slim)
         run: |
