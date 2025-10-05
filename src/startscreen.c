@@ -23,6 +23,7 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 	Mix_Music *music = loadmus("MainTitleN");
 
 	while (exit != 1) {
+		gameoption_t option = OPT_NONE;
         
         if (change == 1) { /* Only redraw when change is made */
 
@@ -48,70 +49,90 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 			Mix_PlayMusic(music, 0);
 		}
 
-		/* Check keyboard */
+		/* Check input (keyboard/gamepad) */
 		if ( SDL_PollEvent(&keyp) ) {
-			if (keyp.type == SDL_KEYDOWN) { /* Key pressed */
-				if (keyp.key.keysym.sym == SDLK_c) { /* Change graphic set */
-                    change = 1; /* enable redraw */
-					if (*grapset == 0)
-						*grapset = 1;
-					else
-						*grapset = 0;
-				}
-				if (keyp.key.keysym.sym == SDLK_i) { /* Show instructions */
-                    change = 1; /* enable redraw */
-					if (srcintro.y == 0)
-						srcintro.y = SCREEN_H;
-					else {
-						srcintro.y = 0;
-						musicplay = 0;
+			switch (keyp.type) {
+				case SDL_KEYDOWN:
+					switch (keyp.key.keysym.sym) {
+						case SDLK_SPACE:
+							option = OPT_STARTGAME;
+							break;
+						case SDLK_i:
+							option = OPT_SHOWINSTRUCT;
+							break;
+						case SDLK_f:
+							option = OPT_FULLSCREEN;
+							break;
+						case SDLK_c:
+							option = OPT_GRAPHICS;
+							break;
+						case SDLK_ESCAPE:
+							option = OPT_QUIT;
+							break;
 					}
-				}
-				if (keyp.key.keysym.sym == SDLK_f) { /* Switch fullscreen/windowed */
-					if (*fullscreen == 0) {
-						SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
-						*fullscreen = 1;
+					break;
+				case SDL_CONTROLLERBUTTONDOWN:
+					switch (keyp.cbutton.button) {
+						case SDL_CONTROLLER_BUTTON_A:
+						case SDL_CONTROLLER_BUTTON_START:
+							option = OPT_STARTGAME;
+							break;
+						case SDL_CONTROLLER_BUTTON_X:
+							option = OPT_SHOWINSTRUCT;
+							break;
+						case SDL_CONTROLLER_BUTTON_Y:
+							option = OPT_GRAPHICS;
+							break;
+						case SDL_CONTROLLER_BUTTON_BACK:
+							option = OPT_QUIT;
+							break;
 					}
-					else {
-						SDL_SetWindowFullscreen(screen,0);
-						*fullscreen = 0;
-					}
-				}
-				if (keyp.key.keysym.sym == SDLK_SPACE) { /* Start game */
-					*state = 1;
-					exit = 1;
-				}
-				if (keyp.key.keysym.sym == SDLK_ESCAPE) { /* Exit game */
-					exit = 1;
-					*state = 6;
-				}
+					break;
+				case SDL_WINDOWEVENT:
+					change = 1;
+					break;
+				case SDL_QUIT:
+					option = OPT_QUIT;
+					break;
 			}
-			
-			if (keyp.type == SDL_JOYBUTTONDOWN) {
-				if (keyp.jbutton.button == JUMP_JOYBUTTON || keyp.jbutton.button == START_JOYBUTTON) {
-					*state = 1;
-					exit = 1;
-				}
-				if (keyp.jbutton.button == SELECT_JOYBUTTON) {
-                    change = 1; /* enable redraw */
-					if (*grapset == 0)
-						*grapset = 1;
-					else
-						*grapset = 0;
-				}
-			}
-
-			if (keyp.type == SDL_QUIT) { /* Exit game */
-				exit = 1;
-				*state = 6;
-			}
-
-			if (keyp.type == SDL_WINDOWEVENT) { /* window changed */
-				change = 1;
-			}
-
 		}
-		
+
+		switch (option) {
+			case OPT_STARTGAME:
+				*state = 1;
+				exit = 1;
+				break;
+			case OPT_SHOWINSTRUCT:	// Show instructions
+				change = 1; // enable redraw
+				if (srcintro.y == 0)
+					srcintro.y = SCREEN_H;
+				else {
+					srcintro.y = 0;
+					musicplay = 0;
+				}
+				break;
+			case OPT_GRAPHICS:	// Change graphics set
+				change = 1;	// enable redraw
+				if (*grapset == 0)
+					*grapset = 1;
+				else
+					*grapset = 0;
+				break;
+			case OPT_FULLSCREEN:	// Switch fullscreen/windowed
+				if (*fullscreen == 0) {
+					SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
+					*fullscreen = 1;
+				} else {
+					SDL_SetWindowFullscreen(screen,0);
+					*fullscreen = 0;
+				}
+				break;
+			case OPT_QUIT:
+				*state = 6;
+				exit = 1;
+			default:
+				break;
+		}
 	}
 
 	/* Cleaning */
