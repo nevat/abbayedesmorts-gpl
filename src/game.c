@@ -9,6 +9,14 @@
 #include "rooms.h"
 #include "main.h"
 
+enum {
+	KEY_NONE = 0,
+	KEY_ANYTHING,
+	KEY_FULLSCREEN,
+	KEY_GRAPHICS,
+	KEY_QUIT
+};
+
 void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
 	/* Sounds */
@@ -25,7 +33,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 	uint changetiles=*grapset;
 	uint i = 0;
 	float proyec[24] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; /* Enemiess shoots */
-	uint keyp = 0;
+	uint keyp = KEY_NONE;
 	uint parchment = 0;
 	uint n = 0;
 	uint winfull = *fullscreen;
@@ -92,8 +100,8 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 		SDL_RenderClear(renderer);
 
 		/* Change graphic set requested */
-		if (keyp == 9) {
-			keyp = 0;
+		if (keyp == KEY_GRAPHICS) {
+			keyp = KEY_NONE;
 			if (changetiles == 0)
 				changetiles = 1;
 			else
@@ -102,7 +110,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 		}
 
 		/* Switch fullscreen/windowed requested */
-		if (keyp == 6) {
+		if (keyp == KEY_FULLSCREEN) {
 			if (*fullscreen == 0) {
 				SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
 				*fullscreen = 1;
@@ -111,11 +119,11 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 				SDL_SetWindowFullscreen(screen,0);
 				*fullscreen = 0;
 			}
-			keyp = 0;
+			keyp = KEY_NONE;
 		}
 
 		/* Exit requested */
-		if (keyp == 10) {
+		if (keyp == KEY_QUIT) {
 			exit = 1;
 			*state = 6;
 		}
@@ -187,10 +195,8 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 				jean.y = jean.checkpoint[2];
 				jean.jump = 0;
 				jean.height = 0;
-				jean.push[0] = 0;
-				jean.push[1] = 0;
-				jean.push[2] = 0;
-				jean.push[3] = 0;
+				for (i=0; i<4; i++)
+					jean.push[i] = 0;
 				changeflag = 2;
 				jean.state[0] --;
 				jean.death = 0;
@@ -246,11 +252,11 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 			Mix_PlayChannel(-1, fx[2], 0);
 			Mix_PauseMusic();
 			/* Waiting a key */
-			while (keyp == 0)
+			while (keyp == KEY_NONE)
 				keybpause (&keyp);
-			jean.push[2] = 0;
-			jean.push[3] = 0;
-			keyp = 0;
+			jean.push[J_LEFT] = 0;
+			jean.push[J_RIGHT] = 0;
+			keyp = KEY_NONE;
 			Mix_ResumeMusic();
 			parchment = 0;
 		}
@@ -349,12 +355,12 @@ void control (struct hero *jean,uint *keyp) {
 
 	SDL_Event event;
 
-	if (*keyp > 0)
-		*keyp = 0;
+	if (*keyp > KEY_NONE)
+		*keyp = KEY_NONE;
 
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT)
-			*keyp = 10;
+			*keyp = KEY_QUIT;
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_UP) {
 				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
@@ -379,11 +385,11 @@ void control (struct hero *jean,uint *keyp) {
 				}
 			}
 			if (event.key.keysym.sym == SDLK_f)
-				*keyp = 6;
+				*keyp = KEY_FULLSCREEN;
 			if (event.key.keysym.sym == SDLK_c)
-				*keyp = 9;
+				*keyp = KEY_GRAPHICS;
 			if (event.key.keysym.sym == SDLK_ESCAPE)
-				*keyp = 10;
+				*keyp = KEY_QUIT;
 			}
 
 		if (event.type == SDL_KEYUP) {
@@ -454,7 +460,7 @@ void control (struct hero *jean,uint *keyp) {
 					jean->jump = 1;
 		
 			if (event.jbutton.button == SELECT_JOYBUTTON)
-				*keyp = 10;
+				*keyp = KEY_QUIT;
 		}
 		
 		if (event.type == SDL_JOYBUTTONUP) {
@@ -768,15 +774,15 @@ void keybpause (uint *keyp) {
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_KEYDOWN) {
 			if ((event.key.keysym.sym == SDLK_SPACE) || (event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
-				*keyp = 1;
+				*keyp = KEY_ANYTHING;
 		}
 		if (event.type == SDL_JOYBUTTONDOWN) {
 			if (event.jbutton.button == JUMP_JOYBUTTON || event.jbutton.button == START_JOYBUTTON) {
-				*keyp = 1;
+				*keyp = KEY_ANYTHING;
 			}
 		}
 		if (event.type == SDL_QUIT) {
-			*keyp = 10;
+			*keyp = KEY_QUIT;
 		}
 	}
 

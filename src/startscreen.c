@@ -8,7 +8,7 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 
 	uint8_t exit = 0;
 	uint8_t musicplay = 0;
-    uint8_t change = 1;
+	uint8_t change = 1;
 
 	SDL_Rect srcintro = {0,0,SCREEN_W,SCREEN_H};
 	SDL_Rect desintro = {0,0,SCREEN_W,SCREEN_H};
@@ -117,6 +117,6 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 	/* Cleaning */
 	SDL_DestroyTexture(intro);
 	SDL_DestroyTexture(intromd);
-    Mix_FreeMusic(music);
-    
+	Mix_FreeMusic(music);
+
 }
