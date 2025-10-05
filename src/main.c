@@ -39,6 +39,13 @@ void gamepad_init (void) {
 	}
 }
 
+void gamepad_remove (SDL_JoystickID joy_id) {
+	if (gamepad && SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad)) == joy_id) {
+		gamepad_shutdown();
+		gamepad_init();
+	}
+}
+
 int main (int argc, char** argv) {
 
 	// TODO: support arguments for fullscreen, etc.
@@ -81,7 +88,13 @@ int main (int argc, char** argv) {
 	SDL_RenderClear(renderer);
 
 	/* Init gamepad subsystem */
+#ifdef SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS
+	// Use button positions instead of labels, like SDL3
+	SDL_SetHint( SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS, "0" );
+#endif
+
 	if (SDL_Init(SDL_INIT_GAMECONTROLLER) >= 0) {
+		SDL_GameControllerAddMappingsFromFile(DATADIR "/gamecontrollerdb.txt");
 		gamepad_init();
 	}
 

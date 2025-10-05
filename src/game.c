@@ -466,6 +466,14 @@ void control (struct hero *jean,uint *keyp) {
 				break;
 			}
 
+			case SDL_CONTROLLERDEVICEADDED:
+				gamepad_init();
+				break;
+
+			case SDL_CONTROLLERDEVICEREMOVED:
+				gamepad_remove(event.cdevice.which);
+				break;
+
 			case SDL_QUIT:
 				*keyp = KEY_QUIT;
 				break;
@@ -832,6 +840,12 @@ void keybpause (uint *keyp) {
 					case SDL_CONTROLLER_BUTTON_START:
 						*keyp = KEY_ANYTHING;
 				}
+				break;
+			case SDL_CONTROLLERDEVICEADDED:
+				gamepad_init();
+				break;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				gamepad_remove(event.cdevice.which);
 				break;
 			case SDL_QUIT:
 				*keyp = KEY_QUIT;

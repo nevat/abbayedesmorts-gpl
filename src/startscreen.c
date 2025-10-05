@@ -91,6 +91,12 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 				case SDL_WINDOWEVENT:
 					change = 1;
 					break;
+				case SDL_CONTROLLERDEVICEADDED:
+					gamepad_init();
+					break;
+				case SDL_CONTROLLERDEVICEREMOVED:
+					gamepad_remove(keyp.cdevice.which);
+					break;
 				case SDL_QUIT:
 					option = OPT_QUIT;
 					break;
