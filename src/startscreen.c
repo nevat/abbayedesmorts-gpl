@@ -24,24 +24,24 @@ void startscreen(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *ful
 
 	while (exit != 1) {
 		gameoption_t option = OPT_NONE;
-        
-        if (change == 1) { /* Only redraw when change is made */
 
-            /* Cleaning the renderer */
-            SDL_RenderClear(renderer);
+		if (change == 1) { /* Only redraw when change is made */
 
-            /* Put image on renderer */
-            if (*grapset == 0)
-                SDL_RenderCopy(renderer, intro, &srcintro, &desintro);
-            else
-                SDL_RenderCopy(renderer, intromd, &srcintro, &desintro);
+			/* Cleaning the renderer */
+			SDL_RenderClear(renderer);
 
-            /* Flip ! */
-            renderpresent(renderer);
-            
-            change = 0;
-            
-        }
+			/* Put image on renderer */
+			if (*grapset == 0)
+				SDL_RenderCopy(renderer, intro, &srcintro, &desintro);
+			else
+				SDL_RenderCopy(renderer, intromd, &srcintro, &desintro);
+
+			/* Flip ! */
+			renderpresent(renderer);
+
+			change = 0;
+
+		}
 
 		/* Play music if required */
 		if (musicplay == 0) {

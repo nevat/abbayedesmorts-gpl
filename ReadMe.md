@@ -21,8 +21,8 @@ Currently, this port works on:
  * CGW Zero
  * Nintendo Wii
  * PSP [Link](https://t.co/AkH3HvG3kr)
- * XBox [Link](https://t.co/rLwe4UCi43) 
- * Nintendo 3DS (replaced SDL2) [Link](http://www.nintendomax.com/viewtopic.php?t=16450)
+ * XBox [Link](https://t.co/rLwe4UCi43)
+ * Nintendo 3DS (replaced SDL2) [Link](https://github.com/JeffRuLz/abbayedesmorts-3ds)
 
 Feel free to port this program to other systems. It is open source, take the code and
 modify it to fit your platforms needs!
@@ -66,6 +66,14 @@ To build on Macs, we use Homebrew as the package manager for dependencies. Note 
 
     cd abbaye-<version> # enter the directory
     make uninstall      # uninstall the game (as root)
+
+## Command line parameters
+
+* `-nofilter`: disable linear filtering on screen image.
+* `-fullscreen`: start the game in fullscreen.
+* `-graphset`: start the game using the 16-bit graphics set.
+
+Note that the last two can be changed in-game with the `F` and `C` keys, respectively.
 
 ## History
 

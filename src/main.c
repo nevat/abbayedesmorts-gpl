@@ -46,16 +46,23 @@ void gamepad_remove (SDL_JoystickID joy_id) {
 	}
 }
 
-int main (int argc, char** argv) {
-
-	// TODO: support arguments for fullscreen, etc.
-	(void) argc;
-	(void) argv;
+int main (int argc, char *argv[]) {
+	static const char *filter_modes[] = {"nearest", "linear"};
 
 	uint8_t exit = 0;
 	uint8_t state = 0; /* 0-intro,1-history,2-game,3-gameover,4-ending,5-exit */
 	uint8_t grapset = 0; /* 0-8bits, 1-16bits */
 	uint8_t fullscreen = 0; /* 0-Windowed,1-Fullscreen */
+	uint8_t filtering = 1;
+
+	for (int i = 1; i < argc; i++) {
+		if ( !strcmp("-nofilter", argv[i]) )
+			filtering = 0;
+		else if ( !strcmp("-fullscreen", argv[i]) )
+			fullscreen = 1;
+		else if ( !strcmp("-graphset", argv[i]) )
+			grapset = 1;
+	}
 
 	/* SDL2 initialization */
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -78,7 +85,7 @@ int main (int argc, char** argv) {
 	SDL_RenderSetLogicalSize(renderer, SCREEN_W, SCREEN_H);
 
 	/* Create a render target for smooth scaling */
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, filter_modes[filtering]);
 	SDL_Texture *target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET, SCREEN_W, SCREEN_H);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
