@@ -34,9 +34,9 @@ struct hero {
 	int collision[4]; /* Collisions, in 4 directions */
 	int ducking;
 	int checkpoint[4];
-	int state[2]; /* Vidas y cruces */
+	int state[2]; /* Lives and crosses */
 	int flags[7];
 	int death;
-	int push[4]; /* Pulsaciones de teclas */
+	int push[4]; /* Key presses - directional input */
 	int temp;
 };
