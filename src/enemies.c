@@ -285,7 +285,7 @@ void plants (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 		destile.y = enemies->y[n];
 
 		SDL_RenderCopy(renderer,tiles,&srctile,&destile);
-}
+	}
 
 	/* Init fire */
 	for (uint8_t n=1; n<4; n++) {
@@ -658,7 +658,7 @@ void dragon (struct enem *enemies,SDL_Renderer *renderer,SDL_Texture *tiles,uint
 							proyec[n+1] = 472;
 						else
 							proyec[n+1] = 464;
-						}
+					}
 				}
 				else {
 					proyec[n] = 0;

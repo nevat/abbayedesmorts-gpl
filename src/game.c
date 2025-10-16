@@ -9,6 +9,22 @@
 #include "rooms.h"
 #include "main.h"
 
+#define ANALOG_DEADZONE_X 14592
+#define ANALOG_DEADZONE_Y 16384
+
+enum {
+	KEY_NONE = 0,
+	KEY_ANYTHING,
+	KEY_FULLSCREEN,
+	KEY_GRAPHICS,
+	KEY_QUIT
+};
+
+enum {
+	AXIS_X = 0,
+	AXIS_Y
+};
+
 void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen) {
 
 	/* Sounds */
@@ -25,7 +41,7 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 	uint changetiles=*grapset;
 	uint i = 0;
 	float proyec[24] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; /* Enemiess shoots */
-	uint keyp = 0;
+	uint keyp = KEY_NONE;
 	uint parchment = 0;
 	uint n = 0;
 	uint winfull = *fullscreen;
@@ -91,33 +107,36 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 		/* Cleaning the renderer */
 		SDL_RenderClear(renderer);
 
-		/* Change graphic set requested */
-		if (keyp == 9) {
-			keyp = 0;
-			if (changetiles == 0)
-				changetiles = 1;
-			else
-				changetiles = 0;
-			*grapset = changetiles;
-		}
+		switch (keyp) {
 
-		/* Switch fullscreen/windowed requested */
-		if (keyp == 6) {
-			if (*fullscreen == 0) {
-				SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
-				*fullscreen = 1;
-			}
-			else {
-				SDL_SetWindowFullscreen(screen,0);
-				*fullscreen = 0;
-			}
-			keyp = 0;
-		}
+			// Change graphics set requested
+			case KEY_GRAPHICS:
+				if (changetiles == 0)
+					changetiles = 1;
+				else
+					changetiles = 0;
+				*grapset = changetiles;
+				keyp = KEY_NONE;
+				break;
 
-		/* Exit requested */
-		if (keyp == 10) {
-			exit = 1;
-			*state = 6;
+			// Switch fullscreen/windowed requested
+			case KEY_FULLSCREEN:
+				if (*fullscreen == 0) {
+					SDL_SetWindowFullscreen(screen,SDL_WINDOW_FULLSCREEN_DESKTOP);
+					*fullscreen = 1;
+				}
+				else {
+					SDL_SetWindowFullscreen(screen,0);
+					*fullscreen = 0;
+				}
+				keyp = KEY_NONE;
+				break;
+
+			// Exit requested
+			case KEY_QUIT:
+				exit = 1;
+				*state = 6;
+				break;
 		}
 
 		/* Animation of fire and water */
@@ -187,10 +206,8 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 				jean.y = jean.checkpoint[2];
 				jean.jump = 0;
 				jean.height = 0;
-				jean.push[0] = 0;
-				jean.push[1] = 0;
-				jean.push[2] = 0;
-				jean.push[3] = 0;
+				for (i=0; i<4; i++)
+					jean.push[i] = 0;
 				changeflag = 2;
 				jean.state[0] --;
 				jean.death = 0;
@@ -246,11 +263,11 @@ void game(SDL_Window *screen,uint8_t *state,uint8_t *grapset,uint8_t *fullscreen
 			Mix_PlayChannel(-1, fx[2], 0);
 			Mix_PauseMusic();
 			/* Waiting a key */
-			while (keyp == 0)
+			while (keyp == KEY_NONE)
 				keybpause (&keyp);
-			jean.push[2] = 0;
-			jean.push[3] = 0;
-			keyp = 0;
+			jean.push[J_LEFT] = 0;
+			jean.push[J_RIGHT] = 0;
+			keyp = KEY_NONE;
 			Mix_ResumeMusic();
 			parchment = 0;
 		}
@@ -349,118 +366,160 @@ void control (struct hero *jean,uint *keyp) {
 
 	SDL_Event event;
 
-	if (*keyp > 0)
-		*keyp = 0;
+	// Player input in "push" format (up,down,left,right)
+	uint8_t press[4] = {0,0,0,0}, release[4] = {0,0,0,0};
+
+	if (*keyp > KEY_NONE)
+		*keyp = KEY_NONE;
 
 	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT)
-			*keyp = 10;
-		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym == SDLK_UP) {
-				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
-					jean->jump = 1;
-			}
-			if (event.key.keysym.sym == SDLK_DOWN) {
-				if ((jean->push[1] == 0) && (jean->jump == 0)) {
-					jean->push[1] = 1;
-					jean->ducking = 1;
+		switch (event.type) {
+
+			case SDL_KEYDOWN:
+			case SDL_KEYUP: {
+				uint8_t down = (event.type == SDL_KEYDOWN);
+				uint8_t (*input)[4] = (down) ? &press : &release;
+
+				switch (event.key.keysym.sym) {
+					case SDLK_UP:
+						(*input)[J_UP] = 1;
+						break;
+					case SDLK_DOWN:
+						(*input)[J_DOWN] = 1;
+						break;
+					case SDLK_LEFT:
+						(*input)[J_LEFT] = 1;
+						break;
+					case SDLK_RIGHT:
+						(*input)[J_RIGHT] = 1;
+						break;
+					case SDLK_f:
+						if (down) *keyp = KEY_FULLSCREEN;
+						break;
+					case SDLK_c:
+						if (down) *keyp = KEY_GRAPHICS;
+						break;
+					case SDLK_ESCAPE:
+						if (down) *keyp = KEY_QUIT;
+						break;
 				}
-			}
-			if (event.key.keysym.sym == SDLK_LEFT) {
-				if (jean->push[2] == 0) {
-					jean->push[2] = 1;
-					jean->push[3] = 0;
-				}
-			}
-			if (event.key.keysym.sym == SDLK_RIGHT) {
-				if (jean->push[3] == 0) {
-					jean->push[3] = 1;
-					jean->push[2] = 0;
-				}
-			}
-			if (event.key.keysym.sym == SDLK_f)
-				*keyp = 6;
-			if (event.key.keysym.sym == SDLK_c)
-				*keyp = 9;
-			if (event.key.keysym.sym == SDLK_ESCAPE)
-				*keyp = 10;
+				break;
 			}
 
-		if (event.type == SDL_KEYUP) {
-			if (event.key.keysym.sym == SDLK_UP)
-				jean->push[0] = 0;
-			if (event.key.keysym.sym == SDLK_DOWN) {
-				jean->push[1] = 0;
-				jean->ducking = 0;
-			}
-			if (event.key.keysym.sym == SDLK_LEFT)
-				jean->push[2] = 0;
-			if (event.key.keysym.sym == SDLK_RIGHT)
-				jean->push[3] = 0;
-		}
+			case SDL_CONTROLLERBUTTONDOWN:
+			case SDL_CONTROLLERBUTTONUP: {
+				uint8_t down = (event.type == SDL_CONTROLLERBUTTONDOWN);
+				uint8_t (*input)[4] = (down) ? &press : &release;
 
-		if (event.type == SDL_JOYAXISMOTION) {
-			if (event.jaxis.axis == X_JOYAXIS) {
-				if (event.jaxis.value < 0) { // BUTTONDOWN LEFT	
-					jean->push[2] = 1;
-					jean->push[3] = 0;
+				switch (event.cbutton.button) {
+					case SDL_CONTROLLER_BUTTON_A:
+						(*input)[J_UP] = 1;
+						break;
+					case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+						(*input)[J_DOWN] = 1;
+						break;
+					case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+						(*input)[J_LEFT] = 1;
+						break;
+					case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+						(*input)[J_RIGHT] = 1;
+						break;
+					case SDL_CONTROLLER_BUTTON_Y:
+						if (down) *keyp = KEY_GRAPHICS;
+						break;
+					case SDL_CONTROLLER_BUTTON_BACK:
+						if (down) *keyp = KEY_QUIT;
+						break;
 				}
-				if (event.jaxis.value > 0) { // BUTTONDOWN RIGHT
-					jean->push[3] = 1;
-					jean->push[2] = 0;
-				}
-				if (event.jaxis.value == 0) { // BUTTONUP	
-					jean->push[2] = 0;
-					jean->push[3] = 0;
-				}
-			}
-			if (event.jaxis.axis == Y_JOYAXIS) {
-				if (event.jaxis.value > 0) { // BUTTONDOWN DUCK
-					jean->push[1] = 1;
-					jean->ducking = 1;
-				}
-				if (event.jaxis.value == 0) { // BUTTONUP
-					jean->push[1] = 0;
-					jean->ducking = 0;
-				}
+				break;
 			}
 
-		}
+			case SDL_CONTROLLERAXISMOTION: {
+				static uint8_t used_analog[2] = {0,0};	// if axes have been used before
+				int axisval = event.caxis.value;
 
-		if (event.type == SDL_JOYHATMOTION) {
-			jean->push[1] = 0;
-			jean->push[2] = 0;
-			jean->push[3] = 0;
-			jean->ducking = 0;
-			if (event.jhat.value & SDL_HAT_LEFT) {
-				jean->push[2] = 1;
-				jean->push[3] = 0;
-			} else if (event.jhat.value & SDL_HAT_RIGHT) {
-				jean->push[3] = 1;
-				jean->push[2] = 0;
+				switch (event.caxis.axis) {
+					case SDL_CONTROLLER_AXIS_LEFTX:
+						if (axisval < -ANALOG_DEADZONE_X) {
+							used_analog[AXIS_X] = 1;
+							press[J_LEFT] = 1;
+							press[J_RIGHT] = 0;
+						} else if (axisval > ANALOG_DEADZONE_X) {
+							used_analog[AXIS_X] = 1;
+							press[J_RIGHT] = 1;
+							press[J_LEFT] = 0;
+						} else if (used_analog[AXIS_X]) {	// avoids constant "releases"
+							used_analog[AXIS_X] = 0;
+							release[J_LEFT] = release[J_RIGHT] = 1;
+						}
+						break;
+					case SDL_CONTROLLER_AXIS_LEFTY:
+						if (axisval > ANALOG_DEADZONE_Y) {
+							used_analog[AXIS_Y] = 1;
+							press[J_DOWN] = 1;
+						} else if (used_analog[AXIS_Y]) {
+							used_analog[AXIS_Y] = 0;
+							release[J_DOWN] = 1;
+						}
+						break;
+				}
+				break;
 			}
-			if (event.jhat.value & SDL_HAT_DOWN) {
-				jean->push[1] = 1;
-				jean->ducking = 1;
-			} else if (event.jhat.value & SDL_HAT_UP) {
-				jean->push[1] = 0;
-				jean->ducking = 0;
-			}
-		}
 
-		if (event.type == SDL_JOYBUTTONDOWN) {
-			if (event.jbutton.button == JUMP_JOYBUTTON)
-				if ((jean->push[0] == 0) && (jean->jump == 0) && (jean->ducking == 0))
-					jean->jump = 1;
-		
-			if (event.jbutton.button == SELECT_JOYBUTTON)
-				*keyp = 10;
+			case SDL_CONTROLLERDEVICEADDED:
+				gamepad_init();
+				break;
+
+			case SDL_CONTROLLERDEVICEREMOVED:
+				gamepad_remove(event.cdevice.which);
+				break;
+
+			case SDL_QUIT:
+				*keyp = KEY_QUIT;
+				break;
 		}
-		
-		if (event.type == SDL_JOYBUTTONUP) {
-				if (event.jbutton.button == JUMP_JOYBUTTON)
-					jean->push[0] = 0;
-		}
+	}
+
+	// Resolving SOCD with HitBox solution.
+	// In practice though, the device that throws the most events wins.
+	if (press[J_UP] && press[J_DOWN]) {	// Up + Down = Up
+		press[J_UP] = release[J_DOWN] = 1;
+		press[J_DOWN] = release[J_UP] = 0;
+	}
+	if (press[J_LEFT] && press[J_RIGHT]) {	// Left + Right = Neutral
+		press[J_LEFT] = press[J_RIGHT] = 0;
+		release[J_LEFT] = release[J_RIGHT] = 1;
+	}
+
+	// Up / Jump
+	if (press[J_UP] && !jean->push[J_UP] && !jean->jump && !jean->ducking)
+		jean->jump = 1;
+	jean->push[J_UP] = press[J_UP];
+
+	// Down / Duck
+	if (press[J_DOWN] && !jean->push[J_DOWN] && !jean->jump) {
+		jean->ducking = jean->push[J_DOWN] = 1;
+	}
+	if (release[J_DOWN]) {
+		jean->ducking = jean->push[J_DOWN] = 0;
+	}
+
+	// Left
+	if (press[J_LEFT] && !jean->push[J_LEFT]) {
+		jean->push[J_LEFT] = 1;
+		jean->push[J_RIGHT] = 0;
+	}
+	if (release[J_LEFT] && jean->push[J_LEFT]) {
+		jean->push[J_LEFT] = 0;
+	}
+
+	// Right
+	if (press[J_RIGHT] && !jean->push[J_RIGHT]) {
+		jean->push[J_RIGHT] = 1;
+		jean->push[J_LEFT] = 0;
+	}
+	if (release[J_RIGHT] && jean->push[J_RIGHT]) {
+		jean->push[J_RIGHT] = 0;
 	}
 }
 
@@ -766,17 +825,31 @@ void keybpause (uint *keyp) {
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_KEYDOWN) {
-			if ((event.key.keysym.sym == SDLK_SPACE) || (event.key.keysym.sym == SDLK_LEFT) || (event.key.keysym.sym == SDLK_RIGHT))
-				*keyp = 1;
-		}
-		if (event.type == SDL_JOYBUTTONDOWN) {
-			if (event.jbutton.button == JUMP_JOYBUTTON || event.jbutton.button == START_JOYBUTTON) {
-				*keyp = 1;
-			}
-		}
-		if (event.type == SDL_QUIT) {
-			*keyp = 10;
+		switch (event.type) {
+			case SDL_KEYDOWN:
+				switch (event.key.keysym.sym) {
+					case SDLK_SPACE:
+					case SDLK_LEFT:
+					case SDLK_RIGHT:
+						*keyp = KEY_ANYTHING;
+				}
+				break;
+			case SDL_CONTROLLERBUTTONDOWN:
+				switch (event.cbutton.button) {
+					case SDL_CONTROLLER_BUTTON_A:
+					case SDL_CONTROLLER_BUTTON_START:
+						*keyp = KEY_ANYTHING;
+				}
+				break;
+			case SDL_CONTROLLERDEVICEADDED:
+				gamepad_init();
+				break;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				gamepad_remove(event.cdevice.which);
+				break;
+			case SDL_QUIT:
+				*keyp = KEY_QUIT;
+				break;
 		}
 	}
 

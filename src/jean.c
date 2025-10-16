@@ -23,7 +23,7 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 
 
 	/* Move to right */
-	if (jean->push[3] == 1) {
+	if (jean->push[J_RIGHT] == 1) {
 		jean->direction = 1;
 		if (jean->collision[3] == 0) {
 			if (jean->jump == 0) {
@@ -32,7 +32,7 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 				else
 					jean->animation = 0;
 			}
-			if (jean->push[1] == 1)
+			if (jean->push[J_DOWN] == 1)
 				jean->x += 0.30;
 			else
 				jean->x += 0.65;
@@ -40,7 +40,7 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 	}
 
 	/* Move to left */
-	if (jean->push[2] == 1) {
+	if (jean->push[J_LEFT] == 1) {
 		jean->direction = 0;
 		if (jean->collision[2] == 0) {
 			if (jean->jump == 0) {
@@ -49,7 +49,7 @@ void movejean (struct hero *jean, Mix_Chunk *fx[]) {
 				else
 					jean->animation = 0;
 			}
-			if (jean->push[1] == 1)
+			if (jean->push[J_DOWN] == 1)
 				jean->x -= 0.30;
 			else
 				jean->x -= 0.65;
@@ -239,13 +239,13 @@ void collisions (struct hero *jean,uint stagedata[][22][32],int room) {
 
 	/* Check small platforms */
 	if (jean->direction == 0) {
-		if ((blground[3] == 38) && ((jean->x + 13) < (points[3] * 8 + 5)) && (jean->push[2] == 1) && (jean->jump ==0)) {
+		if ((blground[3] == 38) && ((jean->x + 13) < (points[3] * 8 + 5)) && (jean->push[J_LEFT] == 1) && (jean->jump == 0)) {
 			jean->y += jean->gravity;
 			jean->jump = 2;
 		}
 	}
 	if (jean->direction == 1) {
-		if ((blground[0] == 38) && ((jean->x + 1) > (points[0] + 2)) && (jean->push[3] == 1) && (jean->jump == 0)) {
+		if ((blground[0] == 38) && ((jean->x + 1) > (points[0] + 2)) && (jean->push[J_RIGHT] == 1) && (jean->jump == 0)) {
 			jean->y += jean->gravity;
 			jean->jump = 2;
 		}

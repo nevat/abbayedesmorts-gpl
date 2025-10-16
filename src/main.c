@@ -17,16 +17,52 @@
 
 SDL_Renderer *renderer;
 
-int main (int argc, char** argv) {
+static SDL_GameController *gamepad = NULL;
 
-	// TODO: support arguments for fullscreen, etc.
-	(void) argc;
-	(void) argv;
+static void gamepad_shutdown (void) {
+	if (gamepad) {
+		SDL_GameControllerClose(gamepad);
+		gamepad = NULL;
+	}
+}
+
+void gamepad_init (void) {
+	const int num_joysticks = SDL_NumJoysticks();
+	if (gamepad || num_joysticks == 0) return;
+
+	for (int i=0; i < num_joysticks; i++) {
+		if (!SDL_IsGameController(i))
+			continue;
+		gamepad = SDL_GameControllerOpen(i);
+		if (gamepad)
+			break;
+	}
+}
+
+void gamepad_remove (SDL_JoystickID joy_id) {
+	if (gamepad && SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad)) == joy_id) {
+		gamepad_shutdown();
+		gamepad_init();
+	}
+}
+
+int main (int argc, char *argv[]) {
+	static const char *filter_modes[] = {"nearest", "linear"};
 
 	uint8_t exit = 0;
 	uint8_t state = 0; /* 0-intro,1-history,2-game,3-gameover,4-ending,5-exit */
 	uint8_t grapset = 0; /* 0-8bits, 1-16bits */
 	uint8_t fullscreen = 0; /* 0-Windowed,1-Fullscreen */
+	uint8_t filtering = 1;
+
+	for (int i = 1; i < argc; i++) {
+		if ( !strcmp("-nofilter", argv[i]) )
+			filtering = 0;
+		else if ( !strcmp("-fullscreen", argv[i]) )
+			fullscreen = 1;
+		else if ( !strcmp("-graphset", argv[i]) )
+			grapset = 1;
+	}
 
 	/* SDL2 initialization */
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -49,7 +85,7 @@ int main (int argc, char** argv) {
 	SDL_RenderSetLogicalSize(renderer, SCREEN_W, SCREEN_H);
 
 	/* Create a render target for smooth scaling */
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, filter_modes[filtering]);
 	SDL_Texture *target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET, SCREEN_W, SCREEN_H);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
@@ -58,12 +94,15 @@ int main (int argc, char** argv) {
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	SDL_RenderClear(renderer);
 
-	/* Init joystick if there's one connected */
-	SDL_Joystick *joystick = NULL;
+	/* Init gamepad subsystem */
+#ifdef SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS
+	// Use button positions instead of labels, like SDL3
+	SDL_SetHint( SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS, "0" );
+#endif
 
-	if (SDL_Init(SDL_INIT_JOYSTICK) >= 0) {
-		joystick = SDL_NumJoysticks() > 0 ? SDL_JoystickOpen(0) : NULL; 
-		SDL_JoystickEventState(SDL_ENABLE);
+	if (SDL_Init(SDL_INIT_GAMECONTROLLER) >= 0) {
+		SDL_GameControllerAddMappingsFromFile(DATADIR "/gamecontrollerdb.txt");
+		gamepad_init();
 	}
 
 	/* Hide mouse cursor */
@@ -101,7 +140,9 @@ int main (int argc, char** argv) {
 	}
 
 	/* Cleaning */
-	SDL_JoystickClose(joystick);
+	gamepad_shutdown();
+	if (SDL_WasInit(SDL_INIT_GAMECONTROLLER) == SDL_INIT_GAMECONTROLLER)
+		SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 	SDL_DestroyTexture(target);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(screen);
