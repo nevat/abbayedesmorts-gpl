@@ -72,7 +72,7 @@ jobs:
           git archive -o abbaye-${VERSION}.zip --prefix=abbaye-${VERSION}/ ${GITHUB_SHA}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: abbaye-dist
           path: abbaye-*.*
@@ -110,7 +110,7 @@ jobs:
           cp -r data graphics sounds abbaye-${VERSION}/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: abbaye-linux-glibc2.35-x86_64
           path: abbaye-*/
