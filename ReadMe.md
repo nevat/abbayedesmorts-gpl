@@ -18,10 +18,10 @@ Currently, this port works on:
  * FreeBSD
  * Mac (must specify PLATFORM=mac to make commands)
  * OpenPandora
- * CGW Zero
+ * GCW Zero
  * Nintendo Wii
  * PSP [Link](https://t.co/AkH3HvG3kr)
- * XBox [Link](https://t.co/rLwe4UCi43)
+ * Xbox [Link](https://t.co/rLwe4UCi43)
  * Nintendo 3DS (replaced SDL2) [Link](https://github.com/JeffRuLz/abbayedesmorts-3ds)
 
 Feel free to port this program to other systems. It is open source, take the code and
